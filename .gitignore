@@ -5,4 +5,4 @@
 /backend/.mvn
 /backend/.mvn/wrapper/
 /backend/target
-
+/frontend/node_modules
