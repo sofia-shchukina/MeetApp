@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-
 import './App.css';
 import axios from "axios";
 
@@ -8,6 +7,8 @@ export default function App() {
 
     const [message, setMessage] = useState();
 
+
+ 
     axios.get("/participants/hello")
         .then(response => response.data)
         .then(setMessage)
@@ -16,4 +17,5 @@ export default function App() {
             <h1>{message}</h1>
         </>
     );
+
 }
