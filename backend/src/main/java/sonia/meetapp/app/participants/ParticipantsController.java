@@ -23,7 +23,7 @@ public class ParticipantsController {
     }
 
     @PostMapping()
-    public ResponseEntity<Participant> addAnimal(
+    public ResponseEntity<Participant> addParticipant(
             @RequestBody String nameOfParticipant) {
 
         Participant createdParticipant = participantsService.addParticipant(nameOfParticipant);
