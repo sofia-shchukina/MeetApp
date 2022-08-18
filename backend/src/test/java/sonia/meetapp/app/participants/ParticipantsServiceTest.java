@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,5 +29,20 @@ class ParticipantsServiceTest {
                 new Participant("3", "Ivan")
         );
         assertThat(actualResult).hasSameElementsAs(expectedResult);
+    }
+
+
+    @Test
+    void addParticipant() {
+
+        String participantName = "Guillermo";
+        String id = "123";
+        Participant testParticipant = new Participant(participantName, id);
+        ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
+        when(participantsRepo.save(any(Participant.class))).thenReturn(testParticipant);
+        ParticipantsService participantsService = new ParticipantsService(participantsRepo);
+        Participant actualResult = participantsService.addParticipant("Guillermo");
+        assertThat(actualResult.name).isEqualTo(participantName);
+
     }
 }
