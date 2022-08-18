@@ -1,4 +1,7 @@
 import {FormEvent, useState} from "react";
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import './AddNewParticipant.css';
 
 export default function AddNewParticipant(props:
                                               {
@@ -17,7 +20,7 @@ export default function AddNewParticipant(props:
             <label>What is your name on the nametag? </label>
             <input value={name}
                    onChange={event => setName(event.target.value)}/>
-            <button>save</button>
+            <Button id="btn" variant="contained" endIcon={<SendIcon/>}>save</Button>
         </form>
     );
 }

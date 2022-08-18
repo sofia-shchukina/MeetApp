@@ -1,0 +1,15 @@
+input {
+    height: 3vh;
+    border-color: var(--brown);
+    margin-right: 1vw;
+    border-radius: 5px;
+}
+
+#btn {
+    height: 4vh;
+    background-color: var(--brown);
+}
+
+form {
+    text-align: center;
+}
