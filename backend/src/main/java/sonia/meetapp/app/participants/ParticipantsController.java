@@ -24,12 +24,11 @@ public class ParticipantsController {
 
     @PostMapping()
     public ResponseEntity<Participant> addParticipant(
-            @RequestBody String nameOfParticipant) {
+            @RequestBody NewParticipant newParticipant) {
 
-        Participant createdParticipant = participantsService.addParticipant(nameOfParticipant);
+        Participant createdParticipant = participantsService.addParticipant(newParticipant);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdParticipant);
-
     }
 }

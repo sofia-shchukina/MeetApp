@@ -11,9 +11,8 @@ export default function ParticipantsList(props:
             <h2>List of participants</h2>
             <ol>
                 {props.participants.map(participant =>
-                    (<li>{participant.name}</li>))}
+                    (<li key={participant.id}>{participant.name}</li>))}
             </ol>
-
         </>
     );
 }

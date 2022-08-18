@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Participant} from "./Participant";
+import {NewParticipant, Participant} from "./Participant";
 import axios from "axios";
 
 export default function useParticipants() {
@@ -13,5 +13,13 @@ export default function useParticipants() {
             .then(response => response.data)
             .then(setParticipants)
     }
-    return {participants}
+
+    const addParticipant = (name: string) => {
+        const newParticipant: NewParticipant = {name}
+        return axios.post("participants", newParticipant)
+            .then(getAllParticipants)
+    }
+
+    return {participants, addParticipant}
+
 }
