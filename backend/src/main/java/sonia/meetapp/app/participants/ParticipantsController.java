@@ -1,8 +1,8 @@
 package sonia.meetapp.app.participants;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +20,16 @@ public class ParticipantsController {
     public List<Participant> getAllParticipants() {
 
         return participantsService.getAllParticipants();
+    }
+
+    @PostMapping()
+    public ResponseEntity<Participant> addAnimal(
+            @RequestBody String nameOfParticipant) {
+
+        Participant createdParticipant = participantsService.addParticipant(nameOfParticipant);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdParticipant);
+
     }
 }
