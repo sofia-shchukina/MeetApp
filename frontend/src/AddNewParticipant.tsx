@@ -2,6 +2,7 @@ import {FormEvent, useState} from "react";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import './AddNewParticipant.css';
+import {toast} from "react-toastify";
 
 export default function AddNewParticipant(props:
                                               {
@@ -13,8 +14,17 @@ export default function AddNewParticipant(props:
         event.preventDefault();
         if (name === "") return;
         props.addParticipant(name)
+            .catch((error) => {
+                notify("Your name was not saved, please contact meetup host" + error.message)
+            })
         setName("")
     }
+
+    const notify = (message: string) => {
+        toast.error(message, {
+            position: toast.POSITION.TOP_LEFT
+        });
+    };
     return (
         <form onSubmit={onNameSubmit}>
             <label>What is your name on the nametag? </label>
