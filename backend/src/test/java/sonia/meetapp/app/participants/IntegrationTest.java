@@ -19,7 +19,6 @@ class IntegrationTest {
     @Autowired
     MockMvc mockMvc;
 
-
     @DirtiesContext
     @Test
     void getAllParticipants() throws Exception {

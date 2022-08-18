@@ -16,8 +16,6 @@ public class ParticipantsController {
         this.participantsService = participantsService;
     }
 
-
-
     @GetMapping()
     public List<Participant> getAllParticipants() {
 

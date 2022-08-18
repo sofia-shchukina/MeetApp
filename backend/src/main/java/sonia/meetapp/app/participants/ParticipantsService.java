@@ -13,10 +13,8 @@ public class ParticipantsService {
         this.participantsRepo = participantsRepo;
     }
 
-
     public List<Participant> getAllParticipants() {
 
         return participantsRepo.findAll();
     }
-
 }

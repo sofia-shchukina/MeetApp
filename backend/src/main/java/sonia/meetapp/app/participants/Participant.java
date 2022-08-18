@@ -1,5 +1,4 @@
 package sonia.meetapp.app.participants;
-
 import lombok.Data;
 
 @Data
@@ -11,6 +10,4 @@ public class Participant {
         this.name = name;
         this.id = id;
     }
-
-
 }
