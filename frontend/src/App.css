@@ -1,0 +1,28 @@
+:root {
+    --dark-green: #374a26;
+    --brown: #a56432;
+    --orange: #db862c;
+    --beige: #e7d5c3;
+    --yellow: #efba66;
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--beige);
+}
+
+h1 {
+    color: var(--brown);
+    text-align: center;
+    margin-top: 5vh;
+}
+
+header {
+    margin: -20px;
+    height: 10vh;
+    background-color: var(--brown);
+    color: var(--white);
+    text-align: center;
+    padding-top: 7vh;
+    font-size: 4vh;
+}
