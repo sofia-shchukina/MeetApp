@@ -16,10 +16,6 @@ public class ParticipantsController {
         this.participantsService = participantsService;
     }
 
-    @GetMapping("/hello")
-    String sayHello() {
-        return "Hello";
-    }
 
 
     @GetMapping()

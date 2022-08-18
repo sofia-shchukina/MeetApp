@@ -1,20 +1,16 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import axios from "axios";
+import useParticipants from "./useParticipants";
+import ParticipantsList from "./ParticipantsList";
 
 
 export default function App() {
 
-    const [message, setMessage] = useState();
-
-
- 
-    axios.get("/participants/hello")
-        .then(response => response.data)
-        .then(setMessage)
+    const participantsHook = useParticipants()
 
     return (<>
-            <h1>{message}</h1>
+            <h1>Meetup Registration</h1>
+            <ParticipantsList participants={participantsHook.participants}/>
         </>
     );
 
