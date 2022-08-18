@@ -9,7 +9,8 @@ export default function App() {
     const participantsHook = useParticipants()
 
     return (<>
-            <h1>Meetup Registration</h1>
+            <header>Speed-friending App</header>
+            <h1>Registration</h1>
             <ParticipantsList participants={participantsHook.participants}/>
         </>
     );
