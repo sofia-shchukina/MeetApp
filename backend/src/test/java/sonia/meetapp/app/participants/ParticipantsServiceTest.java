@@ -13,7 +13,7 @@ class ParticipantsServiceTest {
 
     ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
     Utility utility = mock(Utility.class);
-    ParticipantsService participantService = new ParticipantsService(participantsRepo, utility);
+    ParticipantsService participantsService = new ParticipantsService(participantsRepo, utility);
 
     @Test
     void getAllParticipants() {
@@ -24,7 +24,7 @@ class ParticipantsServiceTest {
         );
 
         when(participantsRepo.findAll()).thenReturn(participants);
-        List<Participant> actualResult = participantService.getAllParticipants();
+        List<Participant> actualResult = participantsService.getAllParticipants();
         List<Participant> expectedResult = List.of(
                 new Participant("Alex", "12"),
                 new Participant("Marina", "333"),
@@ -45,9 +45,18 @@ class ParticipantsServiceTest {
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
         when(utility.createIdAsString()).thenReturn(id);
 
-        Participant actualResult = participantService.addParticipant(newParticipant);
+        Participant actualResult = participantsService.addParticipant(newParticipant);
         verify(participantsRepo).save(testParticipant);
         Assertions.assertEquals(testParticipant, actualResult);
+    }
+
+    @Test
+    void deleteParticipant() {
+        Participant testParticipant = new Participant("Daria", "54321");
+        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(true);
+        doNothing().when(participantsRepo).deleteById(testParticipant.getId());
+        participantsService.deleteParticipant(testParticipant.getId());
+        verify(participantsRepo).deleteById(testParticipant.getId());
     }
 }
 

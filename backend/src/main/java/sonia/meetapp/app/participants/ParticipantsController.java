@@ -31,4 +31,14 @@ public class ParticipantsController {
                 .status(HttpStatus.CREATED)
                 .body(createdParticipant);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable String id) {
+
+        if (participantsService.deleteParticipant(id)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
 }

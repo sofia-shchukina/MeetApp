@@ -24,4 +24,12 @@ public class ParticipantsService {
         Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString());
         return participantsRepo.save(participant);
     }
+
+    public boolean deleteParticipant(String id) {
+        if (participantsRepo.existsById(id)) {
+            participantsRepo.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }
