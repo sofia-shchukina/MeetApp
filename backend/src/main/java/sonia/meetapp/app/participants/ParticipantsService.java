@@ -16,7 +16,6 @@ public class ParticipantsService {
     }
 
     public List<Participant> getAllParticipants() {
-
         return participantsRepo.findAll();
     }
 

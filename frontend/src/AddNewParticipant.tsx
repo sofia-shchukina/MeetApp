@@ -2,7 +2,7 @@ import {FormEvent, useState} from "react";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import './AddNewParticipant.css';
-import {toast, ToastContainer} from "react-toastify";
+import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -22,14 +22,11 @@ export default function AddNewParticipant(props:
         }
     }
     return (
-        <>
             <form onSubmit={onNameSubmit}>
                 <label>What is your name on the nametag? </label>
                 <input value={name}
                        onChange={event => setName(event.target.value)}/>
                 <Button type="submit" id="btn" variant="contained" endIcon={<SendIcon/>}>save</Button>
             </form>
-            <ToastContainer className="toast" position="top-center" style={{width: "150px"}}/>
-        </>
     );
 }

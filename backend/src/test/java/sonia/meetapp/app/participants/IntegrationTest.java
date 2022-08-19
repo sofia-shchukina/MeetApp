@@ -24,14 +24,12 @@ class IntegrationTest {
 
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     ObjectMapper objectMapper;
 
     @DirtiesContext
     @Test
     void getAllParticipants() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -42,7 +40,6 @@ class IntegrationTest {
     @DirtiesContext
     @Test
     void addParticipant() throws Exception {
-
         MvcResult result = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
@@ -58,7 +55,6 @@ class IntegrationTest {
     @DirtiesContext
     @Test
     void deleteParticipant() throws Exception {
-
         String result = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
@@ -86,10 +82,8 @@ class IntegrationTest {
     @DirtiesContext
     @Test
     void deleteParticipantDoesNotExist() throws Exception {
-
         String id = "111";
         mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
                 .andExpect(status().is(404));
     }
-
 }

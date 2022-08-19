@@ -22,7 +22,6 @@ class ParticipantsServiceTest {
                 new Participant("Marina", "333"),
                 new Participant("Ivan", "2222")
         );
-
         when(participantsRepo.findAll()).thenReturn(participants);
         List<Participant> actualResult = participantsService.getAllParticipants();
         List<Participant> expectedResult = List.of(
@@ -35,16 +34,13 @@ class ParticipantsServiceTest {
 
     @Test
     void addParticipant() {
-
         String participantName = "Guillermo";
         String id = "123";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
         Participant testParticipant = new Participant(participantName, id);
-
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
         when(utility.createIdAsString()).thenReturn(id);
-
         Participant actualResult = participantsService.addParticipant(newParticipant);
         verify(participantsRepo).save(testParticipant);
         Assertions.assertEquals(testParticipant, actualResult);

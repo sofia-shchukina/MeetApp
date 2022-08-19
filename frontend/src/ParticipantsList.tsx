@@ -2,7 +2,6 @@ import EachParticipant from "./EachParticipant";
 import {Participant} from "./Participant";
 import "./ParticipantsList.css"
 
-
 export default function ParticipantsList(props:
                                              {
                                                  participants: Participant[],

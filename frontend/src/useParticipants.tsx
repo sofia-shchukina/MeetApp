@@ -20,6 +20,7 @@ export default function useParticipants() {
         return axios.post("participants", newParticipant)
             .then(getAllParticipants)
     }
+
     const deleteParticipant = (id: string) => {
         return axios.delete("participants/" + id)
             .then(getAllParticipants)
@@ -28,11 +29,10 @@ export default function useParticipants() {
                     onErrorFunction(error)
                 })
     }
+
     const onErrorFunction = (error: Error) => {
-        toast.error(error.message, {
-                position: toast.POSITION.TOP_LEFT
-            }
-        )
+        toast.error(error.message)
     }
+
     return {participants, addParticipant, deleteParticipant}
 }
