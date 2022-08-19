@@ -13,7 +13,8 @@ export default function App() {
             <header>Speed-friending App</header>
             <h1>Registration</h1>
             <AddNewParticipant addParticipant={participantsHook.addParticipant}/>
-            <ParticipantsList participants={participantsHook.participants}/>
+            <ParticipantsList participants={participantsHook.participants}
+                              deleteParticipant={participantsHook.deleteParticipant}/>
         </>
     );
 

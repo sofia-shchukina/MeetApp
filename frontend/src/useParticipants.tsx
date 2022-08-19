@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {NewParticipant, Participant} from "./Participant";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
@@ -19,7 +20,19 @@ export default function useParticipants() {
         return axios.post("participants", newParticipant)
             .then(getAllParticipants)
     }
-
-    return {participants, addParticipant}
-
+    const deleteParticipant = (id: string) => {
+        return axios.delete("participants/" + id)
+            .then(getAllParticipants)
+            .catch(
+                error => {
+                    onErrorFunction(error)
+                })
+    }
+    const onErrorFunction = (error: Error) => {
+        toast.error(error.message, {
+                position: toast.POSITION.TOP_LEFT
+            }
+        )
+    }
+    return {participants, addParticipant, deleteParticipant}
 }
