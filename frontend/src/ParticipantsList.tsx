@@ -1,9 +1,11 @@
+import EachParticipant from "./EachParticipant";
 import {Participant} from "./Participant";
 import "./ParticipantsList.css"
 
 export default function ParticipantsList(props:
                                              {
                                                  participants: Participant[],
+                                                 deleteParticipant: (id: string) => Promise<void>,
                                              }) {
 
     return (
@@ -11,7 +13,8 @@ export default function ParticipantsList(props:
             <h2>List of participants</h2>
             <ol>
                 {props.participants.map(participant =>
-                    (<li key={participant.id}>{participant.name}</li>))}
+                    <EachParticipant key={participant.id} participant={participant}
+                                     deleteParticipant={props.deleteParticipant}/>)}
             </ol>
         </div>
     );

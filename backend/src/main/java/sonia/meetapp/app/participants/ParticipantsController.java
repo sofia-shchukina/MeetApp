@@ -18,17 +18,22 @@ public class ParticipantsController {
 
     @GetMapping()
     public List<Participant> getAllParticipants() {
-
         return participantsService.getAllParticipants();
     }
 
     @PostMapping()
     public ResponseEntity<Participant> addParticipant(
             @RequestBody NewParticipant newParticipant) {
-
         Participant createdParticipant = participantsService.addParticipant(newParticipant);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdParticipant);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable String id) {
+        participantsService.deleteParticipant(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 }

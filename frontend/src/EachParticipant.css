@@ -1,0 +1,28 @@
+#dltbtn {
+    width: 20vw;
+    background-color: var(--brown);
+    border-color: var(--brown);
+    color: var(--white);
+    font-size: 10px;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: flex;
+}
+
+#deleteicon {
+    color: var(--white);
+    width: 15px;
+}
+
+#nameAndButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2px;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.nameStyle {
+    font-size: 20px;
+}
