@@ -34,6 +34,15 @@ public class ParticipantsController {
     public ResponseEntity<Void> deleteParticipant(@PathVariable String id) {
         participantsService.deleteParticipant(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+    @PutMapping("/update{id}")
+    public ResponseEntity<Participant> editParticipant(
+            @PathVariable String id,
+            @RequestBody NewParticipant editedNewParticipant) {
+        Participant updatedParticipant = participantsService.editParticipant(id, editedNewParticipant);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedParticipant);
     }
 }
