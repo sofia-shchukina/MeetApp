@@ -36,7 +36,7 @@ public class ParticipantsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/update{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<Participant> editParticipant(
             @PathVariable String id,
             @RequestBody NewParticipant editedNewParticipant) {

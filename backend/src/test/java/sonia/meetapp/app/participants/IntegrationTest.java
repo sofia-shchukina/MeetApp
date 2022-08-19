@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,5 +84,32 @@ class IntegrationTest {
         String id = "111";
         mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
                 .andExpect(status().is(404));
+    }
+
+    @DirtiesContext
+    @Test
+    void editParticipant() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mike"}
+                                 """)
+                )
+                .andExpect(status().is(201));
+
+        mockMvc.perform(put("/participants/edit/" + "123")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Nike"}
+                                 """)
+                )
+                .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [{"name":"Nike", "id": "123"}]
+                          """));
     }
 }
