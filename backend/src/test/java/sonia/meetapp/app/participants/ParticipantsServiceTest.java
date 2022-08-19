@@ -2,6 +2,8 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -59,9 +61,13 @@ class ParticipantsServiceTest {
     @Test
     void deleteParticipantDoesNotExistTest() {
         Participant testParticipant = new Participant("Daria", "54321");
-        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(false);
-        doNothing().when(participantsRepo).deleteById(testParticipant.getId());
-        participantsService.deleteParticipant(testParticipant.getId());
-        verify(participantsRepo, times(0)).deleteById(testParticipant.getId());
+        when(participantsRepo.existsById(testParticipant.getId())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id"));
+        String id = testParticipant.getId();
+        try {
+            participantsService.deleteParticipant(id);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (ResponseStatusException e) {
+
+        }
     }
 }

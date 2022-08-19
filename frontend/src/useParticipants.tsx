@@ -26,12 +26,8 @@ export default function useParticipants() {
             .then(getAllParticipants)
             .catch(
                 error => {
-                    onErrorFunction(error)
+                    toast.error(error.message)
                 })
-    }
-
-    const onErrorFunction = (error: Error) => {
-        toast.error(error.message)
     }
 
     return {participants, addParticipant, deleteParticipant}

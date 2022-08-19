@@ -1,6 +1,8 @@
 package sonia.meetapp.app.participants;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,11 +26,11 @@ public class ParticipantsService {
         return participantsRepo.save(participant);
     }
 
-    public boolean deleteParticipant(String id) {
+    public void deleteParticipant(String id) {
         if (participantsRepo.existsById(id)) {
             participantsRepo.deleteById(id);
-            return true;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
         }
-        return false;
     }
 }
