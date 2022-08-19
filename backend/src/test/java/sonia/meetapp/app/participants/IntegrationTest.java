@@ -82,4 +82,14 @@ class IntegrationTest {
                         []
                         """));
     }
+
+    @DirtiesContext
+    @Test
+    void deleteParticipantDoesNotExist() throws Exception {
+
+        String id = "111";
+        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
+                .andExpect(status().is(404));
+    }
+
 }

@@ -58,5 +58,14 @@ class ParticipantsServiceTest {
         participantsService.deleteParticipant(testParticipant.getId());
         verify(participantsRepo).deleteById(testParticipant.getId());
     }
-}
 
+
+    @Test
+    void deleteParticipantDoesNotExistTest() {
+        Participant testParticipant = new Participant("Daria", "54321");
+        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(false);
+        doNothing().when(participantsRepo).deleteById(testParticipant.getId());
+        participantsService.deleteParticipant(testParticipant.getId());
+        verify(participantsRepo, times(0)).deleteById(testParticipant.getId());
+    }
+}
