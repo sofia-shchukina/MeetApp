@@ -1,0 +1,13 @@
+#dltbtn {
+    height: 3vh;
+    background-color: var(--brown);
+    border-color: var(--brown);
+}
+
+#deleteicon {
+    color: var(--white);
+    height: 2vh;
+    align-self: center;
+}
+
+#
