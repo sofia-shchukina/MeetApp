@@ -8,10 +8,11 @@ import java.util.List;
 @Service
 public class ParticipantsService {
     private final ParticipantsRepo participantsRepo;
+    private final Utility utility;
 
-    public ParticipantsService(ParticipantsRepo participantsRepo) {
-
+    public ParticipantsService(ParticipantsRepo participantsRepo, Utility utility) {
         this.participantsRepo = participantsRepo;
+        this.utility = utility;
     }
 
     public List<Participant> getAllParticipants() {
@@ -20,6 +21,7 @@ public class ParticipantsService {
     }
 
     public Participant addParticipant(NewParticipant newParticipant) {
-        return participantsRepo.save(newParticipant.withRandomID(newParticipant));
+        Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString());
+        return participantsRepo.save(participant);
     }
 }

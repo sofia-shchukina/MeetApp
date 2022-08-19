@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ParticipantsServiceTest {
+
+
+    ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
+    Utility utility = mock(Utility.class);
+    ParticipantsService participantService = new ParticipantsService(participantsRepo, utility);
 
     @Test
     void getAllParticipants() {
@@ -19,10 +22,8 @@ class ParticipantsServiceTest {
                 new Participant("Marina", "333"),
                 new Participant("Ivan", "2222")
         );
-        ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
-        when(participantsRepo.findAll()).thenReturn(participants);
-        ParticipantsService participantService = new ParticipantsService(participantsRepo);
 
+        when(participantsRepo.findAll()).thenReturn(participants);
         List<Participant> actualResult = participantService.getAllParticipants();
         List<Participant> expectedResult = List.of(
                 new Participant("Alex", "12"),
@@ -41,13 +42,12 @@ class ParticipantsServiceTest {
         newParticipant.setName(participantName);
         Participant testParticipant = new Participant(participantName, id);
 
-        ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
-        when(participantsRepo.save(any(Participant.class))).thenReturn(testParticipant);
-        ParticipantsService participantsService = new ParticipantsService(participantsRepo);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+        when(utility.createIdAsString()).thenReturn(id);
 
-        Participant actualResult = participantsService.addParticipant(newParticipant);
-
+        Participant actualResult = participantService.addParticipant(newParticipant);
+        verify(participantsRepo).save(testParticipant);
         Assertions.assertEquals(testParticipant, actualResult);
-
     }
 }
+
