@@ -13,7 +13,7 @@ export default function EachParticipant(props:
             <div id="nameAndButton">
                 <div className="nameStyle"> {props.participant.name} </div>
                 <Button variant="outlined" id="dltbtn" startIcon={<DeleteIcon id="deleteicon"/>}
-                        onClick={() => props.deleteParticipant(props.participant.id)}/>
+                        onClick={() => props.deleteParticipant(props.participant.id)}>Delete</Button>
             </div>
         </li>
     )
