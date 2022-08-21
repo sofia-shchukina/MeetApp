@@ -4,6 +4,8 @@ import {toast} from "react-toastify";
 import {useNavigate, useParams} from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import "./ParticipantDetails.css"
 
 export default function ParticipantDetails(props: {
     participants: Participant[],
@@ -29,17 +31,17 @@ export default function ParticipantDetails(props: {
     }
 
     return (
-        <form onSubmit={onNameSubmit}>
-            <label> How would you like to change your name? Your previous version was <>{participantToEdit.name}</>
+        <form id="nameEditForm" onSubmit={onNameSubmit}>
+            <label> How would you like to change your name?
+                Your previous version was <>{participantToEdit.name}</>
             </label>
-            <input value={editedName}
+            <input id="detailsInput" value={editedName}
                    onChange={event => setEditedName(event.target.value)}/>
-            <Button type="submit" id="btn" variant="contained" endIcon={<SendIcon/>}>save</Button>
-            <Button type="submit" id="close" variant="contained"
+            <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
+            <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
                     onClick={() => {
                         navigate("/")
-                    }}>go back</Button>
+                    }}>back</Button>
         </form>
     );
-
 }

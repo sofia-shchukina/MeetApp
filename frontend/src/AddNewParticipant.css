@@ -5,7 +5,7 @@ input {
     border-radius: 5px;
 }
 
-#btn {
+#saveButton {
     height: 4vh;
     background-color: var(--brown);
 }

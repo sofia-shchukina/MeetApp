@@ -1,4 +1,4 @@
-#deletebtn {
+#personalButton {
     width: 20vw;
     background-color: var(--brown);
     border-color: var(--brown);
@@ -9,18 +9,26 @@
     display: flex;
 }
 
-#deleteicon {
+#deleteIcon {
     color: var(--white);
     width: 15px;
 }
 
-#nameAndButton {
+#nameAndButtons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-top: 2px;
     align-items: center;
     margin-right: 10px;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5px;
+    flex-shrink: 2;
 }
 
 .nameStyle {

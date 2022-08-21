@@ -26,7 +26,7 @@ export default function AddNewParticipant(props:
                 <label>What is your name on the nametag? </label>
                 <input value={name}
                        onChange={event => setName(event.target.value)}/>
-                <Button type="submit" id="btn" variant="contained" endIcon={<SendIcon/>}>save</Button>
+                <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             </form>
     );
 }
