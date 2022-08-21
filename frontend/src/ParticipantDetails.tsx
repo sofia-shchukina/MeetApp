@@ -18,7 +18,7 @@ export default function ParticipantDetails(props: {
 
     if (!participantToEdit) {
         return <>
-            Animal not found</>
+            Participant not found</>
     }
     const onNameSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
