@@ -11,7 +11,6 @@ import static org.mockito.Mockito.*;
 
 class ParticipantsServiceTest {
 
-
     ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
     Utility utility = mock(Utility.class);
     ParticipantsService participantsService = new ParticipantsService(participantsRepo, utility);
@@ -66,7 +65,6 @@ class ParticipantsServiceTest {
             participantsService.deleteParticipant(id);
             Assertions.fail("Expected exception was not thrown");
         } catch (ResponseStatusException ignored) {
-
         }
     }
 
@@ -99,8 +97,6 @@ class ParticipantsServiceTest {
             participantsService.editParticipant(id, newParticipant);
             Assertions.fail("Expected exception was not thrown");
         } catch (ResponseStatusException ignored) {
-
         }
     }
 }
-

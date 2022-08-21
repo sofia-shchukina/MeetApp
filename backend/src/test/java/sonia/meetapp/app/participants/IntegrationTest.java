@@ -67,7 +67,6 @@ class IntegrationTest {
                 )
                 .andExpect(status().is(201));
 
-
         mockMvc.perform(delete("/participants/" + "123"))
                 .andExpect(status().is(204));
 

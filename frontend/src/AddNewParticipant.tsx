@@ -21,6 +21,7 @@ export default function AddNewParticipant(props:
                 toast.error("Your name is not saved, please contact meetup host"))
         }
     }
+
     return (
             <form onSubmit={onNameSubmit}>
                 <label>What is your name on the nametag? </label>
