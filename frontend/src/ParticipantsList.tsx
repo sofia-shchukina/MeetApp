@@ -13,8 +13,10 @@ export default function ParticipantsList(props:
             <h2>List of participants</h2>
             <ol>
                 {props.participants.map(participant =>
-                    <EachParticipant key={participant.id} participant={participant}
-                                     deleteParticipant={props.deleteParticipant}/>)}
+                    <EachParticipant key={participant.id}
+                                     participant={participant}
+                                     deleteParticipant={props.deleteParticipant}
+                    />)}
             </ol>
         </div>
     );
