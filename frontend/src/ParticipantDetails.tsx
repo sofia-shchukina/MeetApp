@@ -30,9 +30,8 @@ export default function ParticipantDetails(props: {
                 setEditedName("");
                 setErrorMessage("")
             })
-                .catch(() => {
-                    setErrorMessage("Unfortunately somebody already uses this name," +
-                        " please try again. Hint: use also a first letter of your surname.")
+                .catch((error) => {
+                    setErrorMessage(error.response.data.message)
                 });
         }
     }

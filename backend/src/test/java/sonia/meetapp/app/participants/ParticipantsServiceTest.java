@@ -2,7 +2,8 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.server.ResponseStatusException;
+import sonia.meetapp.exceptions.NameIsNotUniqueException;
+import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ class ParticipantsServiceTest {
         try {
             participantsService.addParticipant(newParticipant);
             Assertions.fail("Expected exception was not thrown");
-        } catch (IllegalArgumentException ignored) {
+        } catch (NameIsNotUniqueException ignored) {
         }
     }
 
@@ -85,7 +86,7 @@ class ParticipantsServiceTest {
         try {
             participantsService.deleteParticipant(id);
             Assertions.fail("Expected exception was not thrown");
-        } catch (ResponseStatusException ignored) {
+        } catch (ParticipantNotFoundException ignored) {
         }
     }
 
@@ -97,12 +98,12 @@ class ParticipantsServiceTest {
         Participant testParticipant = new Participant(newParticipant.getName(), id);
 
         when(participantsRepo.existsById(id)).thenReturn(true);
-        doNothing().when(participantsRepo).deleteById(id);
+
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
 
 
         Participant actualResult = participantsService.editParticipant(id, newParticipant);
-        verify(participantsRepo).deleteById(id);
+
         verify(participantsRepo).save(testParticipant);
         Assertions.assertEquals(testParticipant, actualResult);
     }
@@ -127,7 +128,7 @@ class ParticipantsServiceTest {
         try {
             participantsService.editParticipant(id, newParticipant);
             Assertions.fail("Expected exception was not thrown");
-        } catch (IllegalArgumentException ignored) {
+        } catch (NameIsNotUniqueException ignored) {
         }
     }
 
@@ -142,7 +143,7 @@ class ParticipantsServiceTest {
         try {
             participantsService.editParticipant(id, newParticipant);
             Assertions.fail("Expected exception was not thrown");
-        } catch (ResponseStatusException ignored) {
+        } catch (ParticipantNotFoundException ignored) {
         }
     }
 

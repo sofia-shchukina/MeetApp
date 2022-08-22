@@ -6,6 +6,7 @@ import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
 import java.util.List;
+import java.util.Locale;
 
 
 @Service
@@ -57,7 +58,7 @@ public class ParticipantsService {
         List<Participant> allParticipants = participantsRepo.findAll();
 
         for (Participant allParticipant : allParticipants) {
-            if (allParticipant.getName().equals(name)) {
+            if (allParticipant.getName().toLowerCase(Locale.ROOT).equals(name.toLowerCase())) {
                 return false;
             }
         }
