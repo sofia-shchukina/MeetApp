@@ -18,7 +18,7 @@ export default function AddNewParticipant(props:
             toast.error("Your name should not be empty, try again or contact meetup host")
         } else {
             props.addParticipant(name).then(() => setName("")).catch(() =>
-                toast.error("Your name is not saved, please contact meetup host"))
+                toast.error("Your name has to be unique, please try again"))
         }
     }
 

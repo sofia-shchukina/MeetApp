@@ -23,7 +23,11 @@ public class ParticipantsService {
 
     public Participant addParticipant(NewParticipant newParticipant) {
         Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString());
-        return participantsRepo.save(participant);
+        if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant))) {
+            return participantsRepo.save(participant);
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void deleteParticipant(String id) {
@@ -35,11 +39,27 @@ public class ParticipantsService {
     }
 
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
-        if (participantsRepo.existsById(id)) {
-            participantsRepo.deleteById(id);
-            return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
+        if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
+            if (participantsRepo.existsById(id)) {
+                participantsRepo.deleteById(id);
+                return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
+            }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
+            throw new IllegalArgumentException();
         }
+    }
+
+    public Boolean thisNameIsUnique(NewParticipant newParticipant) {
+        String name = newParticipant.getName();
+        List<Participant> allParticipants = participantsRepo.findAll();
+
+        for (Participant allParticipant : allParticipants) {
+            if (allParticipant.getName().equals(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
