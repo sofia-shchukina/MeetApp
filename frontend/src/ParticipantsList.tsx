@@ -10,7 +10,7 @@ export default function ParticipantsList(props:
 
     return (
         <div id="list">
-            <h2>List of participants</h2>
+            <h3>List of participants</h3>
             <ol>
                 {props.participants.map(participant =>
                     <EachParticipant key={participant.id}

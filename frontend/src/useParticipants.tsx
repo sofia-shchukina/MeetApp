@@ -34,11 +34,9 @@ export default function useParticipants() {
         const newParticipant: NewParticipant = {name: editedName}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
             .then(getAllParticipants)
-            .catch(() => {
-                    toast.error("Your name has to be unique, please try again")
+
                 }
-            )
-    }
+
 
     return {participants, addParticipant, deleteParticipant, editParticipant}
 }

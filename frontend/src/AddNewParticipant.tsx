@@ -10,6 +10,7 @@ export default function AddNewParticipant(props:
                                               {
                                                   addParticipant: (name: string) => Promise<void>,
                                               }) {
+
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState("");
     const onNameSubmit = (event: FormEvent<HTMLFormElement>) => {

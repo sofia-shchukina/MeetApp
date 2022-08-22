@@ -11,6 +11,7 @@ export default function ParticipantDetails(props: {
     participants: Participant[],
     editParticipant: (participantToEdit: Participant, editedName: string) => Promise<void>,
 }) {
+    const [errorMessage, setErrorMessage] = useState("");
     const {id} = useParams();
     const participantToEdit = props.participants.find(item => item.id === id);
     const [editedName, setEditedName] = useState("");
@@ -25,8 +26,14 @@ export default function ParticipantDetails(props: {
         if (!editedName) {
             toast.error("Your name should not be empty, try again or contact meetup host")
         } else {
-            props.editParticipant(participantToEdit, editedName).then(() => setEditedName("")).catch(() =>
-                toast.error("Your name is not saved, please contact meetup host"))
+            props.editParticipant(participantToEdit, editedName).then(() => {
+                setEditedName("");
+                setErrorMessage("")
+            })
+                .catch(() => {
+                    setErrorMessage("Unfortunately somebody already uses this name," +
+                        " please try again. Hint: use also a first letter of your surname.")
+                });
         }
     }
 
@@ -37,6 +44,7 @@ export default function ParticipantDetails(props: {
             </label>
             <input id="detailsInput" value={editedName}
                    onChange={event => setEditedName(event.target.value)}/>
+            <div id="errorMessage"> {errorMessage}</div>
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
                     onClick={() => {
