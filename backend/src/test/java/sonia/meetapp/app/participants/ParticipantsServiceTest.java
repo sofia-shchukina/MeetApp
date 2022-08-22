@@ -99,4 +99,30 @@ class ParticipantsServiceTest {
         } catch (ResponseStatusException ignored) {
         }
     }
+
+    @Test
+    void thisNameIsUnique() {
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("George");
+
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("Daniel", "1234");
+        when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
+
+        Boolean actual = participantsService.thisNameIsUnique(newParticipant);
+        Assertions.assertTrue(actual);
+    }
+
+    @Test
+    void thisNameIsUniqueFalse() {
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("George");
+
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("George", "1234");
+        when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
+
+        Boolean actual = participantsService.thisNameIsUnique(newParticipant);
+        Assertions.assertFalse(actual);
+    }
 }
