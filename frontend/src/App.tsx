@@ -14,9 +14,9 @@ export default function App() {
 
     return (<>
             <HashRouter>
-                <header>Speed-friending App</header>
+                <header>Registration</header>
                 <main>
-                    <h1>Registration</h1>
+
                     <Routes>
                         <Route path={"/"} element={
                             <>

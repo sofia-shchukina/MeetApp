@@ -23,7 +23,7 @@ export default function AddNewParticipant(props:
     }
 
     return (
-            <form onSubmit={onNameSubmit}>
+            <form id="registrationForm" onSubmit={onNameSubmit}>
                 <label>What is your name on the nametag? </label>
                 <input value={name}
                        onChange={event => setName(event.target.value)}/>
