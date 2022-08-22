@@ -2,7 +2,6 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ParticipantsServiceTest {
-
 
     ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
     Utility utility = mock(Utility.class);
@@ -59,15 +57,46 @@ class ParticipantsServiceTest {
 
 
     @Test
-    void deleteParticipantDoesNotExistTest() {
+    void deleteParticipantDoesNotExist() {
         Participant testParticipant = new Participant("Daria", "54321");
-        when(participantsRepo.existsById(testParticipant.getId())).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id"));
+        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(false);
         String id = testParticipant.getId();
         try {
             participantsService.deleteParticipant(id);
             Assertions.fail("Expected exception was not thrown");
-        } catch (ResponseStatusException e) {
+        } catch (ResponseStatusException ignored) {
+        }
+    }
 
+    @Test
+    void editParticipant() {
+        String id = "123";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("George");
+        Participant testParticipant = new Participant(newParticipant.getName(), id);
+
+        when(participantsRepo.existsById(id)).thenReturn(true);
+        doNothing().when(participantsRepo).deleteById(id);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+
+        Participant actualResult = participantsService.editParticipant(id, newParticipant);
+        verify(participantsRepo).deleteById(id);
+        verify(participantsRepo).save(testParticipant);
+        Assertions.assertEquals(testParticipant, actualResult);
+    }
+
+    @Test
+    void editParticipantDoesNotExist() {
+        String id = "123";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("George");
+        Participant testParticipant = new Participant(newParticipant.getName(), id);
+
+        when(participantsRepo.existsById(id)).thenReturn(false);
+        try {
+            participantsService.editParticipant(id, newParticipant);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (ResponseStatusException ignored) {
         }
     }
 }

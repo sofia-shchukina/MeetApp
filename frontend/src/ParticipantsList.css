@@ -6,6 +6,6 @@ h2 {
 #list {
     border: solid 1px white;
     border-radius: 15px;
-    margin-top: 3vh;
+    margin: 3vh 3vw 1vh 3vw;
     background-color: white;
 }

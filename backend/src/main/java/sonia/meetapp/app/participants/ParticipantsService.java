@@ -33,4 +33,13 @@ public class ParticipantsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
         }
     }
+
+    public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
+        if (participantsRepo.existsById(id)) {
+            participantsRepo.deleteById(id);
+            return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
+        }
+    }
 }
