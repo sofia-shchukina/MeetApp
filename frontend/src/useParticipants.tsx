@@ -34,7 +34,6 @@ export default function useParticipants() {
         const newParticipant: NewParticipant = {name: editedName}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
             .then(getAllParticipants)
-
                 }
 
 

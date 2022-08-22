@@ -1,8 +1,9 @@
 package sonia.meetapp.app.participants;
 
-import org.springframework.http.HttpStatus;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import sonia.meetapp.exceptions.NameIsNotUniqueException;
+import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ParticipantsService {
         if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant))) {
             return participantsRepo.save(participant);
         } else {
-            throw new IllegalArgumentException();
+            throw new NameIsNotUniqueException();
         }
     }
 
@@ -34,20 +35,20 @@ public class ParticipantsService {
         if (participantsRepo.existsById(id)) {
             participantsRepo.deleteById(id);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
+            throw new ParticipantNotFoundException(id);
         }
     }
+
 
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
-                participantsRepo.deleteById(id);
                 return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
             } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no participant with this id");
+                throw new ParticipantNotFoundException(id);
             }
         } else {
-            throw new IllegalArgumentException();
+            throw new NameIsNotUniqueException();
         }
     }
 
