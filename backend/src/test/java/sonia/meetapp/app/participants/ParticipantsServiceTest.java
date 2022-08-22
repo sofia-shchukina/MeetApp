@@ -47,6 +47,27 @@ class ParticipantsServiceTest {
     }
 
     @Test
+    void addParticipantNotUniqueName() {
+        List<Participant> testList = List.of(
+                new Participant("Daniel", "1234"),
+                new Participant("Guillermo", "1"));
+
+        String participantName = "Guillermo";
+        String id = "123";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName(participantName);
+        Participant testParticipant = new Participant(participantName, id);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+        when(participantsRepo.findAll()).thenReturn(testList);
+        when(utility.createIdAsString()).thenReturn(id);
+        try {
+            participantsService.addParticipant(newParticipant);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    @Test
     void deleteParticipant() {
         Participant testParticipant = new Participant("Daria", "54321");
         when(participantsRepo.existsById(testParticipant.getId())).thenReturn(true);
@@ -79,10 +100,35 @@ class ParticipantsServiceTest {
         doNothing().when(participantsRepo).deleteById(id);
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
 
+
         Participant actualResult = participantsService.editParticipant(id, newParticipant);
         verify(participantsRepo).deleteById(id);
         verify(participantsRepo).save(testParticipant);
         Assertions.assertEquals(testParticipant, actualResult);
+    }
+
+    @Test
+    void editParticipantNotUnique() {
+        List<Participant> testList = List.of(
+                new Participant("Daniel", "1234"),
+                new Participant("George", "1"));
+
+
+        String id = "123";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("George");
+        Participant testParticipant = new Participant(newParticipant.getName(), id);
+
+        when(participantsRepo.findAll()).thenReturn(testList);
+        when(participantsRepo.existsById(id)).thenReturn(true);
+        doNothing().when(participantsRepo).deleteById(id);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+
+        try {
+            participantsService.editParticipant(id, newParticipant);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     @Test
