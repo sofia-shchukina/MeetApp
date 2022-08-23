@@ -43,7 +43,7 @@ export default function ParticipantDetails(props: {
             </label>
             <input id="detailsInput" value={editedName}
                    onChange={event => setEditedName(event.target.value)}/>
-            <div id="errorMessage"> {errorMessage}</div>
+            <div className="errorMessage"> {errorMessage}</div>
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
                     onClick={() => {

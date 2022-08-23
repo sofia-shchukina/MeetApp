@@ -34,7 +34,7 @@ export default function AddNewParticipant(props:
             <label>What is your name on the nametag? </label>
             <input value={name}
                    onChange={event => setName(event.target.value)}/>
-            <div> {errorMessage}</div>
+            <div className="errorMessage"> {errorMessage}</div>
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
         </form>
     );

@@ -45,4 +45,12 @@ public class ParticipantsController {
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);
     }
+
+    @PutMapping("/likes/")
+    public void addLikes(
+            @RequestBody Participant liker,
+            Participant[] likedPeople
+    ) {
+        participantsService.addLikes(liker, likedPeople);
+    }
 }

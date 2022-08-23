@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,5 +65,15 @@ public class ParticipantsService {
             }
         }
         return true;
+    }
+
+    public void addLikes(Participant liker, Participant[] likedPeople) {
+        List<Participant> likedPeopleArrayList = new ArrayList<>(Arrays.asList(likedPeople));
+        liker.setPeopleILike(likedPeopleArrayList);
+        if (participantsRepo.existsById(liker.getId())) {
+            participantsRepo.save(liker);
+        } else {
+            throw new ParticipantNotFoundException(liker.getId());
+        }
     }
 }

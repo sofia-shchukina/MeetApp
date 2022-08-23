@@ -111,4 +111,35 @@ class IntegrationTest {
                         [{"name":"Nike", "id": "123"}]
                           """));
     }
+
+    @DirtiesContext
+    @Test
+    void addLikes() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mike"}
+                                 """)
+                )
+                .andExpect(status().is(201));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [{"name":"Mike"}]
+                        """));
+
+
+        mockMvc.perform(put("/participants/likes/")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {{"name":"Mike", "id":"123"},
+                                [{"name":"Daniel", "id": "12"}, {"name":"Florian"}, "id":"13"]}
+                                 """)
+                )
+                .andExpect(status().isOk());
+
+    }
+
 }
