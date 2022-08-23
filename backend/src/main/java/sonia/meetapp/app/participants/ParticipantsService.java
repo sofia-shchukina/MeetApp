@@ -67,33 +67,27 @@ public class ParticipantsService {
         return true;
     }
 
-    public Participant addLikes(Participant[] likerAndLikedPeople) {
-        Participant liker = likerAndLikedPeople[0];
-        List<Participant> likedPeopleArrayList = new ArrayList<>(Arrays.asList(likerAndLikedPeople));
-        likedPeopleArrayList.remove(0);
-        List<String> ids = likedPeopleArrayList.stream().map(Participant::getId).
-                toList();
+    public Participant addLikes(Like like) {
+        String likerID = like.getLikerID();
+        List<String> likedPeopleIDsArrayList = new ArrayList<>(Arrays.asList(like.getLikedPeopleIDs()));
 
-        liker.setPeopleILike(ids);
+        Participant liker = participantsRepo.findById(likerID).orElseThrow(() -> new ParticipantNotFoundException(likerID));
+        liker.setPeopleILike(likedPeopleIDsArrayList);
 
-        if (participantsRepo.existsById(liker.getId())) {
-            for (Participant whoIsLiked : likedPeopleArrayList) {
 
-                if (participantsRepo.existsById(whoIsLiked.getId())) {
-
-                    if (whoIsLiked.getPeopleWhoLikeMe() != null) {
-                        whoIsLiked.getPeopleWhoLikeMe().add(liker.getId());
-                        participantsRepo.save(whoIsLiked);
-                    } else {
-                        whoIsLiked.setPeopleWhoLikeMe(new ArrayList<>(List.of(liker.getId())));
-                        participantsRepo.save(whoIsLiked);
-                    }
+        for (String whoIsLikedID : likedPeopleIDsArrayList) {
+            if (participantsRepo.existsById(whoIsLikedID)) {
+                Participant likedPerson = participantsRepo.findById(whoIsLikedID).orElseThrow(() -> new ParticipantNotFoundException(whoIsLikedID));
+                if (likedPerson.getPeopleWhoLikeMe() != null) {
+                    likedPerson.getPeopleWhoLikeMe().add(likerID);
+                } else {
+                    likedPerson.setPeopleWhoLikeMe(new ArrayList<>(List.of(likerID)));
                 }
+                participantsRepo.save(likedPerson);
             }
-            return participantsRepo.save(liker);
-        } else {
-            throw new ParticipantNotFoundException(liker.getId());
         }
+        return participantsRepo.save(liker);
+
     }
 }
 

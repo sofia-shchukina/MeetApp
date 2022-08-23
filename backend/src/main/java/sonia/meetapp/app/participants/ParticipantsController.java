@@ -49,9 +49,9 @@ public class ParticipantsController {
     @PutMapping("/likes/")
     public ResponseEntity<Participant> addLikes(
             @RequestBody
-            Participant[] likerAndLikedPeople
+            Like like
     ) {
-        Participant updatedParticipant = participantsService.addLikes(likerAndLikedPeople);
+        Participant updatedParticipant = participantsService.addLikes(like);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);

@@ -146,7 +146,8 @@ class IntegrationTest {
         mockMvc.perform(put("/participants/likes/")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                [{"name":"Mike", "id": "<ID>"}, {"name":"Mary", "id":"<ID2>"}]
+                                {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
+                                                             
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
                 )
