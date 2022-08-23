@@ -172,4 +172,12 @@ class ParticipantsServiceTest {
         Boolean actual = participantsService.thisNameIsUnique(newParticipant);
         Assertions.assertFalse(actual);
     }
+
+  /*  @Test
+    void addLikes() {
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("George", "1234");
+        Participant[] likerAndLikedPeople= {dummieParticipant1, dummieParticipant2};
+
+*/
 }

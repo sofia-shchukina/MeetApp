@@ -115,31 +115,54 @@ class IntegrationTest {
     @DirtiesContext
     @Test
     void addLikes() throws Exception {
-        given(utility.createIdAsString()).willReturn("123");
-        mockMvc.perform(post("/participants")
+
+        String saveResult = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike"}
                                  """)
                 )
-                .andExpect(status().is(201));
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                        [{"name":"Mike"}]
-                        """));
+        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
+        String id = saveResultParticipant.getId();
+
+        String saveResult2 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mary"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
+        String id2 = saveResultParticipant2.getId();
 
 
         mockMvc.perform(put("/participants/likes/")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {{"name":"Mike", "id":"123"},
-                                [{"name":"Daniel", "id": "12"}, {"name":"Florian"}, "id":"13"]}
-                                 """)
-                )
-                .andExpect(status().isOk());
+                                [{"name":"Mike", "id": "<ID>"}, {"name":"Mary", "id":"<ID2>"}]
+                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
+                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]},
+                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"]}
+                        ]
+                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
     }
 
 }

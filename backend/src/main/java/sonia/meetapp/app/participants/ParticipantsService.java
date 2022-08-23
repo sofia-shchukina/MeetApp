@@ -67,13 +67,34 @@ public class ParticipantsService {
         return true;
     }
 
-    public void addLikes(Participant liker, Participant[] likedPeople) {
-        List<Participant> likedPeopleArrayList = new ArrayList<>(Arrays.asList(likedPeople));
-        liker.setPeopleILike(likedPeopleArrayList);
+    public Participant addLikes(Participant[] likerAndLikedPeople) {
+        Participant liker = likerAndLikedPeople[0];
+        List<Participant> likedPeopleArrayList = new ArrayList<>(Arrays.asList(likerAndLikedPeople));
+        likedPeopleArrayList.remove(0);
+        List<String> ids = likedPeopleArrayList.stream().map(Participant::getId).
+                toList();
+
+        liker.setPeopleILike(ids);
+
         if (participantsRepo.existsById(liker.getId())) {
-            participantsRepo.save(liker);
+            for (Participant whoIsLiked : likedPeopleArrayList) {
+
+                if (participantsRepo.existsById(whoIsLiked.getId())) {
+
+                    if (whoIsLiked.getPeopleWhoLikeMe() != null) {
+                        whoIsLiked.getPeopleWhoLikeMe().add(liker.getId());
+                        participantsRepo.save(whoIsLiked);
+                    } else {
+                        whoIsLiked.setPeopleWhoLikeMe(new ArrayList<>(List.of(liker.getId())));
+                        participantsRepo.save(whoIsLiked);
+                    }
+                }
+            }
+            return participantsRepo.save(liker);
         } else {
             throw new ParticipantNotFoundException(liker.getId());
         }
     }
 }
+
+

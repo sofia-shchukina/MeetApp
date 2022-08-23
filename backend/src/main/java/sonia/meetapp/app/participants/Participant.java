@@ -9,8 +9,8 @@ public class Participant {
     private String name;
     private String id;
 
-    private List<Participant> peopleILike;
-    private List<Participant> peopleWhoLikeMe;
+    private List<String> peopleILike;
+    private List<String> peopleWhoLikeMe;
 
     public Participant(String name, String id) {
         this.name = name;

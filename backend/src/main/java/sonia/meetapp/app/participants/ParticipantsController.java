@@ -47,10 +47,13 @@ public class ParticipantsController {
     }
 
     @PutMapping("/likes/")
-    public void addLikes(
-            @RequestBody Participant liker,
-            Participant[] likedPeople
+    public ResponseEntity<Participant> addLikes(
+            @RequestBody
+            Participant[] likerAndLikedPeople
     ) {
-        participantsService.addLikes(liker, likedPeople);
+        Participant updatedParticipant = participantsService.addLikes(likerAndLikedPeople);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedParticipant);
     }
 }
