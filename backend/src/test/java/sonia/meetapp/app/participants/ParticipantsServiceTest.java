@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -173,11 +174,38 @@ class ParticipantsServiceTest {
         Assertions.assertFalse(actual);
     }
 
-  /*  @Test
+    @Test
     void addLikes() {
         Participant dummieParticipant1 = new Participant("Florian", "123");
         Participant dummieParticipant2 = new Participant("George", "1234");
-        Participant[] likerAndLikedPeople= {dummieParticipant1, dummieParticipant2};
+        Participant[] likerAndLikedPeople = {dummieParticipant1, dummieParticipant2};
 
-*/
+        Participant expected = new Participant("Florian", "123");
+        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
+
+        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(true);
+        when(participantsRepo.save(expected)).thenReturn(expected);
+
+        Participant actual = participantsService.addLikes(likerAndLikedPeople);
+        Assertions.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void addLikesDoesNotExist() {
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("George", "1234");
+        Participant[] likerAndLikedPeople = {dummieParticipant1, dummieParticipant2};
+
+        Participant expected = new Participant("Florian", "123");
+        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
+
+        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(false);
+
+        try {
+            participantsService.addLikes(likerAndLikedPeople);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (ParticipantNotFoundException ignored) {
+        }
+    }
 }
