@@ -34,12 +34,8 @@ export default function useParticipants() {
         const newParticipant: NewParticipant = {name: editedName}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
             .then(getAllParticipants)
-            .catch(
-                error => {
-                    toast.error(error.message)
                 }
-            )
-    }
+
 
     return {participants, addParticipant, deleteParticipant, editParticipant}
 }

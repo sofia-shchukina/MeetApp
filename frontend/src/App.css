@@ -13,18 +13,20 @@ body {
     padding: 0;
 }
 
-h1 {
+h2 {
     color: var(--brown);
     text-align: center;
     margin-top: 5vh;
 }
 
 header {
-
-    height: 10vh;
+    height: 15vh;
     background-color: var(--brown);
     color: var(--white);
     text-align: center;
-    padding-top: 7vh;
+    padding-top: 9vh;
+
+
     font-size: 4vh;
+    border-bottom-right-radius: 40px;
 }

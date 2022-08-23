@@ -20,14 +20,14 @@
     justify-content: space-between;
     margin-top: 2px;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 3vw;
 }
 
 #buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 5px;
+    gap: 3vw;
     flex-shrink: 2;
 }
 
