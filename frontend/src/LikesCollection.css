@@ -4,6 +4,7 @@
     gap: 1vh;
     align-items: center;
     margin-top: 3vh;
+
 }
 
 select {
@@ -18,4 +19,8 @@ select {
     display: flex;
     flex-direction: column;
     justify-items: flex-start;
+}
+
+#resultMessage {
+    text-align: center;
 }
