@@ -18,7 +18,7 @@ export default function App() {
             <HashRouter>
                 <header>Speed-Friending</header>
                 <main>
-                    <NavigationBar/>
+
                     <Routes>
                         <Route path={"/"} element={
                             <>
@@ -30,9 +30,11 @@ export default function App() {
                         <Route path={"/participants/edit/:id"}
                                element={<ParticipantDetails participants={participantsHook.participants}
                                                             editParticipant={participantsHook.editParticipant}/>}/>
-                        <Route path={"/participants/likes/"} element={<LikesCollection/>}/>
+                        <Route path={"/participants/likes/"}
+                               element={<LikesCollection sendLike={participantsHook.sendLike}
+                                                         participants={participantsHook.participants}/>}/>
                     </Routes>
-
+                    <NavigationBar/>
                 </main>
             </HashRouter>
             <ToastContainer className="toast" position="top-center" style={{width: "150px"}}/>

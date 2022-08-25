@@ -1,0 +1,21 @@
+#likesForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    align-items: center;
+    margin-top: 3vh;
+}
+
+select {
+    height: 3vh;
+    width: 70vw;
+    border-color: var(--brown);
+    margin-right: 1vw;
+    border-radius: 5px;
+}
+
+#checkboxes {
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-start;
+}

@@ -32,7 +32,7 @@ export default function AddNewParticipant(props:
     return (
         <form id="registrationForm" onSubmit={onNameSubmit}>
             <label>What is your name on the nametag? </label>
-            <input value={name}
+            <input className="registrationInput" value={name}
                    onChange={event => setName(event.target.value)}/>
             <div className="errorMessage"> {errorMessage}</div>
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
