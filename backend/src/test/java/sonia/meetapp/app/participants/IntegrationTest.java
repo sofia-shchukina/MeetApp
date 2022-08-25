@@ -111,4 +111,59 @@ class IntegrationTest {
                         [{"name":"Nike", "id": "123"}]
                           """));
     }
+
+    @DirtiesContext
+    @Test
+    void addLikes() throws Exception {
+
+        String saveResult = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mike"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
+        String id = saveResultParticipant.getId();
+
+        String saveResult2 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mary"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
+        String id2 = saveResultParticipant2.getId();
+
+
+        mockMvc.perform(put("/participants/likes/")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
+                                                             
+                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
+                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        [
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]},
+                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"]}
+                        ]
+                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
+    }
+
 }

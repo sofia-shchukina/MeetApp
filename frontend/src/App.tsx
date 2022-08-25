@@ -6,6 +6,8 @@ import AddNewParticipant from "./AddNewParticipant";
 import {ToastContainer} from "react-toastify";
 import {HashRouter, Route, Routes} from "react-router-dom";
 import ParticipantDetails from "./ParticipantDetails";
+import NavigationBar from './NavigationBar';
+import LikesCollection from './LikesCollection';
 
 
 export default function App() {
@@ -14,7 +16,7 @@ export default function App() {
 
     return (<>
             <HashRouter>
-                <header>Registration</header>
+                <header>Speed-Friending</header>
                 <main>
 
                     <Routes>
@@ -28,8 +30,11 @@ export default function App() {
                         <Route path={"/participants/edit/:id"}
                                element={<ParticipantDetails participants={participantsHook.participants}
                                                             editParticipant={participantsHook.editParticipant}/>}/>
+                        <Route path={"/participants/likes/"}
+                               element={<LikesCollection sendLike={participantsHook.sendLike}
+                                                         participants={participantsHook.participants}/>}/>
                     </Routes>
-
+                    <NavigationBar/>
                 </main>
             </HashRouter>
             <ToastContainer className="toast" position="top-center" style={{width: "150px"}}/>

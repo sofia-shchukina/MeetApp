@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -171,5 +173,47 @@ class ParticipantsServiceTest {
 
         Boolean actual = participantsService.thisNameIsUnique(newParticipant);
         Assertions.assertFalse(actual);
+    }
+
+    @Test
+    void addLikes() {
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("George", "1234");
+        Like like = new Like();
+        like.setLikerID(dummieParticipant1.getId());
+        String[] likedPeopleIDs = {"1234"};
+        like.setLikedPeopleIDs(likedPeopleIDs);
+
+        Participant expected = new Participant("Florian", "123");
+        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
+
+        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(true);
+        when(participantsRepo.save(expected)).thenReturn(expected);
+        when(participantsRepo.findById(dummieParticipant1.getId())).thenReturn(Optional.of(dummieParticipant1));
+        when(participantsRepo.findById(dummieParticipant2.getId())).thenReturn(Optional.of(dummieParticipant2));
+        Participant actual = participantsService.addLikes(like);
+        Assertions.assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void addLikesDoesNotExist() {
+        Participant dummieParticipant1 = new Participant("Florian", "123");
+        Participant dummieParticipant2 = new Participant("George", "1234");
+        Like like = new Like();
+        like.setLikerID(dummieParticipant1.getId());
+        String[] likedPeopleIDs = {"1234"};
+        like.setLikedPeopleIDs(likedPeopleIDs);
+
+        Participant expected = new Participant("Florian", "123");
+        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
+
+        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(false);
+
+        try {
+            participantsService.addLikes(like);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (ParticipantNotFoundException ignored) {
+        }
     }
 }

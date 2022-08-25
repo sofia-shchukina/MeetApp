@@ -1,4 +1,4 @@
-input {
+.registrationInput {
     height: 3vh;
     width: 70vw;
     border-color: var(--brown);

@@ -45,4 +45,15 @@ public class ParticipantsController {
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);
     }
+
+    @PutMapping("/likes/")
+    public ResponseEntity<Participant> addLikes(
+            @RequestBody
+            Like like
+    ) {
+        Participant updatedParticipant = participantsService.addLikes(like);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedParticipant);
+    }
 }
