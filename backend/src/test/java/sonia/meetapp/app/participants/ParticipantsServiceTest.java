@@ -231,12 +231,9 @@ class ParticipantsServiceTest {
         when(participantsRepo.findAll()).thenReturn(participants);
 
         List<String> expected = new ArrayList<>(List.of(
-                "Hi, Florian, here are names of people, with whom you have match." +
-                        "It's mutual, so don't hesitate writing them[Dominic]",
-                "Hi, Dominic, here are names of people, with whom you have match." +
-                        "It's mutual, so don't hesitate writing them[Florian]",
-                "Hi, Christopher, unfortunately after today's event you don't have any matches. " +
-                        "I'm sure, it's just a bad luck, so see you soon on one of the next events"));
+                "Hi, Florian, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Dominic.",
+                "Hi, Dominic, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Florian.",
+                "Hi, Christopher, unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, so see you soon on one of the next events."));
         List<String> actual = participantsService.receiveMatches();
         Assertions.assertEquals(expected, actual);
     }

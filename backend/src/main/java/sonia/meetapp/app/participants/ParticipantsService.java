@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,7 +43,6 @@ public class ParticipantsService {
         }
     }
 
-
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
@@ -74,7 +74,6 @@ public class ParticipantsService {
         Participant liker = participantsRepo.findById(likerID).orElseThrow(() -> new ParticipantNotFoundException(likerID));
         liker.setPeopleILike(likedPeopleIDsArrayList);
 
-
         for (String whoIsLikedID : likedPeopleIDsArrayList) {
             if (participantsRepo.existsById(whoIsLikedID)) {
                 Participant likedPerson = participantsRepo.findById(whoIsLikedID).orElseThrow(() -> new ParticipantNotFoundException(whoIsLikedID));
@@ -87,7 +86,6 @@ public class ParticipantsService {
             }
         }
         return participantsRepo.save(liker);
-
     }
 
     public List<String> receiveMatches() {
@@ -107,15 +105,13 @@ public class ParticipantsService {
             String resultMessage;
             if (matches.isEmpty()) {
                 resultMessage = "Hi, " + participant.getName() + ", unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, " +
-                        "so see you soon on one of the next events";
+                        "so see you soon on one of the next events.";
             } else {
-                resultMessage = "Hi, " + participant.getName() + ", here are names of people, with whom you have match." +
-                        "It's mutual, so don't hesitate writing them" + matches;
+                resultMessage = "Hi, " + participant.getName() + ", here are names of people, with whom you have match. " +
+                        "It's mutual, so don't hesitate writing them: " + matches.stream().map(String::toString).collect(Collectors.joining(",")) + ".";
             }
             resultMessages.add(resultMessage);
         }
         return resultMessages;
     }
 }
-
-

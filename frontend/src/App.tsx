@@ -8,7 +8,7 @@ import {HashRouter, Route, Routes} from "react-router-dom";
 import ParticipantDetails from "./ParticipantDetails";
 import NavigationBar from './NavigationBar';
 import LikesCollection from './LikesCollection';
-
+import LikesAnalysis from './LikesAnalysis';
 
 export default function App() {
 
@@ -33,6 +33,8 @@ export default function App() {
                         <Route path={"/participants/likes/"}
                                element={<LikesCollection sendLike={participantsHook.sendLike}
                                                          participants={participantsHook.participants}/>}/>
+                        <Route path={"/participants/likes/analysis"}
+                               element={<LikesAnalysis/>}/>
                     </Routes>
                     <NavigationBar/>
                 </main>
