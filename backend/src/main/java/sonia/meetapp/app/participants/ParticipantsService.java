@@ -89,6 +89,37 @@ public class ParticipantsService {
         return participantsRepo.save(liker);
 
     }
+
+    public List<String> receiveMatches() {
+        List<Participant> allParticipants = participantsRepo.findAll();
+        List<String> resultMessages = new ArrayList<>();
+        for (Participant participant : allParticipants
+        ) {
+            if (participant.getPeopleWhoLikeMe() == null || participant.getPeopleILike() == null) {
+                String resultMessage = "Hi, " + participant.getName() + ", unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, " +
+                        "so see you soon on one of the next events";
+                resultMessages.add(resultMessage);
+            } else {
+                List<String> matches = new ArrayList<>();
+                for (String idParticipantILike : participant.getPeopleILike()) {
+                    if (participant.getPeopleWhoLikeMe().contains(idParticipantILike)) {
+                        Participant matchParticipant = allParticipants.stream().filter(item -> item.getId().equals(idParticipantILike)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(idParticipantILike));
+                        matches.add(matchParticipant.getName());
+                    }
+                }
+                String resultMessage = "";
+                if (matches.isEmpty()) {
+                    resultMessage = "Hi, " + participant.getName() + ", unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, " +
+                            "so see you soon on one of the next events";
+                } else {
+                    resultMessage = "Hi, " + participant.getName() + ", here are names of people, with whom you have match." +
+                            "It's mutual, so don't hesitate writing them" + matches;
+                }
+                resultMessages.add(resultMessage);
+            }
+        }
+        return resultMessages;
+    }
 }
 
 

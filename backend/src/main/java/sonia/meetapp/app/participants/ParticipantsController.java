@@ -56,4 +56,12 @@ public class ParticipantsController {
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);
     }
+
+    @GetMapping("likes/analysis")
+    public ResponseEntity<List<String>> receiveMatches() {
+        List<String> resultMessages = participantsService.receiveMatches();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(resultMessages);
+    }
 }
