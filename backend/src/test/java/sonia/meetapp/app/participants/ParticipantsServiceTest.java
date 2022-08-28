@@ -216,4 +216,24 @@ class ParticipantsServiceTest {
         } catch (ParticipantNotFoundException ignored) {
         }
     }
+
+    @Test
+    void receiveMatches() {
+
+        Participant participant1 = new Participant("Florian", "123");
+        Participant participant2 = new Participant("Dominic", "1234");
+        Participant participant3 = new Participant("Christopher", "12345");
+        participant1.setPeopleILike(new ArrayList<>(List.of(participant2.getId())));
+        participant2.setPeopleILike(new ArrayList<>(List.of(participant1.getId())));
+        participant1.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant2.getId())));
+        participant2.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant1.getId())));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
+        when(participantsRepo.findAll()).thenReturn(participants);
+        when(participantsRepo.findById(participant1.getId())).thenReturn(Optional.of(participant1));
+
+        List<String> expected = new ArrayList<>(List.of(
+                "Dominic"));
+        List<String> actual = participantsService.receiveMatches(participant1.getId());
+        Assertions.assertEquals(expected, actual);
+    }
 }

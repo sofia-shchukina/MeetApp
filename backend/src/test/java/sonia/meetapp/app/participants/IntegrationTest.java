@@ -166,4 +166,79 @@ class IntegrationTest {
                         """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
     }
 
+    @DirtiesContext
+    @Test
+    void getMatches() throws Exception {
+
+        String saveResult = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mike"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
+        String id = saveResultParticipant.getId();
+
+        String saveResult2 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mary"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
+        String id2 = saveResultParticipant2.getId();
+
+
+        String saveResult3 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Sara"}
+                                 """)
+                )
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant3 = objectMapper.readValue(saveResult, Participant.class);
+        String id3 = saveResultParticipant3.getId();
+
+        mockMvc.perform(put("/participants/likes/")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
+                                                             
+                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
+                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
+        mockMvc.perform(put("/participants/likes/")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"likerID":"<ID2>","likedPeopleIDs": ["<ID>"]}
+                                                             
+                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
+
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {"name":"Mary", "id": "<ID2>", "peopleILike":["<ID>"]}
+                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
+
+        mockMvc.perform(get("/participants/likes/analysis/" + "<ID>".replaceFirst("<ID>", id)))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        ["Mary"]
+                        """));
+    }
 }

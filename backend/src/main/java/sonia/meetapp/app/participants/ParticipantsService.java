@@ -42,7 +42,6 @@ public class ParticipantsService {
         }
     }
 
-
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
@@ -74,7 +73,6 @@ public class ParticipantsService {
         Participant liker = participantsRepo.findById(likerID).orElseThrow(() -> new ParticipantNotFoundException(likerID));
         liker.setPeopleILike(likedPeopleIDsArrayList);
 
-
         for (String whoIsLikedID : likedPeopleIDsArrayList) {
             if (participantsRepo.existsById(whoIsLikedID)) {
                 Participant likedPerson = participantsRepo.findById(whoIsLikedID).orElseThrow(() -> new ParticipantNotFoundException(whoIsLikedID));
@@ -87,7 +85,21 @@ public class ParticipantsService {
             }
         }
         return participantsRepo.save(liker);
+    }
 
+    public List<String> receiveMatches(String id) {
+        Participant participant = participantsRepo.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
+        List<Participant> allParticipants = participantsRepo.findAll();
+        List<String> matches = new ArrayList<>();
+        if (participant.getPeopleWhoLikeMe() != null && participant.getPeopleILike() != null) {
+            for (String idParticipantILike : participant.getPeopleILike()) {
+                if (participant.getPeopleWhoLikeMe().contains(idParticipantILike)) {
+                    Participant matchParticipant = allParticipants.stream().filter(item -> item.getId().equals(idParticipantILike)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(idParticipantILike));
+                    matches.add(matchParticipant.getName());
+                }
+            }
+        }
+        return matches;
     }
 }
 

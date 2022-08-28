@@ -56,4 +56,11 @@ public class ParticipantsController {
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);
     }
+
+    @GetMapping("likes/analysis/{id}")
+    public List<String> receiveMatches(
+            @PathVariable String id
+    ) {
+        return participantsService.receiveMatches(id);
+    }
 }
