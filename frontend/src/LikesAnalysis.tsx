@@ -1,5 +1,4 @@
 import {ChangeEvent, useEffect, useState} from "react";
-import axios from "axios";
 import Button from "@mui/material/Button";
 import './LikeAnalysis.css';
 import {Participant} from "./Participant";
@@ -7,8 +6,10 @@ import {Participant} from "./Participant";
 export default function LikesAnalysis(props:
                                           {
                                               participants: Participant[],
+                                              getAllMatches: (id: string) => void,
+                                              matches: string[],
                                           }) {
-    const [matches, setMatches] = useState<string[]>([]);
+
     const [analyserName, setAnalyserName] = useState<string>("");
 
 
@@ -17,19 +18,15 @@ export default function LikesAnalysis(props:
     }
     const handleSubmit = () => {
         const analyser = props.participants.find(participant => participant.name === analyserName);
-        if (analyser) getAllMatches(analyser.id);
+        if (analyser) props.getAllMatches(analyser.id);
     }
-    const getAllMatches = (id: string) => {
-        axios.get("/participants/likes/analysis/" + id)
-            .then(response => response.data)
-            .then(setMatches)
-    }
+
 
     useEffect(() => {
         if (props.participants && props.participants.length > 0) {
             setAnalyserName(props.participants[0].name);
         }
-    }, [getAllMatches, (props.participants)])
+    }, [props.getAllMatches, (props.participants)])
 
     return (<form className="likesForm">
             <label> What was your name on the Meetup? </label>
@@ -45,7 +42,7 @@ export default function LikesAnalysis(props:
             <div id="listOfMatches">
                 <h3> List of matches </h3>
                 <ul>
-                    {matches.length > 0 ? matches.map((match: string) => <li>{match}</li>) :
+                    {props.matches.length > 0 ? props.matches.map((match: string) => <li>{match}</li>) :
                         <h4>Your don't have any matches yet:-)
                         </h4>}</ul>
             </div>

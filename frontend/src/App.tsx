@@ -35,7 +35,9 @@ export default function App() {
                                                          participants={participantsHook.participants}/>}/>
                         <Route path={"/participants/likes/analysis"}
                                element={<LikesAnalysis
-                                   participants={participantsHook.participants}/>}/>
+                                   participants={participantsHook.participants}
+                                   getAllMatches={participantsHook.getAllMatches}
+                                   matches={participantsHook.matches}/>}/>
                     </Routes>
                     <NavigationBar/>
                 </main>
