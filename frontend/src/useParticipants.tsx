@@ -10,6 +10,8 @@ export default function useParticipants() {
         getAllParticipants()
     }, [])
 
+    const [matches, setMatches] = useState<string[]>([]);
+
     const getAllParticipants = () => {
         axios.get("/participants")
             .then(response => response.data)
@@ -45,7 +47,11 @@ export default function useParticipants() {
                     toast.error(error.message)
                 })
     }
+    const getAllMatches = (id: string) => {
+        axios.get("/participants/likes/analysis/" + id)
+            .then(response => response.data)
+            .then(setMatches)
+    }
 
-
-    return {participants, addParticipant, deleteParticipant, editParticipant, sendLike}
+    return {participants, addParticipant, deleteParticipant, editParticipant, sendLike, getAllMatches, matches}
 }
