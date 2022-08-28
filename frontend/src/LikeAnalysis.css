@@ -11,3 +11,16 @@
     margin: 2vh 4vw 1vh 2vw;
     color: var(--dark-green)
 }
+
+#listOfMatches {
+    border: solid 1px white;
+    border-top-left-radius: 40px;
+    margin: 2vh 0 7vh 0;
+    background-color: white;
+    width: 100vw;
+    min-height: 41.7vh;
+}
+
+h4 {
+    color: var(--brown);
+}

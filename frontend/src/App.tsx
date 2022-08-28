@@ -34,7 +34,8 @@ export default function App() {
                                element={<LikesCollection sendLike={participantsHook.sendLike}
                                                          participants={participantsHook.participants}/>}/>
                         <Route path={"/participants/likes/analysis"}
-                               element={<LikesAnalysis/>}/>
+                               element={<LikesAnalysis
+                                   participants={participantsHook.participants}/>}/>
                     </Routes>
                     <NavigationBar/>
                 </main>

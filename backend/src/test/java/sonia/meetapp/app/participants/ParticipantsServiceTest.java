@@ -229,12 +229,11 @@ class ParticipantsServiceTest {
         participant2.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant1.getId())));
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
         when(participantsRepo.findAll()).thenReturn(participants);
+        when(participantsRepo.findById(participant1.getId())).thenReturn(Optional.of(participant1));
 
         List<String> expected = new ArrayList<>(List.of(
-                "Hi, Florian, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Dominic.",
-                "Hi, Dominic, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Florian.",
-                "Hi, Christopher, unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, so see you soon on one of the next events."));
-        List<String> actual = participantsService.receiveMatches();
+                "Dominic"));
+        List<String> actual = participantsService.receiveMatches(participant1.getId());
         Assertions.assertEquals(expected, actual);
     }
 }

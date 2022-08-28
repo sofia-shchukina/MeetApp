@@ -9,4 +9,5 @@ h3 {
     border-top-left-radius: 40px;
     margin: 2vh 0 7vh 0;
     background-color: white;
+    min-height: 50vh;
 }

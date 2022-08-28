@@ -57,7 +57,7 @@ export default function LikesCollection(props:
     }
 
     return (
-        <form id="likesForm" onSubmit={handleSubmitAForm}>
+        <form className="likesForm" onSubmit={handleSubmitAForm}>
             <label> What was your name on the Meetup? </label>
             <select value={likerName} onChange={handleLikerChange}>
                 {props.participants.map((participant) =>
@@ -75,7 +75,6 @@ export default function LikesCollection(props:
                         <label> {participant.name}</label>
                     </div>))}
             </div>
-
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             <div id="resultMessage">{resultMessage} </div>
         </form>

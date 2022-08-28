@@ -235,11 +235,10 @@ class IntegrationTest {
                         {"name":"Mary", "id": "<ID2>", "peopleILike":["<ID>"]}
                           """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
 
-        mockMvc.perform(get("/participants/likes/analysis"))
+        mockMvc.perform(get("/participants/likes/analysis/" + "<ID>".replaceFirst("<ID>", id)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        [
-                        "Hi, Mike, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Mary.","Hi, Mary, here are names of people, with whom you have match. It's mutual, so don't hesitate writing them: Mike.","Hi, Sara, unfortunately after today's event you don't have any matches. I'm sure, it's just a bad luck, so see you soon on one of the next events."]
+                        ["Mary"]
                         """));
     }
 }
