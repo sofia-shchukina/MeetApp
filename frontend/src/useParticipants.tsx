@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {NewParticipant, Participant} from "./Participant";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -6,9 +6,7 @@ import {Like} from "./Like";
 
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
-    useEffect(() => {
-        getAllParticipants()
-    }, [])
+
 
     const [matches, setMatches] = useState<string[]>([]);
 

@@ -6,7 +6,8 @@ export default function NavigationBar() {
 
     return (
         <div className={"navigation"}>
-            <NavLink to={"/"}>Registration</NavLink>
+            <NavLink to={"/"}>Home</NavLink>
+            <NavLink to={"/registration"}>Registration</NavLink>
             <NavLink to={"/participants/likes/"}>Likes</NavLink>
             <NavLink to={"/participants/likes/analysis"}>Find Matches</NavLink>
         </div>

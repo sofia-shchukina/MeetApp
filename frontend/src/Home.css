@@ -1,0 +1,7 @@
+#login {
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-start;
+    gap: 1vh;
+    align-items: center;
+}

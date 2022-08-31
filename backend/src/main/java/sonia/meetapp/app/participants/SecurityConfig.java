@@ -19,21 +19,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/hello/**").authenticated()
-                .antMatchers("/participants").permitAll()
+                .antMatchers("/hello/**").permitAll()
+                .antMatchers("/participants").authenticated()
                 .and().httpBasic();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(appUserDetailsService);
-
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 }
-

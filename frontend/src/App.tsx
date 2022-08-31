@@ -9,6 +9,7 @@ import ParticipantDetails from "./ParticipantDetails";
 import NavigationBar from './NavigationBar';
 import LikesCollection from './LikesCollection';
 import LikesAnalysis from './LikesAnalysis';
+import Home from "./Home";
 
 export default function App() {
 
@@ -20,7 +21,8 @@ export default function App() {
                 <main>
 
                     <Routes>
-                        <Route path={"/"} element={
+                        <Route path={"/"} element={<Home/>}/>
+                        <Route path={"/registration"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}/>
                                 <ParticipantsList participants={participantsHook.participants}
