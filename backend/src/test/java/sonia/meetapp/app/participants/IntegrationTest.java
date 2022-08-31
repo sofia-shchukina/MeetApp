@@ -103,7 +103,7 @@ class IntegrationTest {
         mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andExpect(status().is(201));
@@ -111,7 +111,7 @@ class IntegrationTest {
         mockMvc.perform(put("/participants/edit/" + "123")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Nike"}
+                                {"name":"Nike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andExpect(status().isOk());
@@ -120,7 +120,7 @@ class IntegrationTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        [{"name":"Nike", "id": "123"}]
+                        [{"name":"Nike", "id": "123", "email":"123@gmail.com"}]
                           """));
     }
 
@@ -132,7 +132,7 @@ class IntegrationTest {
         String saveResult = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
@@ -145,7 +145,7 @@ class IntegrationTest {
         String saveResult2 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mary"}
+                                {"name":"Mary", "email":"12@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
@@ -173,8 +173,8 @@ class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
-                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]},
-                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"]}
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"], "email":"123@gmail.com"},
+                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"], "email":"12@gmail.com"}
                         ]
                         """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
     }
@@ -187,7 +187,7 @@ class IntegrationTest {
         String saveResult = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
@@ -200,7 +200,7 @@ class IntegrationTest {
         String saveResult2 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mary"}
+                                {"name":"Mary", "email":"12@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
@@ -214,7 +214,7 @@ class IntegrationTest {
         String saveResult3 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Sara"}
+                                {"name":"Sara", "email":"1@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()

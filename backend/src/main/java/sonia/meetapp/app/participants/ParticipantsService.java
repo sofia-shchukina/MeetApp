@@ -48,11 +48,7 @@ public class ParticipantsService {
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
-                if (Boolean.TRUE.equals(thisEmailIsUnique(editedNewParticipant))) {
                     return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
-                } else {
-                    throw new EmailIsNotUniqueException();
-                }
             } else {
                 throw new ParticipantNotFoundException(id);
             }
