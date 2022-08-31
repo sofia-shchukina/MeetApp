@@ -9,7 +9,7 @@ export default function NavigationBar() {
             <NavLink to={"/"}>Home</NavLink>
             <NavLink to={"/registration"}>Registration</NavLink>
             <NavLink to={"/participants/likes/"}>Likes</NavLink>
-            <NavLink to={"/participants/likes/analysis"}>Find Matches</NavLink>
+            <NavLink to={"/participants/likes/analysis"}>Matches</NavLink>
         </div>
     )
 }

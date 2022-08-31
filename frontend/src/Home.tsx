@@ -1,6 +1,9 @@
 import axios, {AxiosRequestConfig} from "axios";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import './Home.css';
+import NavigationBar from "./NavigationBar";
+import {TextField} from "@mui/material";
+import Button from "@mui/material/Button";
 
 
 export default function Home() {
@@ -49,13 +52,20 @@ export default function Home() {
 
 
     return (
-        <div id="login">
+        <div id="userLogin">
+
+
             {message}
-            {user !== "anonymousUser" ? <>{user}</> : <>Already have an account? log in!</>}
-            <input value={email} onChange={(event) => setEmail(event.target.value)}/>
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
-            {user !== "anonymousUser" ? <button onClick={logout}>Logout</button> :
-                <button onClick={login}>Login</button>}
+            {user && user !== "anonymousUser" ? <>{user}</> : <>Already have an account? log in!</>}
+            <TextField id="login" label="e-mail" color="warning" value={email}
+                       onChange={(event) => setEmail(event.target.value)}/>
+            <TextField id="logout" label="password" color="warning" type="password" value={password}
+                       onChange={(event) => setPassword(event.target.value)}/>
+
+            {user !== "anonymousUser" ?
+                <Button type="submit" id="loginButton" variant="contained" onClick={logout}>Logout</Button> :
+                <Button type="submit" id="logoutButton" variant="contained" onClick={login}>Login</Button>}
+            {user !== "anonymousUser" ? <>{<NavigationBar/>}</> : <></>}
         </div>
     );
 }

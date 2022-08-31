@@ -27,21 +27,34 @@ export default function App() {
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}/>
                                 <ParticipantsList participants={participantsHook.participants}
                                                   deleteParticipant={participantsHook.deleteParticipant}/>
+                                <NavigationBar/>
                             </>
                         }/>
                         <Route path={"/participants/edit/:id"}
-                               element={<ParticipantDetails participants={participantsHook.participants}
-                                                            editParticipant={participantsHook.editParticipant}/>}/>
+                               element={
+                                   <>
+                                       <ParticipantDetails participants={participantsHook.participants}
+                                                           editParticipant={participantsHook.editParticipant}/>
+                                       <NavigationBar/>
+                                   </>
+                               }/>
                         <Route path={"/participants/likes/"}
-                               element={<LikesCollection sendLike={participantsHook.sendLike}
-                                                         participants={participantsHook.participants}/>}/>
+                               element={
+                                   <>
+                                       <LikesCollection sendLike={participantsHook.sendLike}
+                                                        participants={participantsHook.participants}/>
+                                       <NavigationBar/>
+                                   </>}/>
                         <Route path={"/participants/likes/analysis"}
-                               element={<LikesAnalysis
-                                   participants={participantsHook.participants}
-                                   getAllMatches={participantsHook.getAllMatches}
-                                   matches={participantsHook.matches}/>}/>
+                               element={
+                                   <>
+                                       <LikesAnalysis
+                                           participants={participantsHook.participants}
+                                           getAllMatches={participantsHook.getAllMatches}
+                                           matches={participantsHook.matches}/>
+                                       <NavigationBar/>
+                                   </>}/>
                     </Routes>
-                    <NavigationBar/>
                 </main>
             </HashRouter>
             <ToastContainer className="toast" position="top-center" style={{width: "150px"}}/>
