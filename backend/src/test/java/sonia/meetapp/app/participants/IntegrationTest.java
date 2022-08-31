@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,7 +52,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().is(201))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
@@ -68,13 +69,16 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
+                        .with(csrf())
                 )
                 .andExpect(status().is(201));
 
-        mockMvc.perform(delete("/participants/" + "123"))
+        mockMvc.perform(delete("/participants/" + "123")
+                        .with(csrf()))
                 .andExpect(status().is(204));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         []
@@ -86,7 +90,8 @@ class IntegrationTest {
     @WithMockUser(username = "username")
     void deleteParticipantDoesNotExist() throws Exception {
         String id = "111";
-        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id)
+                        .with(csrf()))
                 .andExpect(status().is(404));
     }
 
@@ -100,7 +105,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().is(201));
 
         mockMvc.perform(put("/participants/edit/" + "123")
@@ -108,10 +113,11 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Nike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [{"name":"Nike", "id": "123"}]
@@ -128,7 +134,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -141,7 +147,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mary"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -157,7 +163,7 @@ class IntegrationTest {
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
@@ -183,7 +189,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -196,7 +202,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mary"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -210,7 +216,7 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Sara"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -225,7 +231,7 @@ class IntegrationTest {
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
@@ -237,7 +243,7 @@ class IntegrationTest {
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mary", "id": "<ID2>", "peopleILike":["<ID>"]}
