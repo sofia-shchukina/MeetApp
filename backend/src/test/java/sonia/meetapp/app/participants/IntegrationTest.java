@@ -33,6 +33,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void getAllParticipants() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
                 .andExpect(status().isOk())
@@ -43,6 +44,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void addParticipant() throws Exception {
         MvcResult result = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
@@ -58,6 +60,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void deleteParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/participants")
@@ -80,6 +83,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void deleteParticipantDoesNotExist() throws Exception {
         String id = "111";
         mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
@@ -88,6 +92,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void editParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/participants")
@@ -115,6 +120,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void addLikes() throws Exception {
 
         String saveResult = mockMvc.perform(post("/participants")
@@ -169,6 +175,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void getMatches() throws Exception {
 
         String saveResult = mockMvc.perform(post("/participants")
@@ -252,8 +259,8 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void getTestWithUsername() throws Exception {
-        mockMvc.perform(get("/hello"))
-                .andExpect(content().string("hi username"));
+        mockMvc.perform(get("/hello/login"))
+                .andExpect(content().string("username"));
     }
 
 }
