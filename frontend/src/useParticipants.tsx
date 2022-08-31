@@ -16,8 +16,8 @@ export default function useParticipants() {
             .then(setParticipants)
     }
 
-    const addParticipant = (name: string) => {
-        const newParticipant: NewParticipant = {name}
+    const addParticipant = (name: string, email: string) => {
+        const newParticipant: NewParticipant = {name, email}
         return axios.post("participants", newParticipant)
             .then(getAllParticipants)
     }
@@ -31,8 +31,8 @@ export default function useParticipants() {
                 })
     }
 
-    const editParticipant = (participantToEdit: Participant, editedName: string) => {
-        const newParticipant: NewParticipant = {name: editedName}
+    const editParticipant = (participantToEdit: Participant, editedName: string, email: string) => {
+        const newParticipant: NewParticipant = {name: editedName, email}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
             .then(getAllParticipants)
     }

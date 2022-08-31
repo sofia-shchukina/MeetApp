@@ -2,6 +2,7 @@ package sonia.meetapp.app.participants;
 
 
 import org.springframework.stereotype.Service;
+import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
@@ -26,9 +27,11 @@ public class ParticipantsService {
     }
 
     public Participant addParticipant(NewParticipant newParticipant) {
-        Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString());
+        Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString(), newParticipant.getEmail());
         if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant))) {
-            return participantsRepo.save(participant);
+            if (Boolean.TRUE.equals(thisEmailIsUnique(newParticipant))) {
+                return participantsRepo.save(participant);
+            } else throw new EmailIsNotUniqueException();
         } else {
             throw new NameIsNotUniqueException();
         }
@@ -45,7 +48,11 @@ public class ParticipantsService {
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
-                return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
+                if (Boolean.TRUE.equals(thisEmailIsUnique(editedNewParticipant))) {
+                    return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
+                } else {
+                    throw new EmailIsNotUniqueException();
+                }
             } else {
                 throw new ParticipantNotFoundException(id);
             }
@@ -61,6 +68,19 @@ public class ParticipantsService {
         for (Participant allParticipant : allParticipants) {
             if (allParticipant.getName().toLowerCase(Locale.ROOT).equals(name.toLowerCase())) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean thisEmailIsUnique(NewParticipant newParticipant) {
+        String email = newParticipant.getEmail();
+        List<Participant> allParticipants = participantsRepo.findAll();
+        if (!(allParticipants).isEmpty()) {
+            for (Participant allParticipant : allParticipants) {
+                if (allParticipant.getEmail().toLowerCase(Locale.ROOT).equals(email.toLowerCase())) {
+                    return false;
+                }
             }
         }
         return true;

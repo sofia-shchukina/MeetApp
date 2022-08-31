@@ -11,6 +11,8 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+
     @ExceptionHandler(ParticipantNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleTodoNotFoundException(ParticipantNotFoundException exception) {
         Map<String, Object> responseBody = new LinkedHashMap<>();
@@ -29,5 +31,15 @@ public class GlobalExceptionHandler {
         responseBody.put("message", exception.getMessage());
 
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailIsNotUniqueException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailIsNotUniqueException(EmailIsNotUniqueException exception) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", exception.getMessage());
+
+        return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
     }
 }
