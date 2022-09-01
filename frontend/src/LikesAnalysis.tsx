@@ -18,7 +18,7 @@ export default function LikesAnalysis(props:
 
     return (<>
             <>Your name on meetup was {analyser ? analyser.name : <>unknown</>}
-                . If it's incorrect, please contact the host before sending likes :-)
+                . If it's incorrect, please contact the host to receive your matches :-)
             </>
             <form className="likesForm">
                 <Button type="submit" id="getMatchesButton" variant="contained" onClick={handleSubmit}> Get all

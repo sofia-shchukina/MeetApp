@@ -7,8 +7,9 @@ import {useNavigate} from "react-router-dom";
 
 export default function EachParticipant(props:
                                             {
-                                                participant: Participant
+                                                participant: Participant,
                                                 deleteParticipant: (id: string) => Promise<void>,
+                                                user: string | undefined,
                                             }) {
     const navigate = useNavigate();
 
@@ -16,17 +17,18 @@ export default function EachParticipant(props:
         <li key={props.participant.id}>
             <div id="nameAndButtons">
                 <div className="nameStyle"> {props.participant.name} </div>
-                <div id="buttons">
-                    <Button variant="outlined" id="personalButton"
-                            startIcon={<EditIcon id="editIcon"/>}
-                            onClick={() => {
-                                navigate(`/participants/edit/${props.participant.id}`)
-                            }}>Edit
-                    </Button>
-                    <Button variant="outlined" id="personalButton" startIcon={<DeleteIcon id="deleteIcon"/>}
-                            onClick={() => props.deleteParticipant(props.participant.id)}>Delete</Button>
-                </div>
-
+                {props.participant.email === props.user ?
+                    <div id="buttons">
+                        <Button variant="outlined" id="personalButton"
+                                startIcon={<EditIcon id="editIcon"/>}
+                                onClick={() => {
+                                    navigate(`/participants/edit/${props.participant.id}`)
+                                }}>Edit
+                        </Button>
+                        <Button variant="outlined" id="personalButton" startIcon={<DeleteIcon id="deleteIcon"/>}
+                                onClick={() => props.deleteParticipant(props.participant.id)}>Delete</Button>
+                    </div>
+                    : <></>}
             </div>
         </li>
     )

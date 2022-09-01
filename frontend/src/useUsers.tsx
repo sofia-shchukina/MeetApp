@@ -3,10 +3,9 @@ import {useEffect, useState} from "react";
 
 
 export default function useUsers(
-    setMatches: ([]) => void
+
 ) {
     const [user, setUser] = useState<string>()
-
 
     useEffect(() => {
         checkIfLogin()
@@ -27,8 +26,8 @@ export default function useUsers(
         axios.get("/hello/login", config)
             .then((response) => {
                 setUser(response.data)
-                setMatches([])
             })
+
     }
 
     const logout = () => {
@@ -36,6 +35,7 @@ export default function useUsers(
             .then((response) => {
                 setUser(undefined)
                 checkIfLogin()
+                localStorage.removeItem('matches');
             })
     }
     return {user, login, logout, checkIfLogin}

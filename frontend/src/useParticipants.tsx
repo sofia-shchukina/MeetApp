@@ -11,6 +11,7 @@ export default function useParticipants() {
     useEffect(() => {
         getAllParticipants()
     }, [])
+
     const getAllParticipants = () => {
         axios.get("/participants")
             .then(response => response.data)
@@ -61,6 +62,5 @@ export default function useParticipants() {
         sendLike,
         getAllMatches,
         matches,
-        setMatches
     }
 }
