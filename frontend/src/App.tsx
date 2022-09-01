@@ -10,10 +10,12 @@ import NavigationBar from './NavigationBar';
 import LikesCollection from './LikesCollection';
 import LikesAnalysis from './LikesAnalysis';
 import Home from "./Home";
+import useUsers from './useUsers';
 
 export default function App() {
 
     const participantsHook = useParticipants()
+    const userHook = useUsers()
 
     return (<>
             <HashRouter>
@@ -21,7 +23,10 @@ export default function App() {
                 <main>
 
                     <Routes>
-                        <Route path={"/"} element={<Home/>}/>
+                        <Route path={"/"} element={<Home user={userHook.user}
+                                                         login={userHook.login}
+                                                         logout={userHook.logout}
+                                                         checkIfLogin={userHook.checkIfLogin}/>}/>
                         <Route path={"/registration"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}/>
@@ -42,7 +47,8 @@ export default function App() {
                                element={
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
-                                                        participants={participantsHook.participants}/>
+                                                        participants={participantsHook.participants}
+                                                        user={userHook.user}/>
                                        <NavigationBar/>
                                    </>}/>
                         <Route path={"/participants/likes/analysis"}

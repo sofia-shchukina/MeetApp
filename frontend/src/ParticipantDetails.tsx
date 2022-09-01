@@ -64,7 +64,7 @@ export default function ParticipantDetails(props: {
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
                     onClick={() => {
-                        navigate("/")
+                        navigate("/registration")
                     }}>back</Button>
         </form>
     );

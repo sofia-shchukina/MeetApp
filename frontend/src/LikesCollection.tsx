@@ -8,6 +8,7 @@ export default function LikesCollection(props:
                                             {
                                                 participants: Participant[],
                                                 sendLike: (liker: Participant, liked: Participant[]) => void,
+                                                user: string | undefined,
                                             }) {
 
 
