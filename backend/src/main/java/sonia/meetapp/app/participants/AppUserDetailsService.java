@@ -27,4 +27,5 @@ public class AppUserDetailsService implements UserDetailsService {
         }
         return new User(appUser.email(), appUser.passwordHash(), Collections.emptyList());
     }
+
 }

@@ -13,33 +13,43 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
 
+    public Map<String, Object> hashmapBuilder(String string) {
+        Map<String, Object> responseBody = new LinkedHashMap<>();
+        responseBody.put("timestamp", LocalDateTime.now());
+        responseBody.put("message", string);
+        return responseBody;
+    }
+
+
     @ExceptionHandler(ParticipantNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleTodoNotFoundException(ParticipantNotFoundException exception) {
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-
-        responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", exception.getMessage());
-
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NameIsNotUniqueException.class)
     public ResponseEntity<Map<String, Object>> handleNameNotFoundException(NameIsNotUniqueException exception) {
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-
-        responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", exception.getMessage());
-
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailIsNotUniqueException.class)
     public ResponseEntity<Map<String, Object>> handleEmailIsNotUniqueException(EmailIsNotUniqueException exception) {
-        Map<String, Object> responseBody = new LinkedHashMap<>();
-
-        responseBody.put("timestamp", LocalDateTime.now());
-        responseBody.put("message", exception.getMessage());
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
 
         return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(UserExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleUserExistsException(UserExistsException exception) {
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
+        return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(PasswordNotMatchException.class)
+    public ResponseEntity<Map<String, Object>> handlePasswordNotMatchException(PasswordNotMatchException exception) {
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
+        return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
+    }
+
 }

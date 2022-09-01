@@ -20,7 +20,7 @@ class AppUserDetailsServiceTest {
     @Test
     void loadUserByUsername() {
         String email = "userName@gmail.com";
-        AppUser appUser = new AppUser("userName@gmail.com", "12345");
+        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta");
         User user = new User("userName@gmail.com", "12345", Collections.emptyList());
         when(appUserRepo.findById(email)).thenReturn(Optional.of(appUser));
         User actual = (User) appUserDetailsService.loadUserByUsername(email);

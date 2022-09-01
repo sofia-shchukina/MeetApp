@@ -18,18 +18,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.appUserDetailsService = appUserDetailsService;
     }
 
-    @Override
+   @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http = http.cors()
-                .and().csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and();
-        http.authorizeRequests()
-                .antMatchers("/hello/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/participants").permitAll()
-                .antMatchers("/participants").authenticated()
-                .and().httpBasic();
-    }
+       http = http.cors()
+               .and().csrf()
+               .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+               .and();
+       http.authorizeRequests()
+               .antMatchers("/hello").permitAll()
+               .antMatchers(HttpMethod.GET, "/participants").permitAll()
+               .antMatchers("/participants").authenticated()
+               .and().httpBasic();
+   }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
