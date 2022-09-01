@@ -48,7 +48,8 @@ export default function App() {
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
                                                         participants={participantsHook.participants}
-                                                        user={userHook.user}/>
+                                                        user={userHook.user}
+                                       />
                                        <NavigationBar/>
                                    </>}/>
                         <Route path={"/participants/likes/analysis"}
