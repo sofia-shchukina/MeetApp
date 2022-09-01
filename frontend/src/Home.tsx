@@ -24,21 +24,24 @@ export default function Home(props:
 
     const handleLogin = () => {
         props.login(config)
+        setEmail("")
+        setPassword("")
     }
     return (
         <div id="userLogin">
-
-
             {props.user && props.user !== "anonymousUser" ? <>You are logged in as {props.user}</> : <>Already have an
                 account? log in!</>}
-            <TextField id="login" label="e-mail" color="warning" value={email}
-                       onChange={(event) => setEmail(event.target.value)}/>
-            <TextField id="logout" label="password" color="warning" type="password" value={password}
-                       onChange={(event) => setPassword(event.target.value)}/>
-
             {props.user !== "anonymousUser" ?
-                <Button type="submit" id="loginButton" variant="contained" onClick={props.logout}>Logout</Button> :
-                <Button type="submit" id="logoutButton" variant="contained" onClick={handleLogin}>Login</Button>}
+                <Button type="submit" id="loginButton" variant="contained" onClick={props.logout}>Logout</Button>
+                :
+                <>
+                    <TextField id="login" label="e-mail" color="warning" value={email}
+                               onChange={(event) => setEmail(event.target.value)}/>
+                    <TextField id="logout" label="password" color="warning" type="password" value={password}
+                               onChange={(event) => setPassword(event.target.value)}/>
+                    <Button type="submit" id="logoutButton" variant="contained" onClick={handleLogin}>Login</Button>
+                </>
+            }
             {props.user !== "anonymousUser" ? <>{<NavigationBar/>}</> : <></>}
         </div>
     );

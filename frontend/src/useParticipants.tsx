@@ -7,6 +7,7 @@ import {Like} from "./Like";
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [matches, setMatches] = useState<string[]>([]);
+
     useEffect(() => {
         getAllParticipants()
     }, [])
@@ -45,12 +46,21 @@ export default function useParticipants() {
                     toast.error(error.message)
                 })
     }
+
     const getAllMatches = (id: string) => {
         axios.get("/participants/likes/analysis/" + id)
             .then(response => response.data)
             .then(setMatches)
     }
 
-
-    return {participants, addParticipant, deleteParticipant, editParticipant, sendLike, getAllMatches, matches}
+    return {
+        participants,
+        addParticipant,
+        deleteParticipant,
+        editParticipant,
+        sendLike,
+        getAllMatches,
+        matches,
+        setMatches
+    }
 }

@@ -12,10 +12,14 @@ import LikesAnalysis from './LikesAnalysis';
 import Home from "./Home";
 import useUsers from './useUsers';
 
+function UseUsers() {
+    return null;
+}
+
 export default function App() {
 
     const participantsHook = useParticipants()
-    const userHook = useUsers()
+    const userHook = useUsers(participantsHook.setMatches)
 
     return (<>
             <HashRouter>
@@ -58,7 +62,8 @@ export default function App() {
                                        <LikesAnalysis
                                            participants={participantsHook.participants}
                                            getAllMatches={participantsHook.getAllMatches}
-                                           matches={participantsHook.matches}/>
+                                           matches={participantsHook.matches}
+                                           user={userHook.user}/>
                                        <NavigationBar/>
                                    </>}/>
                     </Routes>

@@ -2,7 +2,9 @@ import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
 
 
-export default function useUsers() {
+export default function useUsers(
+    setMatches: ([]) => void
+) {
     const [user, setUser] = useState<string>()
 
 
@@ -25,6 +27,7 @@ export default function useUsers() {
         axios.get("/hello/login", config)
             .then((response) => {
                 setUser(response.data)
+                setMatches([])
             })
     }
 
