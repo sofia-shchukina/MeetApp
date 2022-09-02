@@ -11,6 +11,7 @@ import LikesCollection from './LikesCollection';
 import LikesAnalysis from './LikesAnalysis';
 import Home from "./Home";
 import useUsers from './useUsers';
+import CreateAccount from './CreateAccount';
 
 
 export default function App() {
@@ -24,10 +25,17 @@ export default function App() {
                 <main>
 
                     <Routes>
-                        <Route path={"/"} element={<Home user={userHook.user}
-                                                         login={userHook.login}
-                                                         logout={userHook.logout}
-                                                         checkIfLogin={userHook.checkIfLogin}/>}/>
+                        <Route path={"/"}
+                               element={
+                                   <>
+                                       <CreateAccount createUser={userHook.createUser}/>
+                                       <Home user={userHook.user}
+                                             login={userHook.login}
+                                             logout={userHook.logout}
+                                             checkIfLogin={userHook.checkIfLogin}/>
+                                   </>
+                               }/>
+
                         <Route path={"/registration"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}/>

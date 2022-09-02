@@ -1,5 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
+import {NewUser} from "./NewUser";
 
 
 export default function useUsers(
@@ -38,5 +39,11 @@ export default function useUsers(
                 localStorage.removeItem('matches');
             })
     }
-    return {user, login, logout, checkIfLogin}
+
+    const createUser = (newUser: NewUser) => {
+        return axios.post("/hello", newUser)
+
+    }
+    return {user, login, logout, checkIfLogin, createUser}
 }
+
