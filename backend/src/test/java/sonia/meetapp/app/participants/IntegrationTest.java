@@ -276,8 +276,8 @@ class IntegrationTest {
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"email": "abcde@gmail.com",
-                                               "password": "aaa",
-                                               "repeatPassword":"aaa",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
                                                "contacts":"insta"
                                                }
                                  """)
@@ -296,8 +296,8 @@ class IntegrationTest {
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"email": "abcde@gmail.com",
-                                               "password": "aaa",
-                                               "repeatPassword":"aaa",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
                                                "contacts":"insta"
                                                }
                                  """)
@@ -308,8 +308,8 @@ class IntegrationTest {
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"email": "abcde@gmail.com",
-                                               "password": "bbb",
-                                               "repeatPassword":"bbb",
+                                               "password": "bbbbbb",
+                                               "repeatPassword":"bbbbbb",
                                                "contacts":"telegram"
                                                }
                                  """)

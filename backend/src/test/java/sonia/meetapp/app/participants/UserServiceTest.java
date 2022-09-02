@@ -54,7 +54,7 @@ class UserServiceTest {
     void registerNewUserTestPasswordDoesNotMatch() {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
-                "qwert", "insta");
+                "qwertz", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
