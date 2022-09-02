@@ -269,4 +269,51 @@ class IntegrationTest {
                 .andExpect(content().string("username"));
     }
 
+    @DirtiesContext
+    @Test
+    void createAccount() throws Exception {
+        MvcResult result = mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "aaa",
+                                               "repeatPassword":"aaa",
+                                               "contacts":"insta"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201))
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assertions.assertTrue(content.contains("abcde@gmail.com"
+        ));
+    }
+
+    @DirtiesContext
+    @Test
+    void createAccountEmailAlreadyExists() throws Exception {
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "aaa",
+                                               "repeatPassword":"aaa",
+                                               "contacts":"insta"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "bbb",
+                                               "repeatPassword":"bbb",
+                                               "contacts":"telegram"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(403));
+    }
 }
