@@ -1,4 +1,4 @@
-import {Participant} from "./Participant";
+import {Participant} from "../types/Participant";
 import {FormEvent, useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {useNavigate, useParams} from "react-router-dom";

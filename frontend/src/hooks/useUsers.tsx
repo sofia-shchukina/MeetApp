@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
-import {NewUser} from "./NewUser";
+import {NewUser} from "../types/NewUser";
 
 
 export default function useUsers(

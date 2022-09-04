@@ -1,5 +1,5 @@
 import EachParticipant from "./EachParticipant";
-import {Participant} from "./Participant";
+import {Participant} from "../types/Participant";
 import "./ParticipantsList.css"
 
 export default function ParticipantsList(props:

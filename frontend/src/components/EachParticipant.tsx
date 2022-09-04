@@ -1,5 +1,5 @@
 import {Button} from "@mui/material";
-import {Participant} from "./Participant";
+import {Participant} from "../types/Participant";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './EachParticipant.css';

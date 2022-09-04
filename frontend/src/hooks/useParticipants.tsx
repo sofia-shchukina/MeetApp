@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import {NewParticipant, Participant} from "./Participant";
+import {NewParticipant, Participant} from "../types/Participant";
 import axios from "axios";
 import {toast} from "react-toastify";
-import {Like} from "./Like";
+import {Like} from "../types/Like";
 
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);

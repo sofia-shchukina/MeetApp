@@ -1,8 +1,11 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.app.users;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
+import sonia.meetapp.users.AppUser;
+import sonia.meetapp.users.AppUserDetailsService;
+import sonia.meetapp.users.AppUserRepo;
 
 import java.util.Collections;
 import java.util.Optional;

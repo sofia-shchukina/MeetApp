@@ -1,4 +1,4 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.users;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

@@ -1,4 +1,4 @@
-import {Participant} from "./Participant";
+import {Participant} from "../types/Participant";
 import {ChangeEvent, FormEvent, useState} from "react";
 import './LikesCollection.css';
 import SendIcon from "@mui/icons-material/Send";

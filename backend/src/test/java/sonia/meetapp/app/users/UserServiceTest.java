@@ -1,10 +1,14 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.app.users;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sonia.meetapp.exceptions.PasswordNotMatchException;
 import sonia.meetapp.exceptions.UserExistsException;
+import sonia.meetapp.users.AppUser;
+import sonia.meetapp.users.AppUserRepo;
+import sonia.meetapp.users.NewAppUser;
+import sonia.meetapp.users.UserService;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.users;
 
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,6 @@ public class UserService {
 
     private final AppUserRepo appUserRepo;
     private final PasswordEncoder passwordEncoder;
-    private Validator validator;
 
     public UserService(AppUserRepo appUserRepo, PasswordEncoder passwordEncoder) {
         this.appUserRepo = appUserRepo;
@@ -36,7 +35,7 @@ public class UserService {
 
     void validateUser(NewAppUser newAppUser) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator = factory.getValidator();
         Set<ConstraintViolation<NewAppUser>> violations = validator.validate(newAppUser);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);

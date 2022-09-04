@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import './LikeAnalysis.css';
-import {Participant} from "./Participant";
+import {Participant} from "../types/Participant";
 
 export default function LikesAnalysis(props:
                                           {

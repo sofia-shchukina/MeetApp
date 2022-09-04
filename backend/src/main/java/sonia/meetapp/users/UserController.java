@@ -1,4 +1,4 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.users;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
