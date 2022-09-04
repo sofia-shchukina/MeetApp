@@ -2,6 +2,7 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
@@ -70,6 +71,29 @@ class ParticipantsServiceTest {
             participantsService.addParticipant(newParticipant);
             Assertions.fail("Expected exception was not thrown");
         } catch (NameIsNotUniqueException ignored) {
+        }
+    }
+
+    @Test
+    void addParticipantNotUniqueEmail() {
+        List<Participant> testList = List.of(
+                new Participant("Daniel", "1234", "daniel@gmail.com"),
+                new Participant("Guillermo", "1", "guillermo@gmail.com"));
+
+        String participantName = "Frank";
+        String id = "123";
+        String email = "daniel@gmail.com";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName(participantName);
+        newParticipant.setEmail(email);
+        Participant testParticipant = new Participant(participantName, id, email);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+        when(participantsRepo.findAll()).thenReturn(testList);
+        when(utility.createIdAsString()).thenReturn(id);
+        try {
+            participantsService.addParticipant(newParticipant);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (EmailIsNotUniqueException ignored) {
         }
     }
 

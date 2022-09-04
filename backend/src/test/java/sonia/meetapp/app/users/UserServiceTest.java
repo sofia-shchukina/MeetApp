@@ -11,6 +11,7 @@ import sonia.meetapp.users.AppUserRepo;
 import sonia.meetapp.users.NewAppUser;
 import sonia.meetapp.users.UserService;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -72,6 +73,24 @@ class UserServiceTest {
             userService.registerNewUser(newAppUser);
             Assertions.fail("Expected exception was not thrown");
         } catch (PasswordNotMatchException ignored) {
+        }
+    }
+
+    @Test
+    void registerNewUserTestConstraintViolation() {
+
+        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer",
+                "qwer", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+
+        when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
+        when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
+        when(appUserRepo.save(appUser)).thenReturn(appUser);
+
+        try {
+            userService.registerNewUser(newAppUser);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (ConstraintViolationException ignored) {
         }
     }
 
