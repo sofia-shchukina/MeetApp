@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
         return responseBody;
     }
 
-
     @ExceptionHandler(ParticipantNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleTodoNotFoundException(ParticipantNotFoundException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
@@ -37,7 +36,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailIsNotUniqueException.class)
     public ResponseEntity<Map<String, Object>> handleEmailIsNotUniqueException(EmailIsNotUniqueException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
-
         return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN);
     }
 

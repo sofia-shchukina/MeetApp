@@ -23,7 +23,6 @@ export default function App() {
             <HashRouter>
                 <header>Speed-Friending</header>
                 <main>
-
                     <Routes>
                         <Route path={"/"}
                                element={

@@ -10,7 +10,6 @@ export default function LikesAnalysis(props:
                                               user: string | undefined
                                           }) {
 
-
     const analyser = props.participants.find(participant => participant.email === props.user);
     const handleSubmit = () => {
         if (analyser) props.getAllMatches(analyser.id);

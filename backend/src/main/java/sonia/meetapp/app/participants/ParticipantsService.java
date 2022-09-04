@@ -1,6 +1,5 @@
 package sonia.meetapp.app.participants;
 
-
 import org.springframework.stereotype.Service;
 import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 
 @Service
 public class ParticipantsService {
@@ -118,5 +116,3 @@ public class ParticipantsService {
         return matches;
     }
 }
-
-

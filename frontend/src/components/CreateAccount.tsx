@@ -27,7 +27,6 @@ export default function CreateAccount(props:
     }
     return (
         <>
-
             <form id="signUpForm">
                 <>New here? Sign up now!</>
                 <TextField id="login" label="e-mail" color="warning" value={email}

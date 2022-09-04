@@ -9,5 +9,3 @@ public class EmailIsNotUniqueException extends RuntimeException {
         super("User with this email is already registered for this event");
     }
 }
-
-

@@ -11,10 +11,8 @@ export default function LikesCollection(props:
                                                 user: string | undefined
                                             }) {
 
-
     const [likedNames, setLikedNames] = useState<string[]>([]);
     const [resultMessage, setResultMessage] = useState<string>("");
-
 
     const handleLikedChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.currentTarget.checked) {
@@ -26,6 +24,7 @@ export default function LikesCollection(props:
             setLikedNames(updatedLikedNames);
         }
     }
+
     const likerParticipant = props.participants.find(participant => participant.email === props.user);
     const handleSubmitAForm = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -51,7 +50,6 @@ export default function LikesCollection(props:
             <>Your name on meetup was {likerParticipant ? likerParticipant.name : <>unknown</>}
                 . If it's incorrect, please contact the host before sending likes :-)
             </>
-
             <form className="likesForm" onSubmit={handleSubmitAForm}>
                 <label> Check here all people you liked </label>
                 <div id="checkboxes">
@@ -70,4 +68,3 @@ export default function LikesCollection(props:
         </>
     );
 }
-

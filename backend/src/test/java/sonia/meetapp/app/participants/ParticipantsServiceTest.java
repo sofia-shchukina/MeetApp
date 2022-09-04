@@ -129,10 +129,7 @@ class ParticipantsServiceTest {
         Participant testParticipant = new Participant(newParticipant.getName(), id, email);
 
         when(participantsRepo.existsById(id)).thenReturn(true);
-
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
-
-
         Participant actualResult = participantsService.editParticipant(id, newParticipant);
 
         verify(participantsRepo).save(testParticipant);
@@ -223,7 +220,6 @@ class ParticipantsServiceTest {
         when(participantsRepo.findById(dummieParticipant2.getId())).thenReturn(Optional.of(dummieParticipant2));
         Participant actual = participantsService.addLikes(like);
         Assertions.assertEquals(expected, actual);
-
     }
 
     @Test
@@ -239,7 +235,6 @@ class ParticipantsServiceTest {
         expected.setPeopleILike(new ArrayList<>(List.of("1234")));
 
         when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(false);
-
         try {
             participantsService.addLikes(like);
             Assertions.fail("Expected exception was not thrown");

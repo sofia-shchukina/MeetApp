@@ -1,6 +1,5 @@
 package sonia.meetapp.users;
 
-
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +11,6 @@ import javax.validation.*;
 import java.util.Collections;
 import java.util.Set;
 
-
 @Service
 public class UserService {
 
@@ -23,7 +21,6 @@ public class UserService {
         this.appUserRepo = appUserRepo;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     public AppUser registerNewUser(NewAppUser newAppUser) {
         validateUser(newAppUser);
@@ -53,5 +50,4 @@ public class UserService {
         }
         return new User(appUser.email(), appUser.passwordHash(), Collections.emptyList());
     }
-
 }

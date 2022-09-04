@@ -8,7 +8,6 @@ import java.util.List;
 public class Participant {
     private String name;
     private String id;
-
     private List<String> peopleILike;
     private List<String> peopleWhoLikeMe;
     private String email;

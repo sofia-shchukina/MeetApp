@@ -111,5 +111,3 @@ class UserServiceTest {
         assertNull(userService.loadUserByUsername(email));
     }
 }
-
-

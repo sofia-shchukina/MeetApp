@@ -164,7 +164,6 @@ class IntegrationTest {
                                 {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
-
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -211,7 +210,6 @@ class IntegrationTest {
 
         Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
         String id2 = saveResultParticipant2.getId();
-
 
         String saveResult3 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)

@@ -9,7 +9,3 @@ public class PasswordNotMatchException extends RuntimeException {
         super("Passwords don't match");
     }
 }
-
-
-
-

@@ -26,6 +26,7 @@ export default function ParticipantDetails(props: {
         return <>
             Participant not found</>
     }
+
     const onNameSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!editedName) {
@@ -43,7 +44,6 @@ export default function ParticipantDetails(props: {
         }
     }
 
-
     const checkIfLogin = () => {
         axios.get("/hello/me")
             .then((response) => {
@@ -53,6 +53,7 @@ export default function ParticipantDetails(props: {
                 setUser(undefined)
             })
     }
+
     return (
         <form id="nameEditForm" onSubmit={onNameSubmit}>
             <label> How would you like to change your name?

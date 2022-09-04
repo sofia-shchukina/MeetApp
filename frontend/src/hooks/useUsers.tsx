@@ -2,7 +2,6 @@ import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
 import {NewUser} from "../types/NewUser";
 
-
 export default function useUsers(
 
 ) {
@@ -11,7 +10,6 @@ export default function useUsers(
     useEffect(() => {
         checkIfLogin()
     }, [])
-
 
     const checkIfLogin = () => {
         axios.get("/hello/me")
@@ -33,7 +31,7 @@ export default function useUsers(
 
     const logout = () => {
         axios.get("/hello/logout")
-            .then((response) => {
+            .then(() => {
                 setUser(undefined)
                 checkIfLogin()
                 localStorage.removeItem('matches');
@@ -46,4 +44,3 @@ export default function useUsers(
     }
     return {user, login, logout, checkIfLogin, createUser}
 }
-
