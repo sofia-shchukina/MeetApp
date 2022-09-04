@@ -10,7 +10,7 @@
     justify-items: flex-start;
     gap: 1vh;
     align-items: center;
-    margin-bottom: 2vh;
+    margin: 1vh 2vw 2vh 2vw;
 }
 
 #message {

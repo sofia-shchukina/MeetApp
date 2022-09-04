@@ -1,12 +1,15 @@
 package sonia.meetapp.users;
 
 
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sonia.meetapp.exceptions.PasswordNotMatchException;
 import sonia.meetapp.exceptions.UserExistsException;
 
 import javax.validation.*;
+import java.util.Collections;
 import java.util.Set;
 
 
@@ -41,4 +44,14 @@ public class UserService {
             throw new ConstraintViolationException(violations);
         }
     }
+
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser = appUserRepo.findById(email)
+                .orElse(null);
+        if (appUser == null) {
+            return null;
+        }
+        return new User(appUser.email(), appUser.passwordHash(), Collections.emptyList());
+    }
+
 }

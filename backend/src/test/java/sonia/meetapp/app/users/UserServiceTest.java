@@ -2,6 +2,7 @@ package sonia.meetapp.app.users;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import sonia.meetapp.exceptions.PasswordNotMatchException;
 import sonia.meetapp.exceptions.UserExistsException;
@@ -10,8 +11,10 @@ import sonia.meetapp.users.AppUserRepo;
 import sonia.meetapp.users.NewAppUser;
 import sonia.meetapp.users.UserService;
 
+import java.util.Collections;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -70,6 +73,23 @@ class UserServiceTest {
             Assertions.fail("Expected exception was not thrown");
         } catch (PasswordNotMatchException ignored) {
         }
+    }
+
+    @Test
+    void loadUserByUsername() {
+        String email = "userName@gmail.com";
+        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta");
+        User user = new User("userName@gmail.com", "12345", Collections.emptyList());
+        when(appUserRepo.findById(email)).thenReturn(Optional.of(appUser));
+        User actual = (User) userService.loadUserByUsername(email);
+        Assertions.assertEquals(user, actual);
+    }
+
+    @Test
+    void loadUserByUsernameFail() {
+        String email = "userName@gmail.com";
+        when(appUserRepo.findById(email)).thenReturn(Optional.empty());
+        assertNull(userService.loadUserByUsername(email));
     }
 }
 
