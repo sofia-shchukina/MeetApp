@@ -17,7 +17,6 @@ export default function LikesAnalysis(props: {
         if (analyser) props.getAllMatches(analyser.id);
     }
 
-
     return <>
         <>Your name on meetup was {analyser ? analyser.name : <>unknown</>}
             . If it's incorrect, please contact the host to receive your matches :-)

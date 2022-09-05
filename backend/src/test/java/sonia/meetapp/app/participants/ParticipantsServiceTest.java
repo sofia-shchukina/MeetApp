@@ -256,9 +256,9 @@ class ParticipantsServiceTest {
         when(participantsRepo.findAll()).thenReturn(participants);
         when(participantsRepo.findById(participant1.getId())).thenReturn(Optional.of(participant1));
 
-        List<String> expected = new ArrayList<>(List.of(
-                "Dominic"));
-        List<String> actual = participantsService.receiveMatches(participant1.getId());
+        List<Participant> expected = new ArrayList<>(List.of(
+                participant2));
+        List<Participant> actual = participantsService.receiveMatches(participant1.getId());
         Assertions.assertEquals(expected, actual);
     }
 }

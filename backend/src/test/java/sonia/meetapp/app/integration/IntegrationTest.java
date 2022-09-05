@@ -252,8 +252,8 @@ class IntegrationTest {
         mockMvc.perform(get("/participants/likes/analysis/" + "<ID>".replaceFirst("<ID>", id)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        ["Mary"]
-                        """));
+                        [{"name":"Mary","id":"<ID2>","peopleILike":["<ID>"],"peopleWhoLikeMe":["<ID>"],"email":"12@gmail.com"}]
+                        """.replaceAll("<ID>", id).replaceFirst("<ID2>", id2)));
     }
 
     @Test
