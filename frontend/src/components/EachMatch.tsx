@@ -1,5 +1,6 @@
 import {Participant} from "../types/Participant";
 import {AppUser} from "../types/AppUser";
+import './EachMatch.css'
 
 
 export default function EachMatch(props: {
@@ -10,9 +11,9 @@ export default function EachMatch(props: {
         props.appUsers.find(user => user.email === props.match.email);
 
 
-    return (<>
-        {props.match.name} <></>
-        {appUser ? appUser.contacts : <>no contacts found</>}
-    </>)
-
+    return (
+        <div id="oneMatch">
+            <div id="name">{props.match.name}</div>
+            <div id="contacts">{appUser ? appUser.contacts : <>no contacts found</>}</div>
+        </div>)
 }
