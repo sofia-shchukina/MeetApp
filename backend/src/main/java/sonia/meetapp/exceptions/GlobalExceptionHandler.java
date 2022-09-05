@@ -56,10 +56,4 @@ public class GlobalExceptionHandler {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException exception) {
-        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
-        return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
-    }
 }
