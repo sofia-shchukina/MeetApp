@@ -7,11 +7,11 @@ export default function EachMatch(props: {
     appUsers: AppUser[],
 }) {
     const appUser =
-        props.appUsers.find(appUser => appUser.email === props.match.email);
+        props.appUsers.find(user => user.email === props.match.email);
 
 
     return (<>
-        {props.match.name}
+        {props.match.name} <></>
         {appUser ? appUser.contacts : <>no contacts found</>}
     </>)
 

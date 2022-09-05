@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("findUsers")
-    public List<AppUser> getAllusers() {
+    public List<AppUser> getAllUsers() {
         return userService.getAllUsers();
     }
 }
