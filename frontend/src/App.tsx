@@ -68,7 +68,7 @@ export default function App() {
                                            participants={participantsHook.participants}
                                            getAllMatches={participantsHook.getAllMatches}
                                            matches={participantsHook.matches}
-                                           findUserById={userHook.findUserById}
+                                           appUsers={userHook.appUsers}
                                            user={userHook.user}/>
                                        <NavigationBar/>
                                    </>}/>
