@@ -6,8 +6,9 @@ export default function LikesAnalysis(props:
                                           {
                                               participants: Participant[],
                                               getAllMatches: (id: string) => void,
-                                              matches: string[],
-                                              user: string | undefined
+                                              matches: Participant[],
+                                              user: string | undefined,
+                                              findUserById: (participant: Participant) => Promise<any>,
                                           }) {
 
     const analyser = props.participants.find(participant => participant.email === props.user);
@@ -28,7 +29,10 @@ export default function LikesAnalysis(props:
                 <div id="listOfMatches">
                     <h3> List of matches </h3>
                     <ul>
-                        {props.matches.length > 0 ? props.matches.map((match: string) => <li>{match}</li>) :
+                        {props.matches.length > 0 ? props.matches.map((match: Participant) =>
+                                <li>
+                                    <>{match.name} {props.findUserById(match)}</>
+                                </li>) :
                             <h4>Your don't have any matches yet:-)
                             </h4>}</ul>
                 </div>

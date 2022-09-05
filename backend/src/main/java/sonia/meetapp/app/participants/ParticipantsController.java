@@ -56,7 +56,7 @@ public class ParticipantsController {
     }
 
     @GetMapping("likes/analysis/{id}")
-    public List<String> receiveMatches(
+    public List<Participant> receiveMatches(
             @PathVariable String id
     ) {
         return participantsService.receiveMatches(id);
