@@ -1,5 +1,6 @@
 package sonia.meetapp.app.participants;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
@@ -11,14 +12,10 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
+@AllArgsConstructor
 public class ParticipantsService {
     private final ParticipantsRepo participantsRepo;
     private final Utility utility;
-
-    public ParticipantsService(ParticipantsRepo participantsRepo, Utility utility) {
-        this.participantsRepo = participantsRepo;
-        this.utility = utility;
-    }
 
     public List<Participant> getAllParticipants() {
         return participantsRepo.findAll();

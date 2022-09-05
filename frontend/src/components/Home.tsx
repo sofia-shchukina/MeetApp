@@ -29,8 +29,9 @@ export default function Home(props:
     }
     return (
         <div id="userLogin">
-            {props.user && props.user !== "anonymousUser" ? <>You are logged in as {props.user}</> : <>Already have an
-                account? log in!</>}
+            {props.user && props.user !== "anonymousUser" ?
+                <>You are logged in as {props.user}</> :
+                <>Already have an account? log in!</>}
             {props.user !== "anonymousUser" ?
                 <Button type="submit" id="loginButton" variant="contained" onClick={props.logout}>Logout</Button>
                 :

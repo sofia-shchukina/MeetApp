@@ -1,5 +1,6 @@
 package sonia.meetapp.app.participants;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,14 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/participants")
 public class ParticipantsController {
 
     private final ParticipantsService participantsService;
-
-    public ParticipantsController(ParticipantsService participantsService) {
-        this.participantsService = participantsService;
-    }
 
     @GetMapping()
     public List<Participant> getAllParticipants() {
