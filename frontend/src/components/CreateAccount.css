@@ -1,0 +1,18 @@
+#signUpButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+}
+
+#signUpForm {
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-start;
+    gap: 1vh;
+    align-items: center;
+    margin: 1vh 2vw 2vh 2vw;
+}
+
+#message {
+    color: red;
+}

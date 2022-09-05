@@ -1,7 +1,8 @@
 package sonia.meetapp.app.participants;
 
-
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
@@ -10,25 +11,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-
 @Service
+@AllArgsConstructor
 public class ParticipantsService {
     private final ParticipantsRepo participantsRepo;
     private final Utility utility;
-
-    public ParticipantsService(ParticipantsRepo participantsRepo, Utility utility) {
-        this.participantsRepo = participantsRepo;
-        this.utility = utility;
-    }
 
     public List<Participant> getAllParticipants() {
         return participantsRepo.findAll();
     }
 
     public Participant addParticipant(NewParticipant newParticipant) {
-        Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString());
+        Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString(), newParticipant.getEmail());
         if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant))) {
-            return participantsRepo.save(participant);
+            if (Boolean.TRUE.equals(thisEmailIsUnique(newParticipant))) {
+                return participantsRepo.save(participant);
+            } else throw new EmailIsNotUniqueException();
         } else {
             throw new NameIsNotUniqueException();
         }
@@ -45,7 +43,7 @@ public class ParticipantsService {
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
-                return participantsRepo.save(new Participant(editedNewParticipant.getName(), id));
+                    return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
             } else {
                 throw new ParticipantNotFoundException(id);
             }
@@ -61,6 +59,19 @@ public class ParticipantsService {
         for (Participant allParticipant : allParticipants) {
             if (allParticipant.getName().toLowerCase(Locale.ROOT).equals(name.toLowerCase())) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean thisEmailIsUnique(NewParticipant newParticipant) {
+        String email = newParticipant.getEmail();
+        List<Participant> allParticipants = participantsRepo.findAll();
+        if (!(allParticipants).isEmpty()) {
+            for (Participant allParticipant : allParticipants) {
+                if (allParticipant.getEmail().toLowerCase(Locale.ROOT).equals(email.toLowerCase())) {
+                    return false;
+                }
             }
         }
         return true;
@@ -102,5 +113,3 @@ public class ParticipantsService {
         return matches;
     }
 }
-
-

@@ -1,16 +1,16 @@
 import {useEffect, useState} from "react";
-import {NewParticipant, Participant} from "./Participant";
+import {NewParticipant, Participant} from "../types/Participant";
 import axios from "axios";
 import {toast} from "react-toastify";
-import {Like} from "./Like";
+import {Like} from "../types/Like";
 
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
+    const [matches, setMatches] = useState<string[]>([]);
+
     useEffect(() => {
         getAllParticipants()
     }, [])
-
-    const [matches, setMatches] = useState<string[]>([]);
 
     const getAllParticipants = () => {
         axios.get("/participants")
@@ -18,8 +18,8 @@ export default function useParticipants() {
             .then(setParticipants)
     }
 
-    const addParticipant = (name: string) => {
-        const newParticipant: NewParticipant = {name}
+    const addParticipant = (name: string, email: string) => {
+        const newParticipant: NewParticipant = {name, email}
         return axios.post("participants", newParticipant)
             .then(getAllParticipants)
     }
@@ -33,8 +33,8 @@ export default function useParticipants() {
                 })
     }
 
-    const editParticipant = (participantToEdit: Participant, editedName: string) => {
-        const newParticipant: NewParticipant = {name: editedName}
+    const editParticipant = (participantToEdit: Participant, editedName: string, email: string) => {
+        const newParticipant: NewParticipant = {name: editedName, email}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
             .then(getAllParticipants)
     }
@@ -47,11 +47,20 @@ export default function useParticipants() {
                     toast.error(error.message)
                 })
     }
+
     const getAllMatches = (id: string) => {
         axios.get("/participants/likes/analysis/" + id)
             .then(response => response.data)
             .then(setMatches)
     }
 
-    return {participants, addParticipant, deleteParticipant, editParticipant, sendLike, getAllMatches, matches}
+    return {
+        participants,
+        addParticipant,
+        deleteParticipant,
+        editParticipant,
+        sendLike,
+        getAllMatches,
+        matches,
+    }
 }

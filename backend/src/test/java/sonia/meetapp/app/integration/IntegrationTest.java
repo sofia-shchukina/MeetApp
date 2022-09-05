@@ -1,4 +1,4 @@
-package sonia.meetapp.app.participants;
+package sonia.meetapp.app.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import sonia.meetapp.app.participants.Participant;
+import sonia.meetapp.app.participants.Utility;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +36,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void getAllParticipants() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
                 .andExpect(status().isOk())
@@ -42,13 +47,14 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void addParticipant() throws Exception {
         MvcResult result = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().is(201))
                 .andReturn();
         String content = result.getResponse().getContentAsString();
@@ -57,6 +63,7 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void deleteParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/participants")
@@ -64,13 +71,16 @@ class IntegrationTest {
                         .content("""
                                 {"name":"Mike"}
                                  """)
+                        .with(csrf())
                 )
                 .andExpect(status().is(201));
 
-        mockMvc.perform(delete("/participants/" + "123"))
+        mockMvc.perform(delete("/participants/" + "123")
+                        .with(csrf()))
                 .andExpect(status().is(204));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         []
@@ -79,49 +89,54 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void deleteParticipantDoesNotExist() throws Exception {
         String id = "111";
-        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id)
+                        .with(csrf()))
                 .andExpect(status().is(404));
     }
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void editParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().is(201));
 
         mockMvc.perform(put("/participants/edit/" + "123")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Nike"}
+                                {"name":"Nike", "email":"123@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        [{"name":"Nike", "id": "123"}]
+                        [{"name":"Nike", "id": "123", "email":"123@gmail.com"}]
                           """));
     }
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void addLikes() throws Exception {
 
         String saveResult = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -132,9 +147,9 @@ class IntegrationTest {
         String saveResult2 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mary"}
+                                {"name":"Mary", "email":"12@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -149,8 +164,7 @@ class IntegrationTest {
                                 {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
-
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
@@ -160,22 +174,23 @@ class IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
-                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]},
-                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"]}
+                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"], "email":"123@gmail.com"},
+                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"], "email":"12@gmail.com"}
                         ]
                         """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
     }
 
     @DirtiesContext
     @Test
+    @WithMockUser(username = "username")
     void getMatches() throws Exception {
 
         String saveResult = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mike"}
+                                {"name":"Mike", "email":"123@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -186,9 +201,9 @@ class IntegrationTest {
         String saveResult2 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Mary"}
+                                {"name":"Mary", "email":"12@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -196,13 +211,12 @@ class IntegrationTest {
         Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
         String id2 = saveResultParticipant2.getId();
 
-
         String saveResult3 = mockMvc.perform(post("/participants")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Sara"}
+                                {"name":"Sara", "email":"1@gmail.com"}
                                  """)
-                )
+                        .with(csrf()))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -217,7 +231,7 @@ class IntegrationTest {
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
@@ -229,7 +243,7 @@ class IntegrationTest {
                                                              
                                  """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
 
-                )
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {"name":"Mary", "id": "<ID2>", "peopleILike":["<ID>"]}
@@ -240,5 +254,66 @@ class IntegrationTest {
                 .andExpect(content().json("""
                         ["Mary"]
                         """));
+    }
+
+    @Test
+    void unauthorized() throws Exception {
+        mockMvc.perform(get("/hello"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @WithMockUser(username = "username")
+    void getTestWithUsername() throws Exception {
+        mockMvc.perform(get("/hello/login"))
+                .andExpect(content().string("username"));
+    }
+
+    @DirtiesContext
+    @Test
+    void createAccount() throws Exception {
+        MvcResult result = mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
+                                               "contacts":"insta"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201))
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assertions.assertTrue(content.contains("abcde@gmail.com"
+        ));
+    }
+
+    @DirtiesContext
+    @Test
+    void createAccountEmailAlreadyExists() throws Exception {
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
+                                               "contacts":"insta"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "abcde@gmail.com",
+                                               "password": "bbbbbb",
+                                               "repeatPassword":"bbbbbb",
+                                               "contacts":"telegram"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(403));
     }
 }

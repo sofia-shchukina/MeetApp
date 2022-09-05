@@ -2,6 +2,7 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
@@ -21,16 +22,16 @@ class ParticipantsServiceTest {
     @Test
     void getAllParticipants() {
         List<Participant> participants = List.of(
-                new Participant("Alex", "12"),
-                new Participant("Marina", "333"),
-                new Participant("Ivan", "2222")
+                new Participant("Alex", "12", "alex@gmail.com"),
+                new Participant("Marina", "333", "marina@gmail.com"),
+                new Participant("Ivan", "2222", "ivan@gmail.com")
         );
         when(participantsRepo.findAll()).thenReturn(participants);
         List<Participant> actualResult = participantsService.getAllParticipants();
         List<Participant> expectedResult = List.of(
-                new Participant("Alex", "12"),
-                new Participant("Marina", "333"),
-                new Participant("Ivan", "2222")
+                new Participant("Alex", "12", "alex@gmail.com"),
+                new Participant("Marina", "333", "marina@gmail.com"),
+                new Participant("Ivan", "2222", "ivan@gmail.com")
         );
         assertThat(actualResult).hasSameElementsAs(expectedResult);
     }
@@ -39,9 +40,11 @@ class ParticipantsServiceTest {
     void addParticipant() {
         String participantName = "Guillermo";
         String id = "123";
+        String email = "guillermo@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
-        Participant testParticipant = new Participant(participantName, id);
+        newParticipant.setEmail(email);
+        Participant testParticipant = new Participant(participantName, id, email);
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
         when(utility.createIdAsString()).thenReturn(id);
         Participant actualResult = participantsService.addParticipant(newParticipant);
@@ -52,14 +55,15 @@ class ParticipantsServiceTest {
     @Test
     void addParticipantNotUniqueName() {
         List<Participant> testList = List.of(
-                new Participant("Daniel", "1234"),
-                new Participant("Guillermo", "1"));
+                new Participant("Daniel", "1234", "daniel@gmail.com"),
+                new Participant("Guillermo", "1", "guillermo@gmail.com"));
 
         String participantName = "Guillermo";
         String id = "123";
+        String email = "test@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
-        Participant testParticipant = new Participant(participantName, id);
+        Participant testParticipant = new Participant(participantName, id, email);
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
         when(participantsRepo.findAll()).thenReturn(testList);
         when(utility.createIdAsString()).thenReturn(id);
@@ -71,8 +75,31 @@ class ParticipantsServiceTest {
     }
 
     @Test
+    void addParticipantNotUniqueEmail() {
+        List<Participant> testList = List.of(
+                new Participant("Daniel", "1234", "daniel@gmail.com"),
+                new Participant("Guillermo", "1", "guillermo@gmail.com"));
+
+        String participantName = "Frank";
+        String id = "123";
+        String email = "daniel@gmail.com";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName(participantName);
+        newParticipant.setEmail(email);
+        Participant testParticipant = new Participant(participantName, id, email);
+        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
+        when(participantsRepo.findAll()).thenReturn(testList);
+        when(utility.createIdAsString()).thenReturn(id);
+        try {
+            participantsService.addParticipant(newParticipant);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (EmailIsNotUniqueException ignored) {
+        }
+    }
+
+    @Test
     void deleteParticipant() {
-        Participant testParticipant = new Participant("Daria", "54321");
+        Participant testParticipant = new Participant("Daria", "54321", "123@gmail.com");
         when(participantsRepo.existsById(testParticipant.getId())).thenReturn(true);
         doNothing().when(participantsRepo).deleteById(testParticipant.getId());
         participantsService.deleteParticipant(testParticipant.getId());
@@ -82,7 +109,7 @@ class ParticipantsServiceTest {
 
     @Test
     void deleteParticipantDoesNotExist() {
-        Participant testParticipant = new Participant("Daria", "54321");
+        Participant testParticipant = new Participant("Daria", "54321", "123@gmail.com");
         when(participantsRepo.existsById(testParticipant.getId())).thenReturn(false);
         String id = testParticipant.getId();
         try {
@@ -95,15 +122,14 @@ class ParticipantsServiceTest {
     @Test
     void editParticipant() {
         String id = "123";
+        String email = "123@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
-        Participant testParticipant = new Participant(newParticipant.getName(), id);
+        newParticipant.setEmail("123@gmail.com");
+        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
 
         when(participantsRepo.existsById(id)).thenReturn(true);
-
         when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
-
-
         Participant actualResult = participantsService.editParticipant(id, newParticipant);
 
         verify(participantsRepo).save(testParticipant);
@@ -113,14 +139,14 @@ class ParticipantsServiceTest {
     @Test
     void editParticipantNotUnique() {
         List<Participant> testList = List.of(
-                new Participant("Daniel", "1234"),
-                new Participant("George", "1"));
-
+                new Participant("Daniel", "1234", "daniel@gmail.com"),
+                new Participant("George", "1", "daniel@gmail.com"));
 
         String id = "123";
+        String email = "12@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
-        Participant testParticipant = new Participant(newParticipant.getName(), id);
+        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
 
         when(participantsRepo.findAll()).thenReturn(testList);
         when(participantsRepo.existsById(id)).thenReturn(true);
@@ -139,7 +165,8 @@ class ParticipantsServiceTest {
         String id = "123";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
-        Participant testParticipant = new Participant(newParticipant.getName(), id);
+        String email = "123@gmail.com";
+        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
 
         when(participantsRepo.existsById(id)).thenReturn(false);
         try {
@@ -154,8 +181,8 @@ class ParticipantsServiceTest {
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
 
-        Participant dummieParticipant1 = new Participant("Florian", "123");
-        Participant dummieParticipant2 = new Participant("Daniel", "1234");
+        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
+        Participant dummieParticipant2 = new Participant("Daniel", "1234", "1234@gmail.com");
         when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
 
         Boolean actual = participantsService.thisNameIsUnique(newParticipant);
@@ -167,8 +194,8 @@ class ParticipantsServiceTest {
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
 
-        Participant dummieParticipant1 = new Participant("Florian", "123");
-        Participant dummieParticipant2 = new Participant("George", "1234");
+        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
+        Participant dummieParticipant2 = new Participant("George", "1234", "123@gmail.com");
         when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
 
         Boolean actual = participantsService.thisNameIsUnique(newParticipant);
@@ -177,14 +204,14 @@ class ParticipantsServiceTest {
 
     @Test
     void addLikes() {
-        Participant dummieParticipant1 = new Participant("Florian", "123");
-        Participant dummieParticipant2 = new Participant("George", "1234");
+        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
+        Participant dummieParticipant2 = new Participant("George", "1234", "123@gmail.com");
         Like like = new Like();
         like.setLikerID(dummieParticipant1.getId());
         String[] likedPeopleIDs = {"1234"};
         like.setLikedPeopleIDs(likedPeopleIDs);
 
-        Participant expected = new Participant("Florian", "123");
+        Participant expected = new Participant("Florian", "123", "123@gmail.com");
         expected.setPeopleILike(new ArrayList<>(List.of("1234")));
 
         when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(true);
@@ -193,23 +220,21 @@ class ParticipantsServiceTest {
         when(participantsRepo.findById(dummieParticipant2.getId())).thenReturn(Optional.of(dummieParticipant2));
         Participant actual = participantsService.addLikes(like);
         Assertions.assertEquals(expected, actual);
-
     }
 
     @Test
     void addLikesDoesNotExist() {
-        Participant dummieParticipant1 = new Participant("Florian", "123");
-        Participant dummieParticipant2 = new Participant("George", "1234");
+        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
+        Participant dummieParticipant2 = new Participant("George", "1234", "1234@gmail.com");
         Like like = new Like();
         like.setLikerID(dummieParticipant1.getId());
         String[] likedPeopleIDs = {"1234"};
         like.setLikedPeopleIDs(likedPeopleIDs);
 
-        Participant expected = new Participant("Florian", "123");
+        Participant expected = new Participant("Florian", "123", "123@gmail.com");
         expected.setPeopleILike(new ArrayList<>(List.of("1234")));
 
         when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(false);
-
         try {
             participantsService.addLikes(like);
             Assertions.fail("Expected exception was not thrown");
@@ -220,9 +245,9 @@ class ParticipantsServiceTest {
     @Test
     void receiveMatches() {
 
-        Participant participant1 = new Participant("Florian", "123");
-        Participant participant2 = new Participant("Dominic", "1234");
-        Participant participant3 = new Participant("Christopher", "12345");
+        Participant participant1 = new Participant("Florian", "123", "123@gmail.com");
+        Participant participant2 = new Participant("Dominic", "1234", "1234@gmail.com");
+        Participant participant3 = new Participant("Christopher", "12345", "12345@gmail.com");
         participant1.setPeopleILike(new ArrayList<>(List.of(participant2.getId())));
         participant2.setPeopleILike(new ArrayList<>(List.of(participant1.getId())));
         participant1.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant2.getId())));

@@ -1,0 +1,29 @@
+#userLogin {
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-start;
+    gap: 1vh;
+    align-items: center;
+}
+
+#login {
+    background-color: white;
+    width: 50vw;
+}
+
+#logout {
+    background-color: white;
+    width: 50vw;
+}
+
+#loginButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+}
+
+#logoutButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+}
