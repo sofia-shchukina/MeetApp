@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -129,8 +130,9 @@ class UserServiceTest {
 
         try {
             userService.findUserByEmail(email);
-            Assertions.fail("Expected exception was not thrown");
+            fail("Expected exception was not thrown");
         } catch (AppUserNotFoundException ignored) {
         }
+
     }
 }

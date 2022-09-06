@@ -5,8 +5,15 @@ export default function ManageUsers(props: {
 }) {
     return (
         <>
-            {props.appUser && props.appUser.role === "admin" ? <> admin </> : <> just user </>}
+            {props.appUser && props.appUser.role === "admin" ?
+                <> Future admin page
+                </>
+                :
+                <>
+                    Hi, it's a page for app's admin.
+                    If you can read it, that's because Sonia is just a newbie in the world of technology, tell her, that
+                    you somehow came here, please:-)
+                </>}
 
-            <h3>hallo</h3>
         </>)
 }

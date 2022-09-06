@@ -18,7 +18,7 @@ export default function EachParticipant(props:
         <li key={props.participant.id}>
             <div id="nameAndButtons">
                 <div className="nameStyle"> {props.participant.name} </div>
-                {props.participant.email === props.appUser?.email ?
+                {props.participant.email === props.appUser?.email || props.appUser?.role === "admin" ?
                     <div id="buttons">
                         <Button variant="outlined" id="personalButton"
                                 startIcon={<EditIcon id="editIcon"/>}
