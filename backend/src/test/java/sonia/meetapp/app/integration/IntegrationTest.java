@@ -377,8 +377,7 @@ class IntegrationTest {
         mockMvc.perform(get("/hello/logout"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/hello"))
-                .andExpect(status().is4xxClientError());
-
+        mockMvc.perform(get("/hello/login"))
+                .andExpect(status().is(404));
     }
 }
