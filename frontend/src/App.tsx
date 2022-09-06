@@ -36,7 +36,9 @@ export default function App() {
                                    </>
                                }/>
                         <Route path={"/for-admin"}
-                               element={<ManageUsers appUser={userHook.appUser}/>}/>
+                               element={<ManageUsers appUser={userHook.appUser}
+                                                     appUsers={userHook.appUsers}
+                                                     participants={participantsHook.participants}/>}/>
 
                         <Route path={"/registration"} element={
                             <>

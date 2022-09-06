@@ -1,18 +1,30 @@
 import {AppUser} from "../types/AppUser";
+import {Participant} from "../types/Participant";
+import EachUser from "./EachUser";
 
 export default function ManageUsers(props: {
-    appUser: AppUser | undefined
+    appUser: AppUser | undefined,
+    appUsers: AppUser[],
+    participants: Participant[]
 }) {
     return (
         <>
             {props.appUser && props.appUser.role === "admin" ?
-                <> Future admin page
-                </>
+                <div id="list">
+                    <h3>List of Users</h3>
+                    <ol>
+                        {props.appUsers.map((user: AppUser) =>
+                            <li>
+                                <EachUser key={user.email}
+                                          user={user}
+                                          participants={props.participants}/>
+                            </li>
+                        )}
+                    </ol>
+                </div>
                 :
                 <>
-                    Hi, it's a page for app's admin.
-                    If you can read it, that's because Sonia is just a newbie in the world of technology, tell her, that
-                    you somehow came here, please:-)
+                    Nothing interesting here
                 </>}
 
         </>)
