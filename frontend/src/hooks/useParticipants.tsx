@@ -6,7 +6,7 @@ import {Like} from "../types/Like";
 
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
-    const [matches, setMatches] = useState<string[]>([]);
+    const [matches, setMatches] = useState<Participant[]>([]);
 
     useEffect(() => {
         getAllParticipants()

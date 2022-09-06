@@ -252,8 +252,8 @@ class IntegrationTest {
         mockMvc.perform(get("/participants/likes/analysis/" + "<ID>".replaceFirst("<ID>", id)))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        ["Mary"]
-                        """));
+                        [{"name":"Mary","id":"<ID2>","peopleILike":["<ID>"],"peopleWhoLikeMe":["<ID>"],"email":"12@gmail.com"}]
+                        """.replaceAll("<ID>", id).replaceFirst("<ID2>", id2)));
     }
 
     @Test
@@ -315,5 +315,40 @@ class IntegrationTest {
                                  """)
                         .with(csrf()))
                 .andExpect(status().is(403));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void getAllUsers() throws Exception {
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "testUser1@gmail.com",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
+                                               "contacts":"telegram"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "testUser2@gmail.com",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
+                                               "contacts":"insta"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/hello/findUsers"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assertions.assertTrue(content.contains("testUser1@gmail.com"));
+        Assertions.assertTrue(content.contains("testUser2@gmail.com"));
     }
 }

@@ -10,6 +10,7 @@ import sonia.meetapp.exceptions.UserExistsException;
 
 import javax.validation.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -46,5 +47,9 @@ public class UserService {
             return null;
         }
         return new User(appUser.email(), appUser.passwordHash(), Collections.emptyList());
+    }
+
+    public List<AppUser> getAllUsers() {
+        return appUserRepo.findAll();
     }
 }

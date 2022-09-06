@@ -98,15 +98,15 @@ public class ParticipantsService {
         return participantsRepo.save(liker);
     }
 
-    public List<String> receiveMatches(String id) {
+    public List<Participant> receiveMatches(String id) {
         Participant participant = participantsRepo.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
         List<Participant> allParticipants = participantsRepo.findAll();
-        List<String> matches = new ArrayList<>();
+        List<Participant> matches = new ArrayList<>();
         if (participant.getPeopleWhoLikeMe() != null && participant.getPeopleILike() != null) {
             for (String idParticipantILike : participant.getPeopleILike()) {
                 if (participant.getPeopleWhoLikeMe().contains(idParticipantILike)) {
                     Participant matchParticipant = allParticipants.stream().filter(item -> item.getId().equals(idParticipantILike)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(idParticipantILike));
-                    matches.add(matchParticipant.getName());
+                    matches.add(matchParticipant);
                 }
             }
         }

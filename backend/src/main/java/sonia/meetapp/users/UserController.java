@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("hello")
@@ -38,5 +39,10 @@ public class UserController {
 
         AppUser registeredUser = userService.registerNewUser(newAppUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+    }
+
+    @GetMapping("findUsers")
+    public List<AppUser> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

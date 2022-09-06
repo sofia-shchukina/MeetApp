@@ -1,0 +1,6 @@
+#oneMatch {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 4vw;
+}

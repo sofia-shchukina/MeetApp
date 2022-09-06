@@ -1,10 +1,10 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {useEffect, useState} from "react";
 import {NewUser} from "../types/NewUser";
+import {AppUser} from "../types/AppUser";
 
-export default function useUsers(
 
-) {
+export default function useUsers() {
     const [user, setUser] = useState<string>()
 
     useEffect(() => {
@@ -42,5 +42,17 @@ export default function useUsers(
         return axios.post("/hello", newUser)
 
     }
-    return {user, login, logout, checkIfLogin, createUser}
+    const [appUsers, setAppUsers] = useState<AppUser[]>([]);
+
+    useEffect(() => {
+        getAllAppUsers()
+    }, [])
+
+    const getAllAppUsers = () => {
+        return axios.get("/hello/findUsers")
+            .then(response => response.data)
+            .then(setAppUsers)
+    }
+
+    return {user, login, logout, checkIfLogin, createUser, appUsers}
 }
