@@ -262,12 +262,6 @@ class IntegrationTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
-    @WithMockUser(username = "username")
-    void getTestWithUsername() throws Exception {
-        mockMvc.perform(get("/hello/login"))
-                .andExpect(content().string("username"));
-    }
 
     @DirtiesContext
     @Test
