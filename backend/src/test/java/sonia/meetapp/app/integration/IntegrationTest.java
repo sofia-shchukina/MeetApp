@@ -345,4 +345,40 @@ class IntegrationTest {
         Assertions.assertTrue(content.contains("testUser1@gmail.com"));
         Assertions.assertTrue(content.contains("testUser2@gmail.com"));
     }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username@gmail.com")
+    void logintest() throws Exception {
+
+        mockMvc.perform(post("/hello")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"email": "username@gmail.com",
+                                               "password": "aaaaaa",
+                                               "repeatPassword":"aaaaaa",
+                                               "contacts":"telegram"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        MvcResult result = mockMvc.perform(get("/hello/login"))
+                .andExpect(status().isOk())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        Assertions.assertTrue(content.contains("username"));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username@gmail.com")
+    void logouttest() throws Exception {
+        mockMvc.perform(get("/hello/logout"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/hello"))
+                .andExpect(status().is4xxClientError());
+
+    }
 }
