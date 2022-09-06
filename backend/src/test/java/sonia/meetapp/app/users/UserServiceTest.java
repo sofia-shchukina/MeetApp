@@ -29,7 +29,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwerty", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -45,7 +45,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwerty", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.of(appUser));
@@ -63,7 +63,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwertz", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -81,7 +81,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer",
                 "qwer", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -97,7 +97,7 @@ class UserServiceTest {
     @Test
     void loadUserByUsername() {
         String email = "userName@gmail.com";
-        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta");
+        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta", "user");
         User user = new User("userName@gmail.com", "12345", Collections.emptyList());
         when(appUserRepo.findById(email)).thenReturn(Optional.of(appUser));
         User actual = (User) userService.loadUserByUsername(email);
