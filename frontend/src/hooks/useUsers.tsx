@@ -5,7 +5,7 @@ import {AppUser} from "../types/AppUser";
 
 
 export default function useUsers() {
-    const [user, setUser] = useState<string>()
+    const [appUser, setAppUser] = useState<AppUser>()
 
     useEffect(() => {
         checkIfLogin()
@@ -14,17 +14,17 @@ export default function useUsers() {
     const checkIfLogin = () => {
         axios.get("/hello/me")
             .then((response) => {
-                setUser(response.data)
+                setAppUser(response.data)
             })
             .catch(() => {
-                setUser(undefined)
+                setAppUser(undefined)
             })
     }
 
     const login = (config: AxiosRequestConfig) => {
         axios.get("/hello/login", config)
             .then((response) => {
-                setUser(response.data)
+                setAppUser(response.data)
             })
 
     }
@@ -32,7 +32,7 @@ export default function useUsers() {
     const logout = () => {
         axios.get("/hello/logout")
             .then(() => {
-                setUser(undefined)
+                setAppUser(undefined)
                 checkIfLogin()
                 localStorage.removeItem('matches');
             })
@@ -54,5 +54,5 @@ export default function useUsers() {
             .then(setAppUsers)
     }
 
-    return {user, login, logout, checkIfLogin, createUser, appUsers}
+    return {appUser, login, logout, checkIfLogin, createUser, appUsers}
 }

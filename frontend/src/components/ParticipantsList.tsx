@@ -1,12 +1,13 @@
 import EachParticipant from "./EachParticipant";
 import {Participant} from "../types/Participant";
 import "./ParticipantsList.css"
+import {AppUser} from "../types/AppUser";
 
 export default function ParticipantsList(props:
                                              {
                                                  participants: Participant[],
                                                  deleteParticipant: (id: string) => Promise<void>,
-                                                 user: string | undefined,
+                                                 appUser: AppUser | undefined,
                                              }) {
 
     return (
@@ -17,7 +18,7 @@ export default function ParticipantsList(props:
                     <EachParticipant key={participant.id}
                                      participant={participant}
                                      deleteParticipant={props.deleteParticipant}
-                                     user={props.user}
+                                     appUser={props.appUser}
                     />)}
             </ol>
         </div>

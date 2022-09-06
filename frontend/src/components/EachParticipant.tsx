@@ -4,12 +4,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './EachParticipant.css';
 import {useNavigate} from "react-router-dom";
+import {AppUser} from "../types/AppUser";
 
 export default function EachParticipant(props:
                                             {
                                                 participant: Participant,
                                                 deleteParticipant: (id: string) => Promise<void>,
-                                                user: string | undefined,
+                                                appUser: AppUser | undefined,
                                             }) {
     const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export default function EachParticipant(props:
         <li key={props.participant.id}>
             <div id="nameAndButtons">
                 <div className="nameStyle"> {props.participant.name} </div>
-                {props.participant.email === props.user ?
+                {props.participant.email === props.appUser?.email ?
                     <div id="buttons">
                         <Button variant="outlined" id="personalButton"
                                 startIcon={<EditIcon id="editIcon"/>}

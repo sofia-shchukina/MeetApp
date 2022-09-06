@@ -4,10 +4,11 @@ import './Home.css';
 import NavigationBar from "./NavigationBar";
 import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
+import {AppUser} from "../types/AppUser";
 
 export default function Home(props:
                                  {
-                                     user: string | undefined,
+                                     appUser: AppUser | undefined,
                                      login: (config: AxiosRequestConfig) => void,
                                      logout: () => void,
                                      checkIfLogin: () => void,
@@ -29,10 +30,10 @@ export default function Home(props:
     }
     return (
         <div id="userLogin">
-            {props.user && props.user !== "anonymousUser" ?
-                <>You are logged in as {props.user}</> :
+            {props.appUser && props.appUser.email !== "anonymousUser" ?
+                <>You are logged in as {props.appUser.email}</> :
                 <>Already have an account? log in!</>}
-            {props.user !== "anonymousUser" ?
+            {props.appUser && props.appUser.email !== "anonymousUser" ?
                 <Button type="submit" id="loginButton" variant="contained" onClick={props.logout}>Logout</Button>
                 :
                 <>
@@ -43,7 +44,7 @@ export default function Home(props:
                     <Button type="submit" id="logoutButton" variant="contained" onClick={handleLogin}>Login</Button>
                 </>
             }
-            {props.user !== "anonymousUser" ? <>{<NavigationBar/>}</> : <></>}
+            {props.appUser && props.appUser.email !== "anonymousUser" ? <>{<NavigationBar/>}</> : <></>}
         </div>
     );
 }

@@ -17,16 +17,16 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("login")
-    String login() {
-        return getUsername();
+    AppUser login() {
+        return getUser();
     }
 
     @GetMapping("me")
-    String getUsername() {
-        return SecurityContextHolder
+    AppUser getUser() {
+        String email = SecurityContextHolder
                 .getContext()
-                .getAuthentication()
-                .getName();
+                .getAuthentication().getName();
+        return userService.findUserByEmail(email);
     }
 
     @GetMapping("logout")

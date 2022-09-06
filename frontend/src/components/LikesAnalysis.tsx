@@ -8,11 +8,14 @@ export default function LikesAnalysis(props: {
     participants: Participant[],
     getAllMatches: (id: string) => void,
     matches: Participant[],
-    user: string | undefined,
+    appUser: AppUser | undefined,
     appUsers: AppUser[],
 }) {
-
-    const analyser = props.participants.find(participant => participant.email === props.user);
+    let email: string;
+    if (props.appUser) {
+        email = props.appUser.email
+    }
+    const analyser = props.participants.find(participant => participant.email === email);
     const handleSubmit = () => {
         if (analyser) props.getAllMatches(analyser.id);
     }

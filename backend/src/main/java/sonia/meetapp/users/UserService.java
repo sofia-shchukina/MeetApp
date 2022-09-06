@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sonia.meetapp.exceptions.AppUserNotFoundException;
 import sonia.meetapp.exceptions.PasswordNotMatchException;
 import sonia.meetapp.exceptions.UserExistsException;
 
@@ -27,7 +28,7 @@ public class UserService {
         } else if (!newAppUser.password().equals(newAppUser.repeatPassword())) {
             throw new PasswordNotMatchException();
         }
-        AppUser appUser = new AppUser(newAppUser.email(), passwordEncoder.encode(newAppUser.password()), newAppUser.contacts());
+        AppUser appUser = new AppUser(newAppUser.email(), passwordEncoder.encode(newAppUser.password()), newAppUser.contacts(), "user");
         return appUserRepo.save(appUser);
     }
 
@@ -51,5 +52,9 @@ public class UserService {
 
     public List<AppUser> getAllUsers() {
         return appUserRepo.findAll();
+    }
+
+    public AppUser findUserByEmail(String email) {
+        return appUserRepo.findById(email).orElseThrow(() -> new AppUserNotFoundException(email));
     }
 }

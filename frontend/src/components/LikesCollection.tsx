@@ -3,12 +3,13 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import './LikesCollection.css';
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
+import {AppUser} from "../types/AppUser";
 
 export default function LikesCollection(props:
                                             {
                                                 participants: Participant[],
                                                 sendLike: (liker: Participant, liked: Participant[]) => void,
-                                                user: string | undefined
+                                                appUser: AppUser | undefined,
                                             }) {
 
     const [likedNames, setLikedNames] = useState<string[]>([]);
@@ -24,8 +25,11 @@ export default function LikesCollection(props:
             setLikedNames(updatedLikedNames);
         }
     }
-
-    const likerParticipant = props.participants.find(participant => participant.email === props.user);
+    let email: string;
+    if (props.appUser) {
+        email = props.appUser.email
+    }
+    const likerParticipant = props.participants.find(participant => participant.email === email);
     const handleSubmitAForm = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
