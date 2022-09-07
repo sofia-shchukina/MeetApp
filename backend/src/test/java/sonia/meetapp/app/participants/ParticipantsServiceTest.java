@@ -366,7 +366,7 @@ class ParticipantsServiceTest {
                 participant5));
         when(participantsRepo.findAll()).thenReturn(participants);
 
-        Participant participantBreak = new Participant("Break", "break", "break");
+        Participant participantBreak = new Participant("break", "break", "break");
         participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
 
         List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant3,
