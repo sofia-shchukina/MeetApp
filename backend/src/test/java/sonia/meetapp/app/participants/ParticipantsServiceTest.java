@@ -317,8 +317,8 @@ class ParticipantsServiceTest {
         participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId(), participant5.getId())));
         participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
         participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant6.getId())));
-        participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId(), participant4.getId())));
-        participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId(), participant2.getId())));
+        participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId(), participant2.getId())));
+        participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId(), participant3.getId())));
 
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5, participant6));
@@ -360,12 +360,16 @@ class ParticipantsServiceTest {
         participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
         participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant2.getId())));
 
+
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5));
         when(participantsRepo.findAll()).thenReturn(participants);
 
+        Participant participantBreak = new Participant("Break", "break", "break");
+        participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
+
         List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant3,
-                participant5));
+                participant5, participantBreak));
         List<Participant> actual = participantsService.receivePairs();
         Assertions.assertEquals(expected, actual);
     }

@@ -115,6 +115,9 @@ public class ParticipantsService {
 
     public List<Participant> receivePairs() {
         List<Participant> allParticipants = participantsRepo.findAll();
+        if (allParticipants.size() % 2 == 1) {
+            allParticipants.add(new Participant("Break", "break", "break"));
+        }
 
         List<Participant> generatedPairs = new ArrayList<>();
         for (int i = 0; i < allParticipants.size(); i++) {
@@ -136,6 +139,7 @@ public class ParticipantsService {
                     }
                 }
             }
+            participantsRepo.deleteById("break");
             return generatedPairs;
         } else throw new
 
@@ -174,7 +178,8 @@ public class ParticipantsService {
                 if (participantToTry.getPeopleITalkedTo() == null) {
                     return true;
                 } else {
-                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId())) {
+                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) ||
+                            participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId())) {
                         return false;
                     } else {
                         return true;
