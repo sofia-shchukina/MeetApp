@@ -13,6 +13,7 @@ import Home from "./components/Home";
 import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
+import PairGeneration from "./components/PairGeneration";
 
 
 export default function App() {
@@ -49,6 +50,11 @@ export default function App() {
                                                   appUser={userHook.appUser}/>
                                 <NavigationBar/>
                             </>
+                        }/>
+
+                        <Route path={"/pairs"} element={
+                            <PairGeneration getPairs={participantsHook.getPairs}
+                                            pairs={participantsHook.pairs}/>
                         }/>
                         <Route path={"/participants/edit/:id"}
                                element={

@@ -1,5 +1,6 @@
 package sonia.meetapp.app.participants;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +64,9 @@ public class ParticipantsController {
     }
 
     @GetMapping("/pairs")
-    public List<Participant> receivePairs() {
-        return participantsService.receivePairs();
+    public List<List<Participant>> receivePairs() {
+        List<Participant> pairs = participantsService.receivePairs();
+        return Lists.partition(pairs, 2);
     }
 
 }

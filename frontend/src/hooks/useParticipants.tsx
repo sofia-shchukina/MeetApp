@@ -7,6 +7,7 @@ import {Like} from "../types/Like";
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [matches, setMatches] = useState<Participant[]>([]);
+    const [pairs, setPairs] = useState<Participant[][]>([]);
 
     useEffect(() => {
         getAllParticipants()
@@ -54,6 +55,13 @@ export default function useParticipants() {
             .then(setMatches)
     }
 
+    const getPairs = () => {
+        axios.get("/participants/pairs")
+            .then(response => response.data)
+            .then(setPairs)
+    }
+
+
     return {
         participants,
         addParticipant,
@@ -62,5 +70,7 @@ export default function useParticipants() {
         sendLike,
         getAllMatches,
         matches,
+        getPairs,
+        pairs
     }
 }
