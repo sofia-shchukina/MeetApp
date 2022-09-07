@@ -261,4 +261,112 @@ class ParticipantsServiceTest {
         List<Participant> actual = participantsService.receiveMatches(participant1.getId());
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void receivePairs6Participants1Round() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+        Participant participant4 = new Participant("D", "4", "123@gmail.com");
+        Participant participant5 = new Participant("E", "5", "1234@gmail.com");
+        Participant participant6 = new Participant("F", "6", "12345@gmail.com");
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
+                participant5, participant6));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        List<Participant> actual = participantsService.receivePairs();
+        Assertions.assertEquals(participants, actual);
+    }
+
+    @Test
+    void receivePairs6Participants2Round() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+        Participant participant4 = new Participant("D", "4", "123@gmail.com");
+        Participant participant5 = new Participant("E", "5", "1234@gmail.com");
+        Participant participant6 = new Participant("F", "6", "12345@gmail.com");
+
+        participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId())));
+        participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId())));
+        participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId())));
+        participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId())));
+        participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId())));
+        participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
+
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
+                participant5, participant6));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        List<Participant> expected = new ArrayList<>(List.of(participant1, participant3, participant2, participant5,
+                participant4, participant6));
+        List<Participant> actual = participantsService.receivePairs();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void receivePairs6Participants3Round() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+        Participant participant4 = new Participant("D", "4", "123@gmail.com");
+        Participant participant5 = new Participant("E", "5", "1234@gmail.com");
+        Participant participant6 = new Participant("F", "6", "12345@gmail.com");
+
+        participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId(), participant3.getId())));
+        participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId(), participant5.getId())));
+        participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
+        participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant6.getId())));
+        participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId(), participant4.getId())));
+        participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId(), participant2.getId())));
+
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
+                participant5, participant6));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant6,
+                participant3, participant5));
+        List<Participant> actual = participantsService.receivePairs();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void receivePairs5Participants1Round() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+        Participant participant4 = new Participant("D", "4", "123@gmail.com");
+        Participant participant5 = new Participant("E", "5", "1234@gmail.com");
+
+
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
+                participant5));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        List<Participant> actual = participantsService.receivePairs();
+        Assertions.assertEquals(participants, actual);
+    }
+
+    @Test
+    void receivePairs5Participants3Round() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+        Participant participant4 = new Participant("D", "4", "123@gmail.com");
+        Participant participant5 = new Participant("E", "5", "1234@gmail.com");
+
+        participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId(), participant3.getId())));
+        participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId(), participant4.getId())));
+        participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
+        participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant2.getId())));
+
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
+                participant5));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant3,
+                participant5));
+        List<Participant> actual = participantsService.receivePairs();
+        Assertions.assertEquals(expected, actual);
+    }
 }

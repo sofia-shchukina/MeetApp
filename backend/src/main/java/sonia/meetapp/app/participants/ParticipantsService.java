@@ -43,7 +43,7 @@ public class ParticipantsService {
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
             if (participantsRepo.existsById(id)) {
-                    return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
+                return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
             } else {
                 throw new ParticipantNotFoundException(id);
             }
@@ -112,4 +112,56 @@ public class ParticipantsService {
         }
         return matches;
     }
+
+    public List<Participant> receivePairs() {
+        List<Participant> allParticipants = participantsRepo.findAll();
+        List<Participant> generatedPairs = new ArrayList<>();
+        for (int i = 0; i < allParticipants.size(); i++) {
+            generatedPairs.add(null);
+        }
+        if (solve(allParticipants, generatedPairs)) {
+            return generatedPairs;
+        } else throw new RuntimeException();
+    }
+
+    public static boolean solve(List<Participant> allParticipants, List<Participant> generatedPairs) {
+
+        for (int personPlace = 0; personPlace < allParticipants.size(); personPlace++) {
+            if (generatedPairs.get(personPlace) == null) {
+                for (int participantToTry = 0; participantToTry < allParticipants.size(); participantToTry++) {
+                    if (isValidPlacement(generatedPairs, allParticipants.get(participantToTry), personPlace)) {
+                        generatedPairs.set(personPlace, allParticipants.get(participantToTry));
+                        if (solve(allParticipants, generatedPairs)) {
+                            return true;
+                        } else {
+                            generatedPairs.set(personPlace, null);
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isValidPlacement(List<Participant> generatedPairs, Participant participantToTry, int personPlace) {
+        if (generatedPairs.contains(participantToTry)) {
+            return false;
+        } else {
+            if (personPlace % 2 == 0) {
+                return true;
+            } else {
+                if (participantToTry.getPeopleITalkedTo() == null) {
+                    return true;
+                } else {
+                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
 }
+

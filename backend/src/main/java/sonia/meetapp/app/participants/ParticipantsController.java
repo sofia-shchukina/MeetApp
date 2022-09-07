@@ -61,4 +61,10 @@ public class ParticipantsController {
     ) {
         return participantsService.receiveMatches(id);
     }
+
+    @GetMapping("/pairs")
+    public List<Participant> receivePairs() {
+        return participantsService.receivePairs();
+    }
+
 }
