@@ -1,27 +1,28 @@
-import {FormEvent, useEffect, useState} from "react";
+import {FormEvent, useState} from "react";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import './AddNewParticipant.css';
 import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import {AppUser} from "../types/AppUser";
 
 
 export default function AddNewParticipant(props:
                                               {
                                                   addParticipant: (name: string, email: string) => Promise<void>,
+                                                  appUser: AppUser | undefined,
                                               }) {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState("");
-    const [user, setUser] = useState<string>()
+
     const onNameSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!name) {
             toast.error("Your name should not be empty, try again or contact meetup host")
         } else {
-            user ?
-                props.addParticipant(name, user)
+            props.appUser ?
+                props.addParticipant(name, props.appUser.email)
                     .then(() => {
                         setName("");
                         setErrorMessage("")
@@ -33,18 +34,7 @@ export default function AddNewParticipant(props:
                 setErrorMessage("there is no user logged in");
         }
     }
-    useEffect(() => {
-        checkIfLogin()
-    }, [])
-    const checkIfLogin = () => {
-        axios.get("/hello/me")
-            .then((response) => {
-                setUser(response.data)
-            })
-            .catch(() => {
-                setUser(undefined)
-            })
-    }
+
     return (
         <form id="registrationForm" onSubmit={onNameSubmit}>
             <label>What will be your name on the nametag at this event? </label>

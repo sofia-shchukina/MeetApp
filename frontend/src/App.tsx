@@ -12,6 +12,7 @@ import LikesAnalysis from './components/LikesAnalysis';
 import Home from "./components/Home";
 import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
+import ManageUsers from "./components/ManageUsers";
 
 
 export default function App() {
@@ -28,19 +29,24 @@ export default function App() {
                                element={
                                    <>
                                        <CreateAccount createUser={userHook.createUser}/>
-                                       <Home user={userHook.user}
+                                       <Home appUser={userHook.appUser}
                                              login={userHook.login}
                                              logout={userHook.logout}
                                              checkIfLogin={userHook.checkIfLogin}/>
                                    </>
                                }/>
+                        <Route path={"/for-admin"}
+                               element={<ManageUsers appUser={userHook.appUser}
+                                                     appUsers={userHook.appUsers}
+                                                     participants={participantsHook.participants}/>}/>
 
                         <Route path={"/registration"} element={
                             <>
-                                <AddNewParticipant addParticipant={participantsHook.addParticipant}/>
+                                <AddNewParticipant addParticipant={participantsHook.addParticipant}
+                                                   appUser={userHook.appUser}/>
                                 <ParticipantsList participants={participantsHook.participants}
                                                   deleteParticipant={participantsHook.deleteParticipant}
-                                                  user={userHook.user}/>
+                                                  appUser={userHook.appUser}/>
                                 <NavigationBar/>
                             </>
                         }/>
@@ -48,7 +54,8 @@ export default function App() {
                                element={
                                    <>
                                        <ParticipantDetails participants={participantsHook.participants}
-                                                           editParticipant={participantsHook.editParticipant}/>
+                                                           editParticipant={participantsHook.editParticipant}
+                                                           appUser={userHook.appUser}/>
                                        <NavigationBar/>
                                    </>
                                }/>
@@ -57,7 +64,7 @@ export default function App() {
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
                                                         participants={participantsHook.participants}
-                                                        user={userHook.user}
+                                                        appUser={userHook.appUser}
                                        />
                                        <NavigationBar/>
                                    </>}/>
@@ -69,7 +76,7 @@ export default function App() {
                                            getAllMatches={participantsHook.getAllMatches}
                                            matches={participantsHook.matches}
                                            appUsers={userHook.appUsers}
-                                           user={userHook.user}/>
+                                           appUser={userHook.appUser}/>
                                        <NavigationBar/>
                                    </>}/>
                     </Routes>

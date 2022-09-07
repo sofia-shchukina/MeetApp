@@ -27,3 +27,9 @@
     width: 60vw;
     background-color: var(--brown);
 }
+
+#adminButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+}

@@ -22,13 +22,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ParticipantNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleTodoNotFoundException(ParticipantNotFoundException exception) {
+    public ResponseEntity<Map<String, Object>> handleParticipantNotFoundException(ParticipantNotFoundException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NameIsNotUniqueException.class)
-    public ResponseEntity<Map<String, Object>> handleNameNotFoundException(NameIsNotUniqueException exception) {
+    public ResponseEntity<Map<String, Object>> handleNameIsNotUniqueException(NameIsNotUniqueException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
@@ -55,5 +55,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AppUserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAppUserNotFoundException(AppUserNotFoundException exception) {
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
+        return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
 }

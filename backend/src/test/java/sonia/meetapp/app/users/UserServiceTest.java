@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sonia.meetapp.exceptions.AppUserNotFoundException;
 import sonia.meetapp.exceptions.PasswordNotMatchException;
 import sonia.meetapp.exceptions.UserExistsException;
 import sonia.meetapp.users.AppUser;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +31,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwerty", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -45,7 +47,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwerty", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.of(appUser));
@@ -63,7 +65,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwertz", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -81,7 +83,7 @@ class UserServiceTest {
 
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer",
                 "qwer", "insta");
-        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta");
+        AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
@@ -97,10 +99,10 @@ class UserServiceTest {
     @Test
     void loadUserByUsername() {
         String email = "userName@gmail.com";
-        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta");
+        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta", "user");
         User user = new User("userName@gmail.com", "12345", Collections.emptyList());
         when(appUserRepo.findById(email)).thenReturn(Optional.of(appUser));
-        User actual = (User) userService.loadUserByUsername(email);
+        User actual = userService.loadUserByUsername(email);
         Assertions.assertEquals(user, actual);
     }
 
@@ -109,5 +111,28 @@ class UserServiceTest {
         String email = "userName@gmail.com";
         when(appUserRepo.findById(email)).thenReturn(Optional.empty());
         assertNull(userService.loadUserByUsername(email));
+    }
+
+    @Test
+    void findUserByEmail() {
+        String email = "userName@gmail.com";
+        AppUser appUser = new AppUser("userName@gmail.com", "12345", "insta", "user");
+
+        when(appUserRepo.findById(email)).thenReturn(Optional.of(appUser));
+        AppUser actual = userService.findUserByEmail(email);
+        Assertions.assertEquals(appUser, actual);
+    }
+
+    @Test
+    void findUserByEmailFail() {
+        String email = "userName@gmail.com";
+        when(appUserRepo.findById(email)).thenReturn(Optional.empty());
+
+        try {
+            userService.findUserByEmail(email);
+            fail("Expected exception was not thrown");
+        } catch (AppUserNotFoundException ignored) {
+        }
+
     }
 }
