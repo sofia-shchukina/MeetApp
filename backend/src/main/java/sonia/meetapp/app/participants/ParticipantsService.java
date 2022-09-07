@@ -117,8 +117,10 @@ public class ParticipantsService {
     public List<Participant> receivePairs() {
         List<Participant> allParticipants = participantsRepo.findAll();
         if (allParticipants.size() % 2 == 1) {
-            String breakParticipant = "break";
-            allParticipants.add(new Participant(breakParticipant, breakParticipant, breakParticipant));
+            String breakParticipantName = "break";
+            Participant breakParticipant = new Participant(breakParticipantName, breakParticipantName, breakParticipantName);
+            allParticipants.add(breakParticipant);
+            participantsRepo.save(breakParticipant);
         }
 
         List<Participant> generatedPairs = new ArrayList<>();
@@ -127,19 +129,26 @@ public class ParticipantsService {
         }
         if (solve(allParticipants, generatedPairs)) {
             for (int i = 0; i < generatedPairs.size(); i++) {
+
+                int finalI = i;
+                Participant participantToEdit = participantsRepo.findById(generatedPairs.get(i).getId()).orElseThrow(() -> new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
+
                 if (i % 2 == 0) {
-                    if (generatedPairs.get(i).getPeopleITalkedTo() != null) {
-                        generatedPairs.get(i).getPeopleITalkedTo().add(generatedPairs.get(i + 1).getId());
+
+                    if (participantToEdit.getPeopleITalkedTo() != null) {
+                        participantToEdit.getPeopleITalkedTo().add(generatedPairs.get(i + 1).getId());
+
                     } else {
-                        generatedPairs.get(i).setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i + 1).getId())));
+                        participantToEdit.setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i + 1).getId())));
                     }
                 } else {
-                    if (generatedPairs.get(i).getPeopleITalkedTo() != null) {
-                        generatedPairs.get(i).getPeopleITalkedTo().add(generatedPairs.get(i - 1).getId());
+                    if (participantToEdit.getPeopleITalkedTo() != null) {
+                        participantToEdit.getPeopleITalkedTo().add(generatedPairs.get(i - 1).getId());
                     } else {
-                        generatedPairs.get(i).setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i - 1).getId())));
+                        participantToEdit.setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i - 1).getId())));
                     }
                 }
+                participantsRepo.save(participantToEdit);
             }
             participantsRepo.deleteById("break");
             return generatedPairs;
