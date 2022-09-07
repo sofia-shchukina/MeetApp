@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
+import sonia.meetapp.exceptions.NoPossibleCombinationsException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
 import java.util.ArrayList;
@@ -372,5 +373,27 @@ class ParticipantsServiceTest {
                 participant5, participantBreak));
         List<Participant> actual = participantsService.receivePairs();
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void receivePairs3ParticipantsNoCombination() {
+        Participant participant1 = new Participant("A", "1", "123@gmail.com");
+        Participant participant2 = new Participant("B", "2", "1234@gmail.com");
+        Participant participant3 = new Participant("C", "3", "12345@gmail.com");
+
+
+        participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId())));
+        participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId())));
+        participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId())));
+
+
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
+        when(participantsRepo.findAll()).thenReturn(participants);
+
+        try {
+            participantsService.receivePairs();
+            Assertions.fail("Expected exception was not thrown");
+        } catch (NoPossibleCombinationsException ignored) {
+        }
     }
 }

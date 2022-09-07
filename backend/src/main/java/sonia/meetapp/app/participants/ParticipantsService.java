@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
+import sonia.meetapp.exceptions.NoPossibleCombinationsException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
 import java.util.ArrayList;
@@ -142,8 +143,7 @@ public class ParticipantsService {
             participantsRepo.deleteById("break");
             return generatedPairs;
         } else throw new
-
-                RuntimeException();
+                NoPossibleCombinationsException();
 
     }
 
@@ -175,11 +175,23 @@ public class ParticipantsService {
             if (personPlace % 2 == 0) {
                 return true;
             } else {
-                if (participantToTry.getPeopleITalkedTo() == null) {
+                if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() == null)) {
                     return true;
-                } else {
+                } else if ((participantToTry.getPeopleITalkedTo() != null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
                     if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) ||
                             participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
+                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    if (participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId())) {
                         return false;
                     } else {
                         return true;
