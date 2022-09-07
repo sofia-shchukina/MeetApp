@@ -117,7 +117,8 @@ public class ParticipantsService {
     public List<Participant> receivePairs() {
         List<Participant> allParticipants = participantsRepo.findAll();
         if (allParticipants.size() % 2 == 1) {
-            allParticipants.add(new Participant("Break", "break", "break"));
+            String breakParticipant = "break";
+            allParticipants.add(new Participant(breakParticipant, breakParticipant, breakParticipant));
         }
 
         List<Participant> generatedPairs = new ArrayList<>();
@@ -144,7 +145,6 @@ public class ParticipantsService {
             return generatedPairs;
         } else throw new
                 NoPossibleCombinationsException();
-
     }
 
     public static boolean solve(List<Participant> allParticipants, List<Participant> generatedPairs) {
@@ -178,24 +178,12 @@ public class ParticipantsService {
                 if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() == null)) {
                     return true;
                 } else if ((participantToTry.getPeopleITalkedTo() != null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
-                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) ||
-                            participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId())) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return !generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) &&
+                            !participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId());
                 } else if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
-                    if (generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId())) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return !generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId());
                 } else {
-                    if (participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId())) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return !participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId());
                 }
             }
         }
