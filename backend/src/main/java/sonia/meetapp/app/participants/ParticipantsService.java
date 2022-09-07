@@ -152,8 +152,11 @@ public class ParticipantsService {
             }
             participantsRepo.deleteById("break");
             return generatedPairs;
-        } else throw new
-                NoPossibleCombinationsException();
+        } else {
+            participantsRepo.deleteById("break");
+            throw new
+                    NoPossibleCombinationsException();
+        }
     }
 
     public static boolean solve(List<Participant> allParticipants, List<Participant> generatedPairs) {
