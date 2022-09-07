@@ -115,13 +115,32 @@ public class ParticipantsService {
 
     public List<Participant> receivePairs() {
         List<Participant> allParticipants = participantsRepo.findAll();
+
         List<Participant> generatedPairs = new ArrayList<>();
         for (int i = 0; i < allParticipants.size(); i++) {
             generatedPairs.add(null);
         }
         if (solve(allParticipants, generatedPairs)) {
+            for (int i = 0; i < generatedPairs.size(); i++) {
+                if (i % 2 == 0) {
+                    if (generatedPairs.get(i).getPeopleITalkedTo() != null) {
+                        generatedPairs.get(i).getPeopleITalkedTo().add(generatedPairs.get(i + 1).getId());
+                    } else {
+                        generatedPairs.get(i).setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i + 1).getId())));
+                    }
+                } else {
+                    if (generatedPairs.get(i).getPeopleITalkedTo() != null) {
+                        generatedPairs.get(i).getPeopleITalkedTo().add(generatedPairs.get(i - 1).getId());
+                    } else {
+                        generatedPairs.get(i).setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i - 1).getId())));
+                    }
+                }
+            }
             return generatedPairs;
-        } else throw new RuntimeException();
+        } else throw new
+
+                RuntimeException();
+
     }
 
     public static boolean solve(List<Participant> allParticipants, List<Participant> generatedPairs) {
@@ -144,7 +163,8 @@ public class ParticipantsService {
         return true;
     }
 
-    public static boolean isValidPlacement(List<Participant> generatedPairs, Participant participantToTry, int personPlace) {
+    public static boolean isValidPlacement(List<Participant> generatedPairs, Participant participantToTry,
+                                           int personPlace) {
         if (generatedPairs.contains(participantToTry)) {
             return false;
         } else {
