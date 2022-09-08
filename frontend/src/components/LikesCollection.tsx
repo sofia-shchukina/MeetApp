@@ -51,14 +51,15 @@ export default function LikesCollection(props:
 
     return (
         <>
-            <>Your name on meetup was {likerParticipant ? likerParticipant.name : <>unknown</>}
+            <div className="clarificationText">Your name on meetup
+                was {likerParticipant ? likerParticipant.name : <>unknown</>}
                 . If it's incorrect, please contact the host before sending likes :-)
-            </>
+            </div>
             <form className="likesForm" onSubmit={handleSubmitAForm}>
                 <label> Check here all people you liked </label>
                 <div id="checkboxes">
                     {props.participants.map((participant) =>
-                        (<div id="onePersonCheck">
+                        (<div id="onePersonCheck" key={participant.name}>
                             <input type="checkbox" className="checkbox" key={participant.name}
                                    onChange={handleLikedChange}
                                    value={participant.name}

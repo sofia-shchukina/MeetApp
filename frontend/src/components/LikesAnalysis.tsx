@@ -21,9 +21,9 @@ export default function LikesAnalysis(props: {
     }
 
     return <>
-        <>Your name on meetup was {analyser ? analyser.name : <>unknown</>}
+        <div className="clarificationText">Your name on meetup was {analyser ? analyser.name : <>unknown</>}
             . If it's incorrect, please contact the host to receive your matches :-)
-        </>
+        </div>
         <form className="likesForm">
             <Button type="submit" id="getMatchesButton" variant="contained" onClick={handleSubmit}> Get all
                 matches </Button>
@@ -34,7 +34,7 @@ export default function LikesAnalysis(props: {
                 <h3> List of matches </h3>
                 <ul>
                     {props.matches.length > 0 ? props.matches.map((match: Participant) =>
-                            <li>
+                            <li key={match.id}>
                                 <EachMatch key={match.id}
                                            match={match}
                                            appUsers={props.appUsers}/>

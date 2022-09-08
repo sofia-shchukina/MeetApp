@@ -29,7 +29,8 @@ export default function App() {
                         <Route path={"/"}
                                element={
                                    <>
-                                       <CreateAccount createUser={userHook.createUser}/>
+                                       <CreateAccount createUser={userHook.createUser}
+                                                      appUser={userHook.appUser}/>
                                        <Home appUser={userHook.appUser}
                                              login={userHook.login}
                                              logout={userHook.logout}
@@ -55,7 +56,8 @@ export default function App() {
                         <Route path={"/pairs"} element={
                             <>
                                 <PairGeneration getPairs={participantsHook.getPairs}
-                                                pairs={participantsHook.pairs}/>
+                                                pairs={participantsHook.pairs}
+                                                appUser={userHook.appUser}/>
                                 <NavigationBar/>
                             </>
                         }/>
