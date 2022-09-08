@@ -408,7 +408,7 @@ class IntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult, Participant.class);
+        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
         String id2 = saveResultParticipant2.getId();
 
         String saveResult3 = mockMvc.perform(post("/participants")
@@ -421,7 +421,7 @@ class IntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult, Participant.class);
+        Participant saveResultParticipant3 = objectMapper.readValue(saveResult3, Participant.class);
         String id3 = saveResultParticipant3.getId();
 
         String saveResult4 = mockMvc.perform(post("/participants")
@@ -434,7 +434,7 @@ class IntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        Participant saveResultParticipant4 = objectMapper.readValue(saveResult, Participant.class);
+        Participant saveResultParticipant4 = objectMapper.readValue(saveResult4, Participant.class);
         String id4 = saveResultParticipant4.getId();
 
         mockMvc.perform(get("/participants/pairs"))
