@@ -1,0 +1,5 @@
+#getPairsButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+}

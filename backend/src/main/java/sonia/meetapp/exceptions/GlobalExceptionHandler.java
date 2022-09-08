@@ -57,9 +57,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AppUserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleAppUserNotFoundException(AppUserNotFoundException exception) {
+    @ExceptionHandler(NoPossibleCombinationsException.class)
+    public ResponseEntity<Map<String, Object>> handleNoPossibleCombinationsException(NoPossibleCombinationsException exception) {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
-        return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(responseBody, HttpStatus.EXPECTATION_FAILED);
     }
+
 }

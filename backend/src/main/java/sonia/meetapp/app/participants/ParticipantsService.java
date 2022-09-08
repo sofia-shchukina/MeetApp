@@ -15,6 +15,7 @@ import java.util.Locale;
 @Service
 @AllArgsConstructor
 public class ParticipantsService {
+    private static final String BREAK_PARTICIPANT_NAME = "break";
     private final ParticipantsRepo participantsRepo;
     private final Utility utility;
 
@@ -117,8 +118,7 @@ public class ParticipantsService {
     public List<Participant> receivePairs() {
         List<Participant> allParticipants = participantsRepo.findAll();
         if (allParticipants.size() % 2 == 1) {
-            String breakParticipantName = "break";
-            Participant breakParticipant = new Participant(breakParticipantName, breakParticipantName, breakParticipantName);
+            Participant breakParticipant = new Participant(BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME);
             allParticipants.add(breakParticipant);
             participantsRepo.save(breakParticipant);
         }
@@ -150,10 +150,10 @@ public class ParticipantsService {
                 }
                 participantsRepo.save(participantToEdit);
             }
-            participantsRepo.deleteById("break");
+            participantsRepo.deleteById(BREAK_PARTICIPANT_NAME);
             return generatedPairs;
         } else {
-            participantsRepo.deleteById("break");
+            participantsRepo.deleteById(BREAK_PARTICIPANT_NAME);
             throw new
                     NoPossibleCombinationsException();
         }
