@@ -380,4 +380,72 @@ class IntegrationTest {
         mockMvc.perform(get("/hello/login"))
                 .andExpect(status().is(404));
     }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username@gmail.com")
+    void createPairsSeveralTimes() throws Exception {
+        String saveResult = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mike", "email":"1@gmail.com"}
+                                 """)
+                        .with(csrf()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
+        String id = saveResultParticipant.getId();
+
+        String saveResult2 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mary", "email":"2@gmail.com"}
+                                 """)
+                        .with(csrf()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant2 = objectMapper.readValue(saveResult, Participant.class);
+        String id2 = saveResultParticipant2.getId();
+
+        String saveResult3 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Misha", "email":"3@gmail.com"}
+                                 """)
+                        .with(csrf()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant3 = objectMapper.readValue(saveResult, Participant.class);
+        String id3 = saveResultParticipant3.getId();
+
+        String saveResult4 = mockMvc.perform(post("/participants")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name":"Mark", "email":"4@gmail.com"}
+                                 """)
+                        .with(csrf()))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Participant saveResultParticipant4 = objectMapper.readValue(saveResult, Participant.class);
+        String id4 = saveResultParticipant4.getId();
+
+        mockMvc.perform(get("/participants/pairs"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                                         [
+                                        [{"name":"Mike","id":"<ID>","email":"1@gmail.com"},
+                        {"name":"Mary","id":"<ID2>","email":"2@gmail.com"}],
+                                        [{"name":"Misha","id":"<ID3>","email":"3@gmail.com"},
+                        {"name":"Mark","id":"<ID4>","email":"4@gmail.com"}]
+                                        ]
+                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
+    }
 }
