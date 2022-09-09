@@ -14,12 +14,15 @@ import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
 import PairGeneration from "./components/PairGeneration";
+import useEvents from "./hooks/useEvents";
+import CreateEvent from './components/CreateEvent';
 
 
 export default function App() {
 
     const participantsHook = useParticipants()
     const userHook = useUsers();
+    const eventHook = useEvents();
 
     return (<>
             <HashRouter>
@@ -41,6 +44,9 @@ export default function App() {
                                element={<ManageUsers appUser={userHook.appUser}
                                                      appUsers={userHook.appUsers}
                                                      participants={participantsHook.participants}/>}/>
+                        <Route path={"/events"}
+                               element={<CreateEvent addTheEvent={eventHook.addTheEvent}
+                                                     appUser={userHook.appUser}/>}/>
 
                         <Route path={"/registration"} element={
                             <>
