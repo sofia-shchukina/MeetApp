@@ -689,4 +689,41 @@ class IntegrationTest {
                         """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
 
     }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void getAllEvents() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/events"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        []
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void addEvent() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201))
+                .andExpect(content().json("""
+                        {"id":"123",
+                        "name": "speed-friending outdoors",
+                        "place": "park",
+                        "time":"today",
+                        "description":"lovely event"
+                        } 
+                        """));
+    }
 }
