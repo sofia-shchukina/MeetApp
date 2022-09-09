@@ -29,17 +29,17 @@ public class ParticipantsController {
                 .body(createdParticipant);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteParticipant(@PathVariable String id) {
-        participantsService.deleteParticipant(id);
+    @DeleteMapping("/{eventId}/{participantId}")
+    public ResponseEntity<Void> deleteParticipant(@PathVariable String eventId, @PathVariable String participantId) {
+        participantsService.deleteParticipant(eventId, participantId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/edit/{eventId}/{participantId}")
     public ResponseEntity<Participant> editParticipant(
-            @PathVariable String id,
+            @PathVariable String eventId, @PathVariable String participantId,
             @RequestBody NewParticipant editedNewParticipant) {
-        Participant updatedParticipant = participantsService.editParticipant(id, editedNewParticipant);
+        Participant updatedParticipant = participantsService.editParticipant(participantId, eventId, editedNewParticipant);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);

@@ -17,6 +17,7 @@ import useEvents from "./hooks/useEvents";
 import CreateEvent from './components/CreateEvent';
 import EventGallery from "./components/EventGallery";
 import TheEventPage from "./components/TheEventPage";
+import ParticipantDetails from './components/ParticipantDetails';
 
 
 export default function App() {
@@ -80,12 +81,13 @@ export default function App() {
                                 <NavigationBar/>
                             </>
                         }/>
-                        <Route path={"/participants/edit/:id"}
+                        <Route path={"/participants/edit/:eventId/:id"}
                                element={
                                    <>
-                                       {/*<ParticipantDetails participants={participantsHook.participants}
-                                                           // editParticipant={participantsHook.editParticipant}
-                                                           appUser={userHook.appUser}/>*/}
+                                       <ParticipantDetails participants={participantsHook.participants}
+                                                           editParticipant={participantsHook.editParticipant}
+                                                           appUser={userHook.appUser}
+                                                           getAllParticipants={participantsHook.getAllParticipants}/>
                                        <NavigationBar/>
                                    </>
                                }/>

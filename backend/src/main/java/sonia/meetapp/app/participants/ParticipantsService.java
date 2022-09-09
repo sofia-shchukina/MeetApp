@@ -38,24 +38,29 @@ public class ParticipantsService {
         }
     }
 
-    public void deleteParticipant(String id) {
-        if (participantsRepo.existsById(id)) {
-            participantsRepo.deleteById(id);
-        } else {
-            throw new ParticipantNotFoundException(id);
-        }
+    public void deleteParticipant(String eventId, String participantId) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        Participant toDelete = event.getEventParticipants().stream().filter(participant ->
+                participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
+                new ParticipantNotFoundException(participantId));
+        event.getEventParticipants().remove(toDelete);
+        eventRepo.save(event);
     }
 
-    public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
-//        if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
-        if (participantsRepo.existsById(id)) {
-            return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
+    public Participant editParticipant(String participantId, String eventId, NewParticipant editedNewParticipant) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant, event))) {
+            Participant toEdit = event.getEventParticipants().stream().filter(participant ->
+                    participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
+                    new ParticipantNotFoundException(participantId));
+            event.getEventParticipants().remove(toEdit);
+            toEdit.setName(editedNewParticipant.getName());
+            event.getEventParticipants().add(toEdit);
+            eventRepo.save(event);
+            return toEdit;
         } else {
-            throw new ParticipantNotFoundException(id);
-        }
-       /* } else {
             throw new NameIsNotUniqueException();
-        }*/
+        }
     }
 
     public Boolean thisNameIsUnique(NewParticipant newParticipant, Event event) {

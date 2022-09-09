@@ -22,19 +22,19 @@ export default function useParticipants() {
             .then(() => getAllParticipants(eventId))
     }
 
-    const deleteParticipant = (id: string) => {
-        return axios.delete("participants/" + id)
-            // .then(getAllParticipants)
+    const deleteParticipant = (id: string, eventId: string) => {
+        return axios.delete(`participants/${eventId}/${id}`)
+            .then(() => getAllParticipants(eventId))
             .catch(
                 error => {
                     toast.error(error.message)
                 })
     }
 
-    const editParticipant = (participantToEdit: Participant, editedName: string, email: string) => {
+    const editParticipant = (participantToEdit: Participant, editedName: string, email: string, eventId: string) => {
         const newParticipant: NewParticipant = {name: editedName, email}
-        return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
-        // .then(getAllParticipants)
+        return axios.put(`participants/edit/${eventId}/${participantToEdit.id}`, newParticipant)
+            .then(() => getAllParticipants(eventId))
     }
 
     const sendLike = (liker: Participant, liked: Participant[]) => {
