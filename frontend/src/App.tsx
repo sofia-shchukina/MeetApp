@@ -16,6 +16,7 @@ import ManageUsers from "./components/ManageUsers";
 import PairGeneration from "./components/PairGeneration";
 import useEvents from "./hooks/useEvents";
 import CreateEvent from './components/CreateEvent';
+import EventGallery from "./components/EventGallery";
 
 
 export default function App() {
@@ -45,8 +46,13 @@ export default function App() {
                                                      appUsers={userHook.appUsers}
                                                      participants={participantsHook.participants}/>}/>
                         <Route path={"/events"}
-                               element={<CreateEvent addTheEvent={eventHook.addTheEvent}
-                                                     appUser={userHook.appUser}/>}/>
+                               element={<>
+                                   <CreateEvent addTheEvent={eventHook.addTheEvent}
+                                                appUser={userHook.appUser}/>
+                                   <EventGallery appUser={userHook.appUser}
+                                                 theEvents={eventHook.theEvents}/>
+                               </>
+                               }/>
 
                         <Route path={"/registration"} element={
                             <>

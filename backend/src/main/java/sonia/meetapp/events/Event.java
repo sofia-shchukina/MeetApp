@@ -12,7 +12,7 @@ public class Event {
     private String name;
     private String place;
     private String time;
-    private List<String> eventParticipants;
+    private List<Participant> eventParticipants;
     private List<List<Participant>> currentRound;
     private List<List<List<Participant>>> previousRounds;
 
