@@ -2,14 +2,23 @@ import EachParticipant from "./EachParticipant";
 import {Participant} from "../types/Participant";
 import "./ParticipantsList.css"
 import {AppUser} from "../types/AppUser";
+import {useEffect} from "react";
+import {useParams} from "react-router-dom";
+import {AxiosResponse} from "axios";
 
 export default function ParticipantsList(props:
                                              {
                                                  participants: Participant[],
-                                                 deleteParticipant: (id: string) => Promise<void>,
+                                                 deleteParticipant: (id: string) => Promise<void | AxiosResponse<any, any>>
                                                  appUser: AppUser | undefined,
+                                                 getAllParticipants: (id: string) => void,
                                              }) {
+    const {id} = useParams();
 
+
+    useEffect(() => {
+        props.getAllParticipants(id ? id : "fakeId")
+    }, [])
     return (
         <div id="list">
             <h3>List of participants</h3>

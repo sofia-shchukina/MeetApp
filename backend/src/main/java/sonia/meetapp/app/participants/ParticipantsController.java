@@ -15,15 +15,15 @@ public class ParticipantsController {
 
     private final ParticipantsService participantsService;
 
-    @GetMapping()
-    public List<Participant> getAllParticipants() {
-        return participantsService.getAllParticipants();
+    @GetMapping("/{eventId}")
+    public List<Participant> getAllParticipants(@PathVariable String eventId) {
+        return participantsService.getAllParticipants(eventId);
     }
 
-    @PostMapping()
-    public ResponseEntity<Participant> addParticipant(
-            @RequestBody NewParticipant newParticipant) {
-        Participant createdParticipant = participantsService.addParticipant(newParticipant);
+    @PostMapping("/{eventId}")
+    public ResponseEntity<Participant> addParticipant(@PathVariable String eventId,
+                                                      @RequestBody NewParticipant newParticipant) {
+        Participant createdParticipant = participantsService.addParticipant(newParticipant, eventId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(createdParticipant);

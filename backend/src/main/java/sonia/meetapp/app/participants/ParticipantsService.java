@@ -2,10 +2,9 @@ package sonia.meetapp.app.participants;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import sonia.meetapp.exceptions.EmailIsNotUniqueException;
-import sonia.meetapp.exceptions.NameIsNotUniqueException;
-import sonia.meetapp.exceptions.NoPossibleCombinationsException;
-import sonia.meetapp.exceptions.ParticipantNotFoundException;
+import sonia.meetapp.events.Event;
+import sonia.meetapp.events.EventRepo;
+import sonia.meetapp.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,17 +16,22 @@ import java.util.Locale;
 public class ParticipantsService {
     private static final String BREAK_PARTICIPANT_NAME = "break";
     private final ParticipantsRepo participantsRepo;
+    private final EventRepo eventRepo;
     private final Utility utility;
 
-    public List<Participant> getAllParticipants() {
-        return participantsRepo.findAll();
+    public List<Participant> getAllParticipants(String eventId) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        return event.getEventParticipants();
     }
 
-    public Participant addParticipant(NewParticipant newParticipant) {
+    public Participant addParticipant(NewParticipant newParticipant, String eventId) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         Participant participant = new Participant(newParticipant.getName(), utility.createIdAsString(), newParticipant.getEmail());
-        if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant))) {
-            if (Boolean.TRUE.equals(thisEmailIsUnique(newParticipant))) {
-                return participantsRepo.save(participant);
+        if (Boolean.TRUE.equals(thisNameIsUnique(newParticipant, event))) {
+            if (Boolean.TRUE.equals(thisEmailIsUnique(newParticipant, event))) {
+                event.getEventParticipants().add(participant);
+                eventRepo.save(event);
+                return participant;
             } else throw new EmailIsNotUniqueException();
         } else {
             throw new NameIsNotUniqueException();
@@ -43,21 +47,20 @@ public class ParticipantsService {
     }
 
     public Participant editParticipant(String id, NewParticipant editedNewParticipant) {
-        if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
-            if (participantsRepo.existsById(id)) {
-                return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
-            } else {
-                throw new ParticipantNotFoundException(id);
-            }
+//        if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant))) {
+        if (participantsRepo.existsById(id)) {
+            return participantsRepo.save(new Participant(editedNewParticipant.getName(), id, editedNewParticipant.getEmail()));
         } else {
-            throw new NameIsNotUniqueException();
+            throw new ParticipantNotFoundException(id);
         }
+       /* } else {
+            throw new NameIsNotUniqueException();
+        }*/
     }
 
-    public Boolean thisNameIsUnique(NewParticipant newParticipant) {
+    public Boolean thisNameIsUnique(NewParticipant newParticipant, Event event) {
         String name = newParticipant.getName();
-        List<Participant> allParticipants = participantsRepo.findAll();
-
+        List<Participant> allParticipants = event.getEventParticipants();
         for (Participant allParticipant : allParticipants) {
             if (allParticipant.getName().toLowerCase(Locale.ROOT).equals(name.toLowerCase())) {
                 return false;
@@ -66,9 +69,9 @@ public class ParticipantsService {
         return true;
     }
 
-    public Boolean thisEmailIsUnique(NewParticipant newParticipant) {
+    public Boolean thisEmailIsUnique(NewParticipant newParticipant, Event event) {
         String email = newParticipant.getEmail();
-        List<Participant> allParticipants = participantsRepo.findAll();
+        List<Participant> allParticipants = event.getEventParticipants();
         if (!(allParticipants).isEmpty()) {
             for (Participant allParticipant : allParticipants) {
                 if (allParticipant.getEmail().toLowerCase(Locale.ROOT).equals(email.toLowerCase())) {

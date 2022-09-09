@@ -5,7 +5,6 @@ import ParticipantsList from "./components/ParticipantsList";
 import AddNewParticipant from "./components/AddNewParticipant";
 import {ToastContainer} from "react-toastify";
 import {HashRouter, Route, Routes} from "react-router-dom";
-import ParticipantDetails from "./components/ParticipantDetails";
 import NavigationBar from './components/NavigationBar';
 import LikesCollection from './components/LikesCollection';
 import LikesAnalysis from './components/LikesAnalysis';
@@ -17,6 +16,7 @@ import PairGeneration from "./components/PairGeneration";
 import useEvents from "./hooks/useEvents";
 import CreateEvent from './components/CreateEvent';
 import EventGallery from "./components/EventGallery";
+import TheEventPage from "./components/TheEventPage";
 
 
 export default function App() {
@@ -51,21 +51,28 @@ export default function App() {
                                                 appUser={userHook.appUser}/>
                                    <EventGallery appUser={userHook.appUser}
                                                  theEvents={eventHook.theEvents}/>
+                                   <NavigationBar/>
                                </>
                                }/>
-
-                        <Route path={"/registration"} element={
+                        <Route path={"/events/:id"}
+                               element={<>
+                                   <TheEventPage theEvents={eventHook.theEvents}
+                                                 appUser={userHook.appUser}/>
+                               </>
+                               }/>
+                        <Route path={"/events/registration/:id"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}
                                                    appUser={userHook.appUser}/>
                                 <ParticipantsList participants={participantsHook.participants}
                                                   deleteParticipant={participantsHook.deleteParticipant}
-                                                  appUser={userHook.appUser}/>
+                                                  appUser={userHook.appUser}
+                                                  getAllParticipants={participantsHook.getAllParticipants}/>
                                 <NavigationBar/>
                             </>
                         }/>
 
-                        <Route path={"/pairs"} element={
+                        <Route path={"/events/pairs/:id"} element={
                             <>
                                 <PairGeneration getPairs={participantsHook.getPairs}
                                                 pairs={participantsHook.pairs}
@@ -76,13 +83,13 @@ export default function App() {
                         <Route path={"/participants/edit/:id"}
                                element={
                                    <>
-                                       <ParticipantDetails participants={participantsHook.participants}
-                                                           editParticipant={participantsHook.editParticipant}
-                                                           appUser={userHook.appUser}/>
+                                       {/*<ParticipantDetails participants={participantsHook.participants}
+                                                           // editParticipant={participantsHook.editParticipant}
+                                                           appUser={userHook.appUser}/>*/}
                                        <NavigationBar/>
                                    </>
                                }/>
-                        <Route path={"/participants/likes/"}
+                        <Route path={"/events/likes/:id"}
                                element={
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
@@ -91,7 +98,7 @@ export default function App() {
                                        />
                                        <NavigationBar/>
                                    </>}/>
-                        <Route path={"/participants/likes/analysis"}
+                        <Route path={"/events/likes/analysis/:id"}
                                element={
                                    <>
                                        <LikesAnalysis

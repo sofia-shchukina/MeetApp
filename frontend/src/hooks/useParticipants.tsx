@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {NewParticipant, Participant} from "../types/Participant";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -9,25 +9,22 @@ export default function useParticipants() {
     const [matches, setMatches] = useState<Participant[]>([]);
     const [pairs, setPairs] = useState<Participant[][]>([]);
 
-    useEffect(() => {
-        getAllParticipants()
-    }, [])
 
-    const getAllParticipants = () => {
-        axios.get("/participants")
+    const getAllParticipants = (eventId: string) => {
+        axios.get("/participants/" + eventId)
             .then(response => response.data)
             .then(setParticipants)
     }
 
-    const addParticipant = (name: string, email: string) => {
+    const addParticipant = (name: string, email: string, eventId: string) => {
         const newParticipant: NewParticipant = {name, email}
-        return axios.post("participants", newParticipant)
-            .then(getAllParticipants)
+        return axios.post("participants/" + eventId, newParticipant)
+            .then(() => getAllParticipants(eventId))
     }
 
     const deleteParticipant = (id: string) => {
         return axios.delete("participants/" + id)
-            .then(getAllParticipants)
+            // .then(getAllParticipants)
             .catch(
                 error => {
                     toast.error(error.message)
@@ -37,7 +34,7 @@ export default function useParticipants() {
     const editParticipant = (participantToEdit: Participant, editedName: string, email: string) => {
         const newParticipant: NewParticipant = {name: editedName, email}
         return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
-            .then(getAllParticipants)
+        // .then(getAllParticipants)
     }
 
     const sendLike = (liker: Participant, liked: Participant[]) => {
@@ -71,6 +68,6 @@ export default function useParticipants() {
         getAllMatches,
         matches,
         getPairs,
-        pairs
+        pairs, getAllParticipants
     }
 }

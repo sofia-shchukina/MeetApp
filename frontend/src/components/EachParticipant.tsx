@@ -5,11 +5,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import './EachParticipant.css';
 import {useNavigate} from "react-router-dom";
 import {AppUser} from "../types/AppUser";
+import {AxiosResponse} from "axios";
 
 export default function EachParticipant(props:
                                             {
                                                 participant: Participant,
-                                                deleteParticipant: (id: string) => Promise<void>,
+                                                deleteParticipant: (id: string) => Promise<void | AxiosResponse<any, any>>,
                                                 appUser: AppUser | undefined,
                                             }) {
     const navigate = useNavigate();
