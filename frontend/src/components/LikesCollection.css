@@ -23,3 +23,7 @@ select {
 #resultMessage {
     text-align: center;
 }
+
+.clarificationText {
+    margin: 1vh 2vw;
+}

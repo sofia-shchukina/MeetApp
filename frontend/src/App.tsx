@@ -13,6 +13,7 @@ import Home from "./components/Home";
 import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
+import PairGeneration from "./components/PairGeneration";
 
 
 export default function App() {
@@ -28,7 +29,8 @@ export default function App() {
                         <Route path={"/"}
                                element={
                                    <>
-                                       <CreateAccount createUser={userHook.createUser}/>
+                                       <CreateAccount createUser={userHook.createUser}
+                                                      appUser={userHook.appUser}/>
                                        <Home appUser={userHook.appUser}
                                              login={userHook.login}
                                              logout={userHook.logout}
@@ -47,6 +49,15 @@ export default function App() {
                                 <ParticipantsList participants={participantsHook.participants}
                                                   deleteParticipant={participantsHook.deleteParticipant}
                                                   appUser={userHook.appUser}/>
+                                <NavigationBar/>
+                            </>
+                        }/>
+
+                        <Route path={"/pairs"} element={
+                            <>
+                                <PairGeneration getPairs={participantsHook.getPairs}
+                                                pairs={participantsHook.pairs}
+                                                appUser={userHook.appUser}/>
                                 <NavigationBar/>
                             </>
                         }/>

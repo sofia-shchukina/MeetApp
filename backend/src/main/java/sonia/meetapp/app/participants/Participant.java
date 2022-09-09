@@ -11,6 +11,7 @@ public class Participant {
     private List<String> peopleILike;
     private List<String> peopleWhoLikeMe;
     private String email;
+    private List<String> peopleITalkedTo;
 
     public Participant(String name, String id, String email) {
         this.name = name;

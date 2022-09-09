@@ -1,0 +1,27 @@
+#getPairsButton {
+    height: 4vh;
+    width: 60vw;
+    background-color: var(--brown);
+    font-size: 2vh;
+
+}
+
+#talk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2vh 0 1vh 0;
+
+    height: 70vh;
+    justify-items: flex-start;
+    gap: 2vh;
+}
+
+#pairsList {
+    border: solid 1px white;
+    border-top-left-radius: 40px;
+    margin: 2vh 0 7vh 0;
+    background-color: white;
+    min-height: 56vh;
+    width: 100vw;
+}
