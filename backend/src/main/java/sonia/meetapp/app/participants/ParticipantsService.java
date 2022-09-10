@@ -117,13 +117,19 @@ public class ParticipantsService {
     }
 
     public List<Participant> receiveMatches(String eventId, String participantId) {
-        Participant participant = participantsRepo.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
-        List<Participant> allParticipants = participantsRepo.findAll();
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+
+        Participant whoWantsMatches = event.getEventParticipants().stream().filter(participant ->
+                participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
+                new ParticipantNotFoundException(participantId));
+
         List<Participant> matches = new ArrayList<>();
-        if (participant.getPeopleWhoLikeMe() != null && participant.getPeopleILike() != null) {
-            for (String idParticipantILike : participant.getPeopleILike()) {
-                if (participant.getPeopleWhoLikeMe().contains(idParticipantILike)) {
-                    Participant matchParticipant = allParticipants.stream().filter(item -> item.getId().equals(idParticipantILike)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(idParticipantILike));
+        if (whoWantsMatches.getPeopleWhoLikeMe() != null && whoWantsMatches.getPeopleILike() != null) {
+            for (String idParticipantILike : whoWantsMatches.getPeopleILike()) {
+                if (whoWantsMatches.getPeopleWhoLikeMe().contains(idParticipantILike)) {
+                    Participant matchParticipant = event.getEventParticipants().stream().filter(participant ->
+                            participant.getId().equals(idParticipantILike)).findFirst().orElseThrow(() ->
+                            new ParticipantNotFoundException(idParticipantILike));
                     matches.add(matchParticipant);
                 }
             }
