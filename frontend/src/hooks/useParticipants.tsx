@@ -37,17 +37,17 @@ export default function useParticipants() {
             .then(() => getAllParticipants(eventId))
     }
 
-    const sendLike = (liker: Participant, liked: Participant[]) => {
+    const sendLike = (liker: Participant, liked: Participant[], eventId: string) => {
         const like: Like = {likerID: liker.id, likedPeopleIDs: liked.map(participant => participant.id)}
-        axios.put("participants/likes/", like)
+        axios.put("participants/likes/" + eventId, like)
             .catch(
                 error => {
                     toast.error(error.message)
                 })
     }
 
-    const getAllMatches = (id: string) => {
-        axios.get("/participants/likes/analysis/" + id)
+    const getAllMatches = (participantId: string, eventId: string) => {
+        axios.get(`/participants/likes/analysis//${eventId}/${participantId}`)
             .then(response => response.data)
             .then(setMatches)
     }

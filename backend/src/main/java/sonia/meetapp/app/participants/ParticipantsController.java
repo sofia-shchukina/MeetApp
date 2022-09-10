@@ -45,22 +45,23 @@ public class ParticipantsController {
                 .body(updatedParticipant);
     }
 
-    @PutMapping("/likes/")
-    public ResponseEntity<Participant> addLikes(
-            @RequestBody
-            Like like
+    @PutMapping("/likes/{eventId}")
+    public ResponseEntity<Participant> addLikes(@PathVariable String eventId,
+                                                @RequestBody
+                                                Like like
     ) {
-        Participant updatedParticipant = participantsService.addLikes(like);
+        Participant updatedParticipant = participantsService.addLikes(like, eventId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(updatedParticipant);
     }
 
-    @GetMapping("likes/analysis/{id}")
+    @GetMapping("likes/analysis/{eventId}/{participantId}")
     public List<Participant> receiveMatches(
-            @PathVariable String id
+            @PathVariable String eventId,
+            @PathVariable String participantId
     ) {
-        return participantsService.receiveMatches(id);
+        return participantsService.receiveMatches(eventId, participantId);
     }
 
     @GetMapping("/pairs")

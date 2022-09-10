@@ -91,20 +91,22 @@ export default function App() {
                                        <NavigationBar/>
                                    </>
                                }/>
-                        <Route path={"/events/likes/:id"}
+                        <Route path={"/events/likes/:eventId"}
                                element={
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
                                                         participants={participantsHook.participants}
                                                         appUser={userHook.appUser}
+                                                        getAllParticipants={participantsHook.getAllParticipants}
                                        />
                                        <NavigationBar/>
                                    </>}/>
-                        <Route path={"/events/likes/analysis/:id"}
+                        <Route path={"/events/likes/analysis/:eventId"}
                                element={
                                    <>
                                        <LikesAnalysis
                                            participants={participantsHook.participants}
+                                           getAllParticipants={participantsHook.getAllParticipants}
                                            getAllMatches={participantsHook.getAllMatches}
                                            matches={participantsHook.matches}
                                            appUsers={userHook.appUsers}

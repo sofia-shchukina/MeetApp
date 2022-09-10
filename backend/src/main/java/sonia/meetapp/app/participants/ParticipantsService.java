@@ -87,28 +87,36 @@ public class ParticipantsService {
         return true;
     }
 
-    public Participant addLikes(Like like) {
+    public Participant addLikes(Like like, String eventId) {
         String likerID = like.getLikerID();
         List<String> likedPeopleIDsArrayList = new ArrayList<>(Arrays.asList(like.getLikedPeopleIDs()));
 
-        Participant liker = participantsRepo.findById(likerID).orElseThrow(() -> new ParticipantNotFoundException(likerID));
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        Participant liker = event.getEventParticipants().stream().filter(participant ->
+                participant.getId().equals(likerID)).findFirst().orElseThrow(() ->
+                new ParticipantNotFoundException(likerID));
+        event.getEventParticipants().remove(liker);
         liker.setPeopleILike(likedPeopleIDsArrayList);
 
         for (String whoIsLikedID : likedPeopleIDsArrayList) {
-            if (participantsRepo.existsById(whoIsLikedID)) {
-                Participant likedPerson = participantsRepo.findById(whoIsLikedID).orElseThrow(() -> new ParticipantNotFoundException(whoIsLikedID));
-                if (likedPerson.getPeopleWhoLikeMe() != null) {
-                    likedPerson.getPeopleWhoLikeMe().add(likerID);
-                } else {
-                    likedPerson.setPeopleWhoLikeMe(new ArrayList<>(List.of(likerID)));
-                }
-                participantsRepo.save(likedPerson);
+
+            Participant likedPerson = event.getEventParticipants().stream().filter(participant ->
+                    participant.getId().equals(whoIsLikedID)).findFirst().orElseThrow(() ->
+                    new ParticipantNotFoundException(whoIsLikedID));
+            event.getEventParticipants().remove(likedPerson);
+            if (likedPerson.getPeopleWhoLikeMe() != null) {
+                likedPerson.getPeopleWhoLikeMe().add(likerID);
+            } else {
+                likedPerson.setPeopleWhoLikeMe(new ArrayList<>(List.of(likerID)));
             }
+            event.getEventParticipants().add(likedPerson);
         }
-        return participantsRepo.save(liker);
+        event.getEventParticipants().add(liker);
+        eventRepo.save(event);
+        return liker;
     }
 
-    public List<Participant> receiveMatches(String id) {
+    public List<Participant> receiveMatches(String eventId, String participantId) {
         Participant participant = participantsRepo.findById(id).orElseThrow(() -> new ParticipantNotFoundException(id));
         List<Participant> allParticipants = participantsRepo.findAll();
         List<Participant> matches = new ArrayList<>();
