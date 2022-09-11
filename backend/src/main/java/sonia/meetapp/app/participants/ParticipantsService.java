@@ -100,7 +100,6 @@ public class ParticipantsService {
         liker.setPeopleILike(likedPeopleIDsArrayList);
 
         for (String whoIsLikedID : likedPeopleIDsArrayList) {
-
             Participant likedPerson = event.getEventParticipants().stream().filter(participant ->
                     participant.getId().equals(whoIsLikedID)).findFirst().orElseThrow(() ->
                     new ParticipantNotFoundException(whoIsLikedID));
