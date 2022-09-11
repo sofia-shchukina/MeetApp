@@ -1,5 +1,6 @@
 package sonia.meetapp.app.participants;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import sonia.meetapp.events.Event;
@@ -137,15 +138,13 @@ public class ParticipantsService {
         return matches;
     }
 
-    public List<Participant> receivePairs(String eventId) {
+    public List<List<Participant>> receivePairs(String eventId) {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         List<Participant> allParticipants = event.getEventParticipants();
         Participant breakParticipant = new Participant(BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME);
 
         if (allParticipants.size() % 2 == 1) {
             allParticipants.add(breakParticipant);
-            event.getEventParticipants().add(breakParticipant);
-            eventRepo.save(event);
         }
 
         List<Participant> generatedPairs = new ArrayList<>();
@@ -177,14 +176,16 @@ public class ParticipantsService {
                     }
                 }
                 event.getEventParticipants().add(participantToEdit);
+
                 eventRepo.save(event);
             }
+
+            List<List<Participant>> pairs = Lists.partition(generatedPairs, 2);
+            event.setCurrentRound(pairs);
             event.getEventParticipants().remove(breakParticipant);
             eventRepo.save(event);
-            return generatedPairs;
+            return pairs;
         } else {
-            event.getEventParticipants().remove(breakParticipant);
-            eventRepo.save(event);
             throw new
                     NoPossibleCombinationsException();
         }
@@ -230,6 +231,11 @@ public class ParticipantsService {
                 }
             }
         }
+    }
+
+    public List<List<Participant>> receiveCurrentRound(String eventId) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        return event.getCurrentRound();
     }
 }
 

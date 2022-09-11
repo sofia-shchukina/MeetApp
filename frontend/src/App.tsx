@@ -75,10 +75,11 @@ export default function App() {
 
                         <Route path={"/events/pairs/:eventId"} element={
                             <>
-                                <PairGeneration getPairs={participantsHook.getPairs}
-                                                pairs={participantsHook.pairs}
+                                <PairGeneration generatePairs={participantsHook.generatePairs}
                                                 appUser={userHook.appUser}
-                                                getAllParticipants={participantsHook.getAllParticipants}/>
+                                                getAllParticipants={participantsHook.getAllParticipants}
+                                                getCurrentRound={participantsHook.getCurrentRound}
+                                                currentRound={participantsHook.currentRound}/>
                                 <NavigationBar/>
                             </>
                         }/>

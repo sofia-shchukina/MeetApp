@@ -7,8 +7,7 @@ import {Like} from "../types/Like";
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [matches, setMatches] = useState<Participant[]>([]);
-    const [pairs, setPairs] = useState<Participant[][]>([]);
-
+    const [currentRound, setCurrentRound] = useState<Participant[][]>([]);
 
     const getAllParticipants = (eventId: string) => {
         axios.get("/participants/" + eventId)
@@ -47,15 +46,20 @@ export default function useParticipants() {
     }
 
     const getAllMatches = (participantId: string, eventId: string) => {
-        axios.get(`/participants/likes/analysis//${eventId}/${participantId}`)
+        axios.get(`/participants/likes/analysis/${eventId}/${participantId}`)
             .then(response => response.data)
             .then(setMatches)
     }
 
-    const getPairs = (eventId: string) => {
+    const generatePairs = (eventId: string) => {
         return axios.get("/participants/pairs/" + eventId)
             .then(response => response.data)
-            .then(setPairs)
+
+    }
+    const getCurrentRound = (eventId: string) => {
+        axios.get(`/participants/pairs/${eventId}/currentRound`)
+            .then(response => response.data)
+            .then(setCurrentRound)
     }
 
 
@@ -67,7 +71,9 @@ export default function useParticipants() {
         sendLike,
         getAllMatches,
         matches,
-        getPairs,
-        pairs, getAllParticipants
+        generatePairs,
+        getAllParticipants,
+        getCurrentRound,
+        currentRound
     }
 }

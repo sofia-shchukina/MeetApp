@@ -1,6 +1,5 @@
 package sonia.meetapp.app.participants;
 
-import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,9 +64,13 @@ public class ParticipantsController {
     }
 
     @GetMapping("/pairs/{eventId}")
-    public List<List<Participant>> receivePairs(@PathVariable String eventId) {
-        List<Participant> pairs = participantsService.receivePairs(eventId);
-        return Lists.partition(pairs, 2);
+    public List<List<Participant>> generatePairs(@PathVariable String eventId) {
+        return participantsService.receivePairs(eventId);
+    }
+
+    @GetMapping("/pairs/{eventId}/currentRound")
+    public List<List<Participant>> receiveCurrentRound(@PathVariable String eventId) {
+        return participantsService.receiveCurrentRound(eventId);
     }
 
 }

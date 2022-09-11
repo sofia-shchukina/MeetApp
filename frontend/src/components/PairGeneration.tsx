@@ -7,24 +7,26 @@ import {useParams} from "react-router-dom";
 
 
 export default function PairGeneration(props: {
-    getPairs: (eventId: string) => Promise<void>,
-    pairs: Participant[][],
+    generatePairs: (eventId: string) => Promise<void>,
     appUser: AppUser | undefined,
     getAllParticipants: (id: string) => void,
+    getCurrentRound: (eventId: string) => void,
+    currentRound: Participant[][],
 }) {
     const [errorMessage, setErrorMessage] = useState("");
-    const [round, setRound] = useState<number>(0);
     const {eventId} = useParams();
     useEffect(() => {
         props.getAllParticipants(eventId ? eventId : "fakeId")
     }, [])
-    const handleSubmit = () => {
-        props.getPairs(eventId ? eventId : "fakeID")
 
-            .then(() => setRound(round + 1))
+    const handleSubmit = () => {
+        props.generatePairs(eventId ? eventId : "fakeID")
             .catch((error) => {
                 setErrorMessage(error.response.data.message)
             })
+    }
+    const handleGetCurrentRoundButton = () => {
+        props.getCurrentRound(eventId ? eventId : "fakeID")
     }
 
 
@@ -32,12 +34,14 @@ export default function PairGeneration(props: {
         <div id="talk">
             {props.appUser && props.appUser.role === "admin" ?
                 <Button type="submit" id="getPairsButton" variant="contained" onClick={handleSubmit}>
-                    Let's get it started! </Button> : <></>}
-            {errorMessage ? <>{errorMessage}</> : <>It's round #{round} now.</>}
-
+                    Generate next round </Button> : <></>}
+            {errorMessage ? errorMessage : <></>}
+            {props.appUser ?
+                <Button type="submit" id="getPairsButton" variant="contained" onClick={handleGetCurrentRoundButton}>
+                    See pairs for current round </Button> : <></>}
             <div id="pairsList">
                 <h3> Pairs for this round </h3>
-                {props.pairs.map((array: Participant[], i: number) => {
+                {props.currentRound.map((array: Participant[], i: number) => {
                     return (
                         <ol key={i}>
                             {array.map((participant: Participant) => {
