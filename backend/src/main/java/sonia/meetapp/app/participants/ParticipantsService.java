@@ -16,7 +16,6 @@ import java.util.Locale;
 @AllArgsConstructor
 public class ParticipantsService {
     private static final String BREAK_PARTICIPANT_NAME = "break";
-
     private final EventRepo eventRepo;
     private final Utility utility;
 
@@ -141,29 +140,23 @@ public class ParticipantsService {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         List<Participant> allParticipants = event.getEventParticipants();
         Participant breakParticipant = new Participant(BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME);
-
         if (allParticipants.size() % 2 == 1) {
             allParticipants.add(breakParticipant);
         }
-
         List<Participant> generatedPairs = new ArrayList<>();
         for (int i = 0; i < allParticipants.size(); i++) {
             generatedPairs.add(null);
         }
         if (solve(allParticipants, generatedPairs)) {
             for (int i = 0; i < generatedPairs.size(); i++) {
-
                 int finalI = i;
                 Participant participantToEdit = allParticipants.stream().filter(participant ->
                         participant.getId().equals(generatedPairs.get(finalI).getId())).findFirst().orElseThrow(() ->
                         new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
                 event.getEventParticipants().remove(participantToEdit);
-
                 if (i % 2 == 0) {
-
                     if (participantToEdit.getPeopleITalkedTo() != null) {
                         participantToEdit.getPeopleITalkedTo().add(generatedPairs.get(i + 1).getId());
-
                     } else {
                         participantToEdit.setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i + 1).getId())));
                     }
@@ -175,10 +168,8 @@ public class ParticipantsService {
                     }
                 }
                 event.getEventParticipants().add(participantToEdit);
-
                 eventRepo.save(event);
             }
-
             List<List<Participant>> pairs = Lists.partition(generatedPairs, 2);
             event.setCurrentRound(pairs);
             event.getEventParticipants().remove(breakParticipant);
@@ -237,4 +228,3 @@ public class ParticipantsService {
         return event.getCurrentRound();
     }
 }
-

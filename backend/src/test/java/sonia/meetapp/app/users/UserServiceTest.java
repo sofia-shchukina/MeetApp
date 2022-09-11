@@ -37,7 +37,6 @@ class UserServiceTest {
         when(appUserRepo.findById(newAppUser.email())).thenReturn(Optional.empty());
         when(appUserRepo.save(appUser)).thenReturn(appUser);
 
-
         AppUser actual = userService.registerNewUser(newAppUser);
         Assertions.assertEquals(appUser, actual);
     }
@@ -62,7 +61,6 @@ class UserServiceTest {
 
     @Test
     void registerNewUserTestPasswordDoesNotMatch() {
-
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
                 "qwertz", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
@@ -80,7 +78,6 @@ class UserServiceTest {
 
     @Test
     void registerNewUserTestConstraintViolation() {
-
         NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer",
                 "qwer", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");

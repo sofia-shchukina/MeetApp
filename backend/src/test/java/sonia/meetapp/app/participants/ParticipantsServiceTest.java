@@ -70,7 +70,6 @@ class ParticipantsServiceTest {
         List<Participant> testList = List.of(
                 new Participant("Daniel", "1234", "daniel@gmail.com"),
                 new Participant("Guillermo", "1", "123"));
-
         mockedEvent.setEventParticipants(testList);
 
         String participantName = "Guillermo";
@@ -81,7 +80,6 @@ class ParticipantsServiceTest {
         newParticipant.setEmail(email);
 
         when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
-
         when(utility.createIdAsString()).thenReturn(id);
         when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
         try {
@@ -96,7 +94,6 @@ class ParticipantsServiceTest {
         List<Participant> testList = List.of(
                 new Participant("Daniel", "1234", "daniel@gmail.com"),
                 new Participant("Alex", "1", "guillermo@gmail.com"));
-
         mockedEvent.setEventParticipants(testList);
 
         String participantName = "Guillermo";
@@ -107,7 +104,6 @@ class ParticipantsServiceTest {
         newParticipant.setEmail(email);
 
         when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
-
         when(utility.createIdAsString()).thenReturn(id);
         when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
         try {
@@ -126,10 +122,8 @@ class ParticipantsServiceTest {
         testList.add(testParticipant2);
 
         mockedEvent.setEventParticipants(testList);
-
         when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
-
         participantsService.deleteParticipant(mockedEvent.getId(), testParticipant.getId());
         verify(eventRepo).save(mockedEvent);
         Assertions.assertEquals(1, mockedEvent.getEventParticipants().size());
@@ -166,9 +160,7 @@ class ParticipantsServiceTest {
         newParticipant.setName("George");
         newParticipant.setEmail("123@gmail.com");
         Participant endParticipant = new Participant(newParticipant.getName(), id, email);
-
         Participant actualResult = participantsService.editParticipant(id, eventId, newParticipant);
-
         Assertions.assertEquals(endParticipant, actualResult);
     }
 
@@ -443,7 +435,6 @@ class ParticipantsServiceTest {
         participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId(), participant4.getId())));
         participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
         participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant2.getId())));
-
 
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5));

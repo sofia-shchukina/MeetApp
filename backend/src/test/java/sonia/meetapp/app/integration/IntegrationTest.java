@@ -227,12 +227,10 @@ class IntegrationTest {
                 .andReturn()
                 .getResponse();
 
-
         mockMvc.perform(put("/participants/likes/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"likerID":"1","likedPeopleIDs": ["2"]}
-                                                             
                                  """)
                         .with(csrf()))
                 .andExpect(status().isOk())
@@ -287,14 +285,12 @@ class IntegrationTest {
                 .andReturn()
                 .getResponse();
 
-
         mockMvc.perform(put("/participants/likes/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"likerID":"1","likedPeopleIDs": ["2"]}
                                                              
                                  """)
-
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -307,7 +303,6 @@ class IntegrationTest {
                                 {"likerID":"2","likedPeopleIDs": ["1"]}
                                                              
                                  """)
-
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -326,7 +321,6 @@ class IntegrationTest {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().is4xxClientError());
     }
-
 
     @DirtiesContext
     @Test
@@ -583,7 +577,6 @@ class IntegrationTest {
                                         ]
                         """));
 
-
         mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -613,7 +606,6 @@ class IntegrationTest {
                             ]
                         ]
                         """));
-
     }
 
     @DirtiesContext
@@ -662,7 +654,6 @@ class IntegrationTest {
                         .with(csrf()))
                 .andReturn()
                 .getResponse();
-
 
         mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
@@ -723,7 +714,6 @@ class IntegrationTest {
                 .andReturn()
                 .getResponse();
 
-
         mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -759,7 +749,6 @@ class IntegrationTest {
                             ]
                         ]
                         """));
-
     }
 
     @DirtiesContext

@@ -72,5 +72,4 @@ public class ParticipantsController {
     public List<List<Participant>> receiveCurrentRound(@PathVariable String eventId) {
         return participantsService.receiveCurrentRound(eventId);
     }
-
 }

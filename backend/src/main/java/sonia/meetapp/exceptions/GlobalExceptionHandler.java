@@ -68,5 +68,4 @@ public class GlobalExceptionHandler {
         Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
         return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
     }
-
 }

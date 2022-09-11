@@ -44,7 +44,6 @@ export default function CreateEvent(props:
     return (<>
             {props.appUser?.role === "admin" ?
                 <form id="addEventForm" onSubmit={onFormSubmit}>
-
                     <TextField id="eventName" label="Event name" color="warning" value={name}
                                onChange={event => setName(event.target.value)}/>
                     <TextField id="eventPlace" label="Event location" color="warning" value={place}

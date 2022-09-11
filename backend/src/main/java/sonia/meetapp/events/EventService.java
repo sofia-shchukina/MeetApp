@@ -12,7 +12,6 @@ import java.util.List;
 public class EventService {
     private final EventRepo eventRepo;
     private final Utility utility;
-
     public List<Event> getAllEvents() {
         return eventRepo.findAll();
     }
