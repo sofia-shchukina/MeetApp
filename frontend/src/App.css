@@ -11,7 +11,7 @@ body {
     background-color: var(--beige);
     margin: 0;
     padding: 0;
-
+    max-width: 100vw;
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
@@ -29,4 +29,12 @@ header {
     padding-top: 9vh;
     font-size: 4vh;
     border-bottom-right-radius: 40px;
+    width: 100vw;
+    max-width: 100vw;
 }
+
+main {
+    width: 100vw;
+    max-width: 100vw;
+}
+

@@ -19,7 +19,7 @@ export default function EachParticipant(props:
 
     return (
         <li key={props.participant.id}>
-            <div id="nameAndButtons">
+            <div id="participantNameAndButtons">
                 <div className="nameStyle"> {props.participant.name} </div>
                 {props.participant.email === props.appUser?.email || props.appUser?.role === "admin" ?
                     <div id="buttons">

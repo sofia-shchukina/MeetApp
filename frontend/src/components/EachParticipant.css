@@ -14,7 +14,7 @@
     width: 15px;
 }
 
-#nameAndButtons {
+#participantNameAndButtons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
