@@ -64,9 +64,9 @@ public class ParticipantsController {
         return participantsService.receiveMatches(eventId, participantId);
     }
 
-    @GetMapping("/pairs")
-    public List<List<Participant>> receivePairs() {
-        List<Participant> pairs = participantsService.receivePairs();
+    @GetMapping("/pairs/{eventId}")
+    public List<List<Participant>> receivePairs(@PathVariable String eventId) {
+        List<Participant> pairs = participantsService.receivePairs(eventId);
         return Lists.partition(pairs, 2);
     }
 

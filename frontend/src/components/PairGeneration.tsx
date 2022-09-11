@@ -1,19 +1,25 @@
 import {Participant} from "../types/Participant";
 import Button from "@mui/material/Button";
 import './PairGeneration.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {AppUser} from "../types/AppUser";
+import {useParams} from "react-router-dom";
 
 
 export default function PairGeneration(props: {
-    getPairs: () => Promise<void>,
+    getPairs: (eventId: string) => Promise<void>,
     pairs: Participant[][],
     appUser: AppUser | undefined,
+    getAllParticipants: (id: string) => void,
 }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [round, setRound] = useState<number>(0);
+    const {eventId} = useParams();
+    useEffect(() => {
+        props.getAllParticipants(eventId ? eventId : "fakeId")
+    }, [])
     const handleSubmit = () => {
-        props.getPairs()
+        props.getPairs(eventId ? eventId : "fakeID")
 
             .then(() => setRound(round + 1))
             .catch((error) => {

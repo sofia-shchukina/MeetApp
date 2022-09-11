@@ -52,8 +52,8 @@ export default function useParticipants() {
             .then(setMatches)
     }
 
-    const getPairs = () => {
-        return axios.get("/participants/pairs")
+    const getPairs = (eventId: string) => {
+        return axios.get("/participants/pairs/" + eventId)
             .then(response => response.data)
             .then(setPairs)
     }

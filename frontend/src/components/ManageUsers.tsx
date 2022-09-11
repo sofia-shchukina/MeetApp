@@ -17,7 +17,7 @@ export default function ManageUsers(props: {
                             <li>
                                 <EachUser key={user.email}
                                           user={user}
-                                          participants={props.participants}/>
+                                          />
                             </li>
                         )}
                     </ol>

@@ -15,7 +15,7 @@ import java.util.Locale;
 @AllArgsConstructor
 public class ParticipantsService {
     private static final String BREAK_PARTICIPANT_NAME = "break";
-    private final ParticipantsRepo participantsRepo;
+
     private final EventRepo eventRepo;
     private final Utility utility;
 
@@ -137,12 +137,15 @@ public class ParticipantsService {
         return matches;
     }
 
-    public List<Participant> receivePairs() {
-        List<Participant> allParticipants = participantsRepo.findAll();
+    public List<Participant> receivePairs(String eventId) {
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
+        List<Participant> allParticipants = event.getEventParticipants();
+        Participant breakParticipant = new Participant(BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME);
+
         if (allParticipants.size() % 2 == 1) {
-            Participant breakParticipant = new Participant(BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME, BREAK_PARTICIPANT_NAME);
             allParticipants.add(breakParticipant);
-            participantsRepo.save(breakParticipant);
+            event.getEventParticipants().add(breakParticipant);
+            eventRepo.save(event);
         }
 
         List<Participant> generatedPairs = new ArrayList<>();
@@ -153,7 +156,10 @@ public class ParticipantsService {
             for (int i = 0; i < generatedPairs.size(); i++) {
 
                 int finalI = i;
-                Participant participantToEdit = participantsRepo.findById(generatedPairs.get(i).getId()).orElseThrow(() -> new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
+                Participant participantToEdit = allParticipants.stream().filter(participant ->
+                        participant.getId().equals(generatedPairs.get(finalI).getId())).findFirst().orElseThrow(() ->
+                        new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
+                event.getEventParticipants().remove(participantToEdit);
 
                 if (i % 2 == 0) {
 
@@ -170,12 +176,15 @@ public class ParticipantsService {
                         participantToEdit.setPeopleITalkedTo(new ArrayList<>(List.of(generatedPairs.get(i - 1).getId())));
                     }
                 }
-                participantsRepo.save(participantToEdit);
+                event.getEventParticipants().add(participantToEdit);
+                eventRepo.save(event);
             }
-            participantsRepo.deleteById(BREAK_PARTICIPANT_NAME);
+            event.getEventParticipants().remove(breakParticipant);
+            eventRepo.save(event);
             return generatedPairs;
         } else {
-            participantsRepo.deleteById(BREAK_PARTICIPANT_NAME);
+            event.getEventParticipants().remove(breakParticipant);
+            eventRepo.save(event);
             throw new
                     NoPossibleCombinationsException();
         }

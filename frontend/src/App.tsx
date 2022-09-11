@@ -73,11 +73,12 @@ export default function App() {
                             </>
                         }/>
 
-                        <Route path={"/events/pairs/:id"} element={
+                        <Route path={"/events/pairs/:eventId"} element={
                             <>
                                 <PairGeneration getPairs={participantsHook.getPairs}
                                                 pairs={participantsHook.pairs}
-                                                appUser={userHook.appUser}/>
+                                                appUser={userHook.appUser}
+                                                getAllParticipants={participantsHook.getAllParticipants}/>
                                 <NavigationBar/>
                             </>
                         }/>
