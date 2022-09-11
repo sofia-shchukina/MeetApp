@@ -318,7 +318,7 @@ class ParticipantsServiceTest {
     @Test
     void receivePairs6Participants1Round() {
 
-
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
