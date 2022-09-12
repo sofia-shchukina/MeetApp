@@ -16,6 +16,7 @@ export default function PairGeneration(props: {
     const {eventId} = useParams();
     useEffect(() => {
         props.getAllParticipants(eventId ? eventId : "fakeId")
+        //eslint-disable-next-line
     }, [])
 
     const handleSubmit = () => {

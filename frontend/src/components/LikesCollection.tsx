@@ -17,9 +17,11 @@ export default function LikesCollection(props:
     const [likedNames, setLikedNames] = useState<string[]>([]);
     const [resultMessage, setResultMessage] = useState<string>("");
     const {eventId} = useParams();
+    const getParticipantsForEvent = props.getAllParticipants;
 
     useEffect(() => {
-        props.getAllParticipants(eventId ? eventId : "fakeId")
+        getParticipantsForEvent(eventId ? eventId : "fakeId")
+        //eslint-disable-next-line
     }, [])
 
     const handleLikedChange = (event: ChangeEvent<HTMLInputElement>) => {

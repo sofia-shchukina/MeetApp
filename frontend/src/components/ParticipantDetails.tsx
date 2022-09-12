@@ -16,6 +16,7 @@ export default function ParticipantDetails(props: {
 }) {
     useEffect(() => {
         props.getAllParticipants(eventId ? eventId : "fakeId")
+        //eslint-disable-next-line
     }, [])
     const [errorMessage, setErrorMessage] = useState("");
     const {id} = useParams();

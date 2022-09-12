@@ -17,6 +17,7 @@ export default function LikesAnalysis(props: {
     const {eventId} = useParams();
     useEffect(() => {
         props.getAllParticipants(eventId ? eventId : "fakeId")
+        //eslint-disable-next-line
     }, [])
     let email: string;
     if (props.appUser) {

@@ -15,6 +15,7 @@ export default function ParticipantsList(props:
     const {id} = useParams();
     useEffect(() => {
         props.getAllParticipants(id ? id : "fakeId")
+        //eslint-disable-next-line
     }, [])
     return (
         <div id="list">
