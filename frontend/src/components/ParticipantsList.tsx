@@ -13,8 +13,6 @@ export default function ParticipantsList(props:
                                                  getAllParticipants: (id: string) => void,
                                              }) {
     const {id} = useParams();
-
-
     useEffect(() => {
         props.getAllParticipants(id ? id : "fakeId")
     }, [])

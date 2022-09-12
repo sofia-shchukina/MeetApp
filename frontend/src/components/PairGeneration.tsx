@@ -5,7 +5,6 @@ import {useEffect, useState} from "react";
 import {AppUser} from "../types/AppUser";
 import {useParams} from "react-router-dom";
 
-
 export default function PairGeneration(props: {
     generatePairs: (eventId: string) => Promise<void>,
     appUser: AppUser | undefined,

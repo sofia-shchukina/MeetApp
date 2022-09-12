@@ -2,7 +2,6 @@ import {AppUser} from "../types/AppUser";
 import {TheEvent} from "../types/TheEvent";
 import EachTheEvent from "./EachTheEvent";
 
-
 export default function EventGallery(props:
                                          {
                                              theEvents: TheEvent[]
