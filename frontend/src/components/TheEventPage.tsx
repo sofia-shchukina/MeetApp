@@ -16,7 +16,7 @@ export default function TheEventPage(props:
     return (<>
             {props.appUser ?
 
-                <div id="nameAndButtons">
+                <div id="eventNameAndButtons">
                     <div className="nameStyle"> {thisEvent?.name} </div>
                     <div className="placeStyle"> {thisEvent?.place} </div>
                     <div className="timeStyle"> {thisEvent?.time} </div>
@@ -25,12 +25,12 @@ export default function TheEventPage(props:
                         <Button variant="outlined" id="personalButton"
                                 onClick={() => {
                                     navigate(`/events/registration/${thisEvent?.id}`)
-                                }}>Register for the event
+                                }}>Reserve a seat
                         </Button>
                         <Button variant="outlined" id="personalButton"
                                 onClick={() => {
                                     navigate(`/events/pairs/${thisEvent?.id}`)
-                                }}> See Pairs
+                                }}> Talk
                         </Button>
                         <Button variant="outlined" id="personalButton"
                                 onClick={() => {
