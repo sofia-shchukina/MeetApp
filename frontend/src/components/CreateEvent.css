@@ -1,0 +1,9 @@
+#addEventForm {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    justify-items: flex-start;
+    gap: 1vw;
+    margin-top: 1vw;
+    align-items: center;
+}

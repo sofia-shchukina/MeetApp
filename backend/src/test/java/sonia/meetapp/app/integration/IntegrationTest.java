@@ -12,7 +12,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import sonia.meetapp.app.participants.Participant;
 import sonia.meetapp.app.participants.Utility;
 
 import static org.mockito.BDDMockito.given;
@@ -38,7 +37,20 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void getAllParticipants() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         []
@@ -49,7 +61,20 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void addParticipant() throws Exception {
-        MvcResult result = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        MvcResult result = mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike"}
@@ -66,7 +91,20 @@ class IntegrationTest {
     @WithMockUser(username = "username")
     void deleteParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
-        mockMvc.perform(post("/participants")
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("124");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike"}
@@ -75,11 +113,11 @@ class IntegrationTest {
                 )
                 .andExpect(status().is(201));
 
-        mockMvc.perform(delete("/participants/" + "123")
+        mockMvc.perform(delete("/participants/" + "123/" + "124")
                         .with(csrf()))
                 .andExpect(status().is(204));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants/123")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -91,8 +129,21 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void deleteParticipantDoesNotExist() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
         String id = "111";
-        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/" + id)
+        mockMvc.perform(MockMvcRequestBuilders.delete("/participants/123/" + id)
                         .with(csrf()))
                 .andExpect(status().is(404));
     }
@@ -102,7 +153,20 @@ class IntegrationTest {
     @WithMockUser(username = "username")
     void editParticipant() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
-        mockMvc.perform(post("/participants")
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("124");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"123@gmail.com"}
@@ -110,7 +174,7 @@ class IntegrationTest {
                         .with(csrf()))
                 .andExpect(status().is(201));
 
-        mockMvc.perform(put("/participants/edit/" + "123")
+        mockMvc.perform(put("/participants/edit/123/124")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Nike", "email":"123@gmail.com"}
@@ -118,11 +182,11 @@ class IntegrationTest {
                         .with(csrf()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants")
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants/123")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        [{"name":"Nike", "id": "123", "email":"123@gmail.com"}]
+                        [{"name":"Nike", "id": "124", "email":"123@gmail.com"}]
                           """));
     }
 
@@ -130,130 +194,126 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void addLikes() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
 
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"12@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-
-        mockMvc.perform(put("/participants/likes/")
+        mockMvc.perform(put("/participants/likes/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
-                                                             
-                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
+                                {"likerID":"1","likedPeopleIDs": ["2"]}
+                                 """)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
-                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
+                        {"name":"Mike", "id": "1", "peopleILike":["2"]}
+                          """));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/participants"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/participants/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
-                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"], "email":"123@gmail.com"},
-                        {"name":"Mary", "id": "<ID2>", "peopleWhoLikeMe":["<ID>"], "email":"12@gmail.com"}
+                        {"name":"Mike", "id": "1", "peopleILike":["2"], "email":"123@gmail.com"},
+                        {"name":"Mary", "id": "2", "peopleWhoLikeMe":["1"], "email":"12@gmail.com"}
                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2)));
+                        """));
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "username")
     void getMatches() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
 
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"123@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"12@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-        String saveResult3 = mockMvc.perform(post("/participants")
+        mockMvc.perform(put("/participants/likes/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"name":"Sara", "email":"1@gmail.com"}
+                                {"likerID":"1","likedPeopleIDs": ["2"]}
+                                                             
                                  """)
                         .with(csrf()))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {"name":"Mike", "id": "1", "peopleILike":["2"]}
+                          """));
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult, Participant.class);
-        String id3 = saveResultParticipant3.getId();
-
-        mockMvc.perform(put("/participants/likes/")
+        mockMvc.perform(put("/participants/likes/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
-                                {"likerID":"<ID>","likedPeopleIDs": ["<ID2>"]}
+                                {"likerID":"2","likedPeopleIDs": ["1"]}
                                                              
-                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
-
+                                 """)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {"name":"Mike", "id": "<ID>", "peopleILike":["<ID2>"]}
-                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
-        mockMvc.perform(put("/participants/likes/")
-                        .contentType(APPLICATION_JSON)
-                        .content("""
-                                {"likerID":"<ID2>","likedPeopleIDs": ["<ID>"]}
-                                                             
-                                 """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2))
+                        {"name":"Mary", "id": "2", "peopleILike":["1"]}
+                          """));
 
-                        .with(csrf()))
+        mockMvc.perform(get("/participants/likes/analysis/123/" + "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
-                        {"name":"Mary", "id": "<ID2>", "peopleILike":["<ID>"]}
-                          """.replaceFirst("<ID>", id).replaceFirst("<ID2>", id2)));
-
-        mockMvc.perform(get("/participants/likes/analysis/" + "<ID>".replaceFirst("<ID>", id)))
-                .andExpect(status().isOk())
-                .andExpect(content().json("""
-                        [{"name":"Mary","id":"<ID2>","peopleILike":["<ID>"],"peopleWhoLikeMe":["<ID>"],"email":"12@gmail.com"}]
-                        """.replaceAll("<ID>", id).replaceFirst("<ID2>", id2)));
+                        [{"name":"Mary","id":"2","peopleILike":["1"],"peopleWhoLikeMe":["1"],"email":"12@gmail.com"}]
+                        """));
     }
 
     @Test
@@ -261,7 +321,6 @@ class IntegrationTest {
         mockMvc.perform(get("/hello"))
                 .andExpect(status().is4xxClientError());
     }
-
 
     @DirtiesContext
     @Test
@@ -385,308 +444,347 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username@gmail.com")
     void createPairsOnce() throws Exception {
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"1@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"2@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-        String saveResult3 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Misha", "email":"3@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult3, Participant.class);
-        String id3 = saveResultParticipant3.getId();
-
-        String saveResult4 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("4");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mark", "email":"4@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant4 = objectMapper.readValue(saveResult4, Participant.class);
-        String id4 = saveResultParticipant4.getId();
-
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                                          [
-                                        [{"name":"Mike","id":"<ID>","email":"1@gmail.com"},
-                        {"name":"Mary","id":"<ID2>","email":"2@gmail.com"}],
-                                        [{"name":"Misha","id":"<ID3>","email":"3@gmail.com"},
-                        {"name":"Mark","id":"<ID4>","email":"4@gmail.com"}]
+                                        [{"name":"Mike","id":"1","email":"1@gmail.com"},
+                        {"name":"Mary","id":"2","email":"2@gmail.com"}],
+                                        [{"name":"Misha","id":"3","email":"3@gmail.com"},
+                        {"name":"Mark","id":"4","email":"4@gmail.com"}]
                                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
+                        """));
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "username@gmail.com")
     void createPairsSeveralTimes() throws Exception {
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"1@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"2@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-        String saveResult3 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Misha", "email":"3@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult3, Participant.class);
-        String id3 = saveResultParticipant3.getId();
-
-        String saveResult4 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("4");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mark", "email":"4@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant4 = objectMapper.readValue(saveResult4, Participant.class);
-        String id4 = saveResultParticipant4.getId();
-
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                                          [
-                                        [{"name":"Mike","id":"<ID>","email":"1@gmail.com"},
-                        {"name":"Mary","id":"<ID2>","email":"2@gmail.com"}],
-                                        [{"name":"Misha","id":"<ID3>","email":"3@gmail.com"},
-                        {"name":"Mark","id":"<ID4>","email":"4@gmail.com"}]
+                                        [{"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2"]},
+                        {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1"]}],
+                                        [{"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4"]},
+                        {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3"]}]
                                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
+                        """));
 
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
                             [
-                                {"name":"Mike","id":"<ID>","email":"1@gmail.com", "peopleITalkedTo":["<ID2>"]},
-                                {"name":"Misha","id":"<ID3>","email":"3@gmail.com", "peopleITalkedTo":["<ID4>"]}
+                                {"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2", "3"]},
+                                {"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4", "1"]}
                             ],
                             [
-                                {"name":"Mary","id":"<ID2>","email":"2@gmail.com", "peopleITalkedTo":["<ID>"]},
-                                {"name":"Mark","id":"<ID4>","email":"4@gmail.com", "peopleITalkedTo":["<ID3>"]}
+                                {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1", "4"]},
+                                {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3", "2"]}
                             ]
                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
+                        """));
 
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
                             [
-                                {"name":"Mike","id":"<ID>","email":"1@gmail.com", "peopleITalkedTo":["<ID2>", "<ID3>"]},
-                                {"name":"Mark","id":"<ID4>","email":"4@gmail.com", "peopleITalkedTo":["<ID3>","<ID2>"]}
+                                {"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2", "3", "4"]},
+                                {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3","2", "1"]}
                             ],
                             [
-                                {"name":"Mary","id":"<ID2>","email":"2@gmail.com", "peopleITalkedTo":["<ID>", "<ID4>"]},
-                                {"name":"Misha","id":"<ID3>","email":"3@gmail.com", "peopleITalkedTo":["<ID4>", "<ID>"]}
+                                {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1", "4", "3"]},
+                                {"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4", "1", "2"]}
                             ]
                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
-
+                        """));
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "username@gmail.com")
     void createPairsOddNumberOfParticipants() throws Exception {
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"1@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"2@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-        String saveResult3 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Misha", "email":"3@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult3, Participant.class);
-        String id3 = saveResultParticipant3.getId();
-
-
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                                          [
-                                        [{"name":"Mike","id":"<ID>","email":"1@gmail.com"},
-                        {"name":"Mary","id":"<ID2>","email":"2@gmail.com"}],
-                                        [{"name":"Misha","id":"<ID3>","email":"3@gmail.com"},
+                                        [{"name":"Mike","id":"1","email":"1@gmail.com"},
+                        {"name":"Mary","id":"2","email":"2@gmail.com"}],
+                                        [{"name":"Misha","id":"3","email":"3@gmail.com"},
                         {"name":"break","id":"break","email":"break"}]
                                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3)));
-
+                        """));
     }
 
     @DirtiesContext
     @Test
     @WithMockUser(username = "username@gmail.com")
     void createPairsOddNumberOfParticipantsWithLatecomer() throws Exception {
-        String saveResult = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mike", "email":"1@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant = objectMapper.readValue(saveResult, Participant.class);
-        String id = saveResultParticipant.getId();
-
-        String saveResult2 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mary", "email":"2@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant2 = objectMapper.readValue(saveResult2, Participant.class);
-        String id2 = saveResultParticipant2.getId();
-
-        String saveResult3 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Misha", "email":"3@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant3 = objectMapper.readValue(saveResult3, Participant.class);
-        String id3 = saveResultParticipant3.getId();
-
-
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                                          [
-                                        [{"name":"Mike","id":"<ID>","email":"1@gmail.com"},
-                        {"name":"Mary","id":"<ID2>","email":"2@gmail.com"}],
-                                        [{"name":"Misha","id":"<ID3>","email":"3@gmail.com"},
+                                        [{"name":"Mike","id":"1","email":"1@gmail.com"},
+                        {"name":"Mary","id":"2","email":"2@gmail.com"}],
+                                        [{"name":"Misha","id":"3","email":"3@gmail.com"},
                         {"name":"break","id":"break","email":"break"}]
                                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3)));
+                        """));
 
-        String saveResult4 = mockMvc.perform(post("/participants")
+        given(utility.createIdAsString()).willReturn("4");
+        mockMvc.perform(post("/participants/123")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {"name":"Mark", "email":"4@gmail.com"}
                                  """)
                         .with(csrf()))
                 .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .getResponse();
 
-        Participant saveResultParticipant4 = objectMapper.readValue(saveResult4, Participant.class);
-        String id4 = saveResultParticipant4.getId();
-
-        mockMvc.perform(get("/participants/pairs"))
+        mockMvc.perform(get("/participants/pairs/123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         [
                             [
-                                {"name":"Mike","id":"<ID>","email":"1@gmail.com", "peopleITalkedTo":["<ID2>"]},
-                                {"name":"Misha","id":"<ID3>","email":"3@gmail.com", "peopleITalkedTo":["break"]}
+                                {"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2", "3"]},
+                                {"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["break", "1"]}
                             ],
                             [
-                                {"name":"Mary","id":"<ID2>","email":"2@gmail.com", "peopleITalkedTo":["<ID>"]},
-                                {"name":"Mark","id":"<ID4>","email":"4@gmail.com"}
+                                {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1", "4"]},
+                                {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["2"]}
                             ]
                         ]
-                        """.replaceAll("<ID>", id).replaceAll("<ID2>", id2).replaceAll("<ID3>", id3).replaceAll("<ID4>", id4)));
+                        """));
+    }
 
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void getAllEvents() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/events"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        []
+                        """));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void addEvent() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {"name": "speed-friending outdoors",
+                                               "place": "park",
+                                               "time":"today",
+                                               "description":"lovely event"
+                                               }
+                                 """)
+                        .with(csrf()))
+                .andExpect(status().is(201))
+                .andExpect(content().json("""
+                        {"id":"123",
+                        "name": "speed-friending outdoors",
+                        "place": "park",
+                        "time":"today",
+                        "description":"lovely event"
+                        } 
+                        """));
     }
 }

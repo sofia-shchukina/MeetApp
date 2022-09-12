@@ -63,4 +63,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(responseBody, HttpStatus.EXPECTATION_FAILED);
     }
 
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleEventNotFoundException(EventNotFoundException exception) {
+        Map<String, Object> responseBody = hashmapBuilder(exception.getMessage());
+        return new ResponseEntity<>(responseBody, HttpStatus.NOT_FOUND);
+    }
 }

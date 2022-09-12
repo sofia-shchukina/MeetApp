@@ -1,5 +1,5 @@
 import {Participant} from "../types/Participant";
-import {FormEvent, useState} from "react";
+import {FormEvent, useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {useNavigate, useParams} from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
@@ -9,12 +9,17 @@ import "./ParticipantDetails.css"
 import {AppUser} from "../types/AppUser";
 
 export default function ParticipantDetails(props: {
-    participants: Participant[],
+    getAllParticipants: (id: string) => void,
     appUser: AppUser | undefined,
-    editParticipant: (participantToEdit: Participant, editedName: string, email: string) => Promise<void>,
+    participants: Participant[],
+    editParticipant: (participantToEdit: Participant, editedName: string, email: string, eventId: string) => Promise<void>,
 }) {
+    useEffect(() => {
+        props.getAllParticipants(eventId ? eventId : "fakeId")
+    }, [])
     const [errorMessage, setErrorMessage] = useState("");
     const {id} = useParams();
+    const {eventId} = useParams();
     const participantToEdit = props.participants.find(item => item.id === id);
     const [editedName, setEditedName] = useState("");
 
@@ -27,7 +32,7 @@ export default function ParticipantDetails(props: {
             toast.error("Your name should not be empty, try again or contact meetup host")
         } else {
             props.appUser && participantToEdit ?
-                props.editParticipant(participantToEdit, editedName, props.appUser.email).then(() => {
+                props.editParticipant(participantToEdit, editedName, props.appUser.email, eventId ? eventId : "fakeId").then(() => {
                     setEditedName("");
                     setErrorMessage("")
                 })
@@ -49,7 +54,7 @@ export default function ParticipantDetails(props: {
             <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
             <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
                     onClick={() => {
-                        navigate("/registration")
+                        navigate("/events/registration/" + eventId)
                     }}>back</Button>
         </form>
     );

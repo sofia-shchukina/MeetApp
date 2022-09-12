@@ -5,7 +5,6 @@ import ParticipantsList from "./components/ParticipantsList";
 import AddNewParticipant from "./components/AddNewParticipant";
 import {ToastContainer} from "react-toastify";
 import {HashRouter, Route, Routes} from "react-router-dom";
-import ParticipantDetails from "./components/ParticipantDetails";
 import NavigationBar from './components/NavigationBar';
 import LikesCollection from './components/LikesCollection';
 import LikesAnalysis from './components/LikesAnalysis';
@@ -14,12 +13,18 @@ import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
 import PairGeneration from "./components/PairGeneration";
+import useEvents from "./hooks/useEvents";
+import CreateEvent from './components/CreateEvent';
+import EventGallery from "./components/EventGallery";
+import TheEventPage from "./components/TheEventPage";
+import ParticipantDetails from './components/ParticipantDetails';
 
 
 export default function App() {
 
     const participantsHook = useParticipants()
     const userHook = useUsers();
+    const eventHook = useEvents();
 
     return (<>
             <HashRouter>
@@ -41,49 +46,69 @@ export default function App() {
                                element={<ManageUsers appUser={userHook.appUser}
                                                      appUsers={userHook.appUsers}
                                                      participants={participantsHook.participants}/>}/>
-
-                        <Route path={"/registration"} element={
+                        <Route path={"/events"}
+                               element={<>
+                                   <CreateEvent addTheEvent={eventHook.addTheEvent}
+                                                appUser={userHook.appUser}/>
+                                   <EventGallery appUser={userHook.appUser}
+                                                 theEvents={eventHook.theEvents}/>
+                                   <NavigationBar/>
+                               </>
+                               }/>
+                        <Route path={"/events/:id"}
+                               element={<>
+                                   <TheEventPage theEvents={eventHook.theEvents}
+                                                 appUser={userHook.appUser}/>
+                               </>
+                               }/>
+                        <Route path={"/events/registration/:id"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}
                                                    appUser={userHook.appUser}/>
                                 <ParticipantsList participants={participantsHook.participants}
                                                   deleteParticipant={participantsHook.deleteParticipant}
-                                                  appUser={userHook.appUser}/>
+                                                  appUser={userHook.appUser}
+                                                  getAllParticipants={participantsHook.getAllParticipants}/>
                                 <NavigationBar/>
                             </>
                         }/>
 
-                        <Route path={"/pairs"} element={
+                        <Route path={"/events/pairs/:eventId"} element={
                             <>
-                                <PairGeneration getPairs={participantsHook.getPairs}
-                                                pairs={participantsHook.pairs}
-                                                appUser={userHook.appUser}/>
+                                <PairGeneration generatePairs={participantsHook.generatePairs}
+                                                appUser={userHook.appUser}
+                                                getAllParticipants={participantsHook.getAllParticipants}
+                                                getCurrentRound={participantsHook.getCurrentRound}
+                                                currentRound={participantsHook.currentRound}/>
                                 <NavigationBar/>
                             </>
                         }/>
-                        <Route path={"/participants/edit/:id"}
+                        <Route path={"/participants/edit/:eventId/:id"}
                                element={
                                    <>
                                        <ParticipantDetails participants={participantsHook.participants}
                                                            editParticipant={participantsHook.editParticipant}
-                                                           appUser={userHook.appUser}/>
+                                                           appUser={userHook.appUser}
+                                                           getAllParticipants={participantsHook.getAllParticipants}/>
                                        <NavigationBar/>
                                    </>
                                }/>
-                        <Route path={"/participants/likes/"}
+                        <Route path={"/events/likes/:eventId"}
                                element={
                                    <>
                                        <LikesCollection sendLike={participantsHook.sendLike}
                                                         participants={participantsHook.participants}
                                                         appUser={userHook.appUser}
+                                                        getAllParticipants={participantsHook.getAllParticipants}
                                        />
                                        <NavigationBar/>
                                    </>}/>
-                        <Route path={"/participants/likes/analysis"}
+                        <Route path={"/events/likes/analysis/:eventId"}
                                element={
                                    <>
                                        <LikesAnalysis
                                            participants={participantsHook.participants}
+                                           getAllParticipants={participantsHook.getAllParticipants}
                                            getAllMatches={participantsHook.getAllMatches}
                                            matches={participantsHook.matches}
                                            appUsers={userHook.appUsers}

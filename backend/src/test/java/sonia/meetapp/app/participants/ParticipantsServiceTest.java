@@ -2,6 +2,8 @@ package sonia.meetapp.app.participants;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sonia.meetapp.events.Event;
+import sonia.meetapp.events.EventRepo;
 import sonia.meetapp.exceptions.EmailIsNotUniqueException;
 import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.NoPossibleCombinationsException;
@@ -16,19 +18,24 @@ import static org.mockito.Mockito.*;
 
 class ParticipantsServiceTest {
 
-    ParticipantsRepo participantsRepo = mock(ParticipantsRepo.class);
+    EventRepo eventRepo = mock(EventRepo.class);
     Utility utility = mock(Utility.class);
-    ParticipantsService participantsService = new ParticipantsService(participantsRepo, utility);
+    ParticipantsService participantsService = new ParticipantsService(eventRepo, utility);
+    String eventId = "123";
+    Event mockedEvent = new Event("123", "Speed-Friending", "park", "today", "only for girls");
+
 
     @Test
     void getAllParticipants() {
-        List<Participant> participants = List.of(
+        List<Participant> testList = List.of(
                 new Participant("Alex", "12", "alex@gmail.com"),
                 new Participant("Marina", "333", "marina@gmail.com"),
-                new Participant("Ivan", "2222", "ivan@gmail.com")
-        );
-        when(participantsRepo.findAll()).thenReturn(participants);
-        List<Participant> actualResult = participantsService.getAllParticipants();
+                new Participant("Ivan", "2222", "ivan@gmail.com"));
+
+        mockedEvent.setEventParticipants(testList);
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        List<Participant> actualResult = participantsService.getAllParticipants(eventId);
         List<Participant> expectedResult = List.of(
                 new Participant("Alex", "12", "alex@gmail.com"),
                 new Participant("Marina", "333", "marina@gmail.com"),
@@ -39,17 +46,22 @@ class ParticipantsServiceTest {
 
     @Test
     void addParticipant() {
+        mockedEvent.setEventParticipants(new ArrayList<>());
+
         String participantName = "Guillermo";
         String id = "123";
         String email = "guillermo@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
         newParticipant.setEmail(email);
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
         Participant testParticipant = new Participant(participantName, id, email);
-        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
         when(utility.createIdAsString()).thenReturn(id);
-        Participant actualResult = participantsService.addParticipant(newParticipant);
-        verify(participantsRepo).save(testParticipant);
+        when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
+        Participant actualResult = participantsService.addParticipant(newParticipant, eventId);
+
         Assertions.assertEquals(testParticipant, actualResult);
     }
 
@@ -57,19 +69,21 @@ class ParticipantsServiceTest {
     void addParticipantNotUniqueName() {
         List<Participant> testList = List.of(
                 new Participant("Daniel", "1234", "daniel@gmail.com"),
-                new Participant("Guillermo", "1", "guillermo@gmail.com"));
+                new Participant("Guillermo", "1", "123"));
+        mockedEvent.setEventParticipants(testList);
 
         String participantName = "Guillermo";
         String id = "123";
-        String email = "test@gmail.com";
+        String email = "guillermo@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
-        Participant testParticipant = new Participant(participantName, id, email);
-        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
-        when(participantsRepo.findAll()).thenReturn(testList);
+        newParticipant.setEmail(email);
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         when(utility.createIdAsString()).thenReturn(id);
+        when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
         try {
-            participantsService.addParticipant(newParticipant);
+            participantsService.addParticipant(newParticipant, eventId);
             Assertions.fail("Expected exception was not thrown");
         } catch (NameIsNotUniqueException ignored) {
         }
@@ -79,20 +93,21 @@ class ParticipantsServiceTest {
     void addParticipantNotUniqueEmail() {
         List<Participant> testList = List.of(
                 new Participant("Daniel", "1234", "daniel@gmail.com"),
-                new Participant("Guillermo", "1", "guillermo@gmail.com"));
+                new Participant("Alex", "1", "guillermo@gmail.com"));
+        mockedEvent.setEventParticipants(testList);
 
-        String participantName = "Frank";
+        String participantName = "Guillermo";
         String id = "123";
-        String email = "daniel@gmail.com";
+        String email = "guillermo@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName(participantName);
         newParticipant.setEmail(email);
-        Participant testParticipant = new Participant(participantName, id, email);
-        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
-        when(participantsRepo.findAll()).thenReturn(testList);
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         when(utility.createIdAsString()).thenReturn(id);
+        when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
         try {
-            participantsService.addParticipant(newParticipant);
+            participantsService.addParticipant(newParticipant, eventId);
             Assertions.fail("Expected exception was not thrown");
         } catch (EmailIsNotUniqueException ignored) {
         }
@@ -100,21 +115,30 @@ class ParticipantsServiceTest {
 
     @Test
     void deleteParticipant() {
-        Participant testParticipant = new Participant("Daria", "54321", "123@gmail.com");
-        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(true);
-        doNothing().when(participantsRepo).deleteById(testParticipant.getId());
-        participantsService.deleteParticipant(testParticipant.getId());
-        verify(participantsRepo).deleteById(testParticipant.getId());
+        Participant testParticipant = new Participant("Alex", "1", "guillermo@gmail.com");
+        Participant testParticipant2 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant);
+        testList.add(testParticipant2);
+
+        mockedEvent.setEventParticipants(testList);
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        when(eventRepo.save(mockedEvent)).thenReturn(mockedEvent);
+        participantsService.deleteParticipant(mockedEvent.getId(), testParticipant.getId());
+        verify(eventRepo).save(mockedEvent);
+        Assertions.assertEquals(1, mockedEvent.getEventParticipants().size());
     }
 
 
     @Test
     void deleteParticipantDoesNotExist() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        List<Participant> testList = new ArrayList<>();
+
+        mockedEvent.setEventParticipants(testList);
         Participant testParticipant = new Participant("Daria", "54321", "123@gmail.com");
-        when(participantsRepo.existsById(testParticipant.getId())).thenReturn(false);
-        String id = testParticipant.getId();
         try {
-            participantsService.deleteParticipant(id);
+            participantsService.deleteParticipant(mockedEvent.getId(), testParticipant.getId());
             Assertions.fail("Expected exception was not thrown");
         } catch (ParticipantNotFoundException ignored) {
         }
@@ -122,40 +146,41 @@ class ParticipantsServiceTest {
 
     @Test
     void editParticipant() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        Participant testParticipant = new Participant("Alex", "1", "guillermo@gmail.com");
+        Participant testParticipant2 = new Participant("Daniel", "123", "123@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
         String id = "123";
         String email = "123@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
         newParticipant.setEmail("123@gmail.com");
-        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
-
-        when(participantsRepo.existsById(id)).thenReturn(true);
-        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
-        Participant actualResult = participantsService.editParticipant(id, newParticipant);
-
-        verify(participantsRepo).save(testParticipant);
-        Assertions.assertEquals(testParticipant, actualResult);
+        Participant endParticipant = new Participant(newParticipant.getName(), id, email);
+        Participant actualResult = participantsService.editParticipant(id, eventId, newParticipant);
+        Assertions.assertEquals(endParticipant, actualResult);
     }
 
     @Test
     void editParticipantNotUnique() {
-        List<Participant> testList = List.of(
-                new Participant("Daniel", "1234", "daniel@gmail.com"),
-                new Participant("George", "1", "daniel@gmail.com"));
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("George", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
 
         String id = "123";
-        String email = "12@gmail.com";
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
-        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
-
-        when(participantsRepo.findAll()).thenReturn(testList);
-        when(participantsRepo.existsById(id)).thenReturn(true);
-        doNothing().when(participantsRepo).deleteById(id);
-        when(participantsRepo.save(testParticipant)).thenReturn(testParticipant);
 
         try {
-            participantsService.editParticipant(id, newParticipant);
+            participantsService.editParticipant(id, eventId, newParticipant);
             Assertions.fail("Expected exception was not thrown");
         } catch (NameIsNotUniqueException ignored) {
         }
@@ -163,15 +188,21 @@ class ParticipantsServiceTest {
 
     @Test
     void editParticipantDoesNotExist() {
-        String id = "123";
-        NewParticipant newParticipant = new NewParticipant();
-        newParticipant.setName("George");
-        String email = "123@gmail.com";
-        Participant testParticipant = new Participant(newParticipant.getName(), id, email);
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
 
-        when(participantsRepo.existsById(id)).thenReturn(false);
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("George", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
+        String id = "12";
+        NewParticipant newParticipant = new NewParticipant();
+        newParticipant.setName("Go");
+
         try {
-            participantsService.editParticipant(id, newParticipant);
+            participantsService.editParticipant(id, eventId, newParticipant);
             Assertions.fail("Expected exception was not thrown");
         } catch (ParticipantNotFoundException ignored) {
         }
@@ -179,65 +210,79 @@ class ParticipantsServiceTest {
 
     @Test
     void thisNameIsUnique() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("Alex", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
         NewParticipant newParticipant = new NewParticipant();
         newParticipant.setName("George");
 
-        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
-        Participant dummieParticipant2 = new Participant("Daniel", "1234", "1234@gmail.com");
-        when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
-
-        Boolean actual = participantsService.thisNameIsUnique(newParticipant);
+        Boolean actual = participantsService.thisNameIsUnique(newParticipant, mockedEvent);
         Assertions.assertTrue(actual);
     }
 
     @Test
     void thisNameIsUniqueFalse() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("Alex", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
         NewParticipant newParticipant = new NewParticipant();
-        newParticipant.setName("George");
+        newParticipant.setName("Alex");
 
-        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
-        Participant dummieParticipant2 = new Participant("George", "1234", "123@gmail.com");
-        when(participantsRepo.findAll()).thenReturn(List.of(dummieParticipant1, dummieParticipant2));
-
-        Boolean actual = participantsService.thisNameIsUnique(newParticipant);
+        Boolean actual = participantsService.thisNameIsUnique(newParticipant, mockedEvent);
         Assertions.assertFalse(actual);
     }
 
     @Test
     void addLikes() {
-        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
-        Participant dummieParticipant2 = new Participant("George", "1234", "123@gmail.com");
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("Alex", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
         Like like = new Like();
-        like.setLikerID(dummieParticipant1.getId());
-        String[] likedPeopleIDs = {"1234"};
+        like.setLikerID(testParticipant1.getId());
+        String[] likedPeopleIDs = {"1"};
         like.setLikedPeopleIDs(likedPeopleIDs);
 
-        Participant expected = new Participant("Florian", "123", "123@gmail.com");
-        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
+        Participant expected = new Participant("Daniel", "1234", "daniel@gmail.com");
+        expected.setPeopleILike(new ArrayList<>(List.of("1")));
 
-        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(true);
-        when(participantsRepo.save(expected)).thenReturn(expected);
-        when(participantsRepo.findById(dummieParticipant1.getId())).thenReturn(Optional.of(dummieParticipant1));
-        when(participantsRepo.findById(dummieParticipant2.getId())).thenReturn(Optional.of(dummieParticipant2));
-        Participant actual = participantsService.addLikes(like);
+        Participant actual = participantsService.addLikes(like, eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void addLikesDoesNotExist() {
-        Participant dummieParticipant1 = new Participant("Florian", "123", "123@gmail.com");
-        Participant dummieParticipant2 = new Participant("George", "1234", "1234@gmail.com");
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("Alex", "1", "daniel@gmail.com");
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
         Like like = new Like();
-        like.setLikerID(dummieParticipant1.getId());
-        String[] likedPeopleIDs = {"1234"};
+        like.setLikerID("111");
+        String[] likedPeopleIDs = {"1"};
         like.setLikedPeopleIDs(likedPeopleIDs);
 
-        Participant expected = new Participant("Florian", "123", "123@gmail.com");
-        expected.setPeopleILike(new ArrayList<>(List.of("1234")));
-
-        when(participantsRepo.existsById(dummieParticipant1.getId())).thenReturn(false);
         try {
-            participantsService.addLikes(like);
+            participantsService.addLikes(like, eventId);
             Assertions.fail("Expected exception was not thrown");
         } catch (ParticipantNotFoundException ignored) {
         }
@@ -245,7 +290,7 @@ class ParticipantsServiceTest {
 
     @Test
     void receiveMatches() {
-
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("Florian", "123", "123@gmail.com");
         Participant participant2 = new Participant("Dominic", "1234", "1234@gmail.com");
         Participant participant3 = new Participant("Christopher", "12345", "12345@gmail.com");
@@ -254,17 +299,18 @@ class ParticipantsServiceTest {
         participant1.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant2.getId())));
         participant2.setPeopleWhoLikeMe(new ArrayList<>(List.of(participant1.getId())));
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
-        when(participantsRepo.findAll()).thenReturn(participants);
-        when(participantsRepo.findById(participant1.getId())).thenReturn(Optional.of(participant1));
+        mockedEvent.setEventParticipants(participants);
 
         List<Participant> expected = new ArrayList<>(List.of(
                 participant2));
-        List<Participant> actual = participantsService.receiveMatches(participant1.getId());
+        List<Participant> actual = participantsService.receiveMatches(participant1.getId(), eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs6Participants1Round() {
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
@@ -273,21 +319,21 @@ class ParticipantsServiceTest {
         Participant participant6 = new Participant("F", "6", "12345@gmail.com");
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5, participant6));
+        mockedEvent.setEventParticipants(participants);
 
-        when(participantsRepo.findAll()).thenReturn(participants);
-        when(participantsRepo.findById("1")).thenReturn(Optional.of(participant1));
-        when(participantsRepo.findById("2")).thenReturn(Optional.of(participant2));
-        when(participantsRepo.findById("3")).thenReturn(Optional.of(participant3));
-        when(participantsRepo.findById("4")).thenReturn(Optional.of(participant4));
-        when(participantsRepo.findById("5")).thenReturn(Optional.of(participant5));
-        when(participantsRepo.findById("6")).thenReturn(Optional.of(participant6));
+        List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant2));
+        List<Participant> expected2couple = new ArrayList<>(List.of(participant3, participant4));
+        List<Participant> expected3couple = new ArrayList<>(List.of(participant5, participant6));
 
-        List<Participant> actual = participantsService.receivePairs();
-        Assertions.assertEquals(participants, actual);
+        List<List<Participant>> expected = new ArrayList<>(List.of(expected1couple, expected2couple, expected3couple));
+
+        List<List<Participant>> actual = participantsService.receivePairs(eventId);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs6Participants2Round() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
@@ -295,12 +341,6 @@ class ParticipantsServiceTest {
         Participant participant5 = new Participant("E", "5", "1234@gmail.com");
         Participant participant6 = new Participant("F", "6", "12345@gmail.com");
 
-        when(participantsRepo.findById("1")).thenReturn(Optional.of(participant1));
-        when(participantsRepo.findById("2")).thenReturn(Optional.of(participant2));
-        when(participantsRepo.findById("3")).thenReturn(Optional.of(participant3));
-        when(participantsRepo.findById("4")).thenReturn(Optional.of(participant4));
-        when(participantsRepo.findById("5")).thenReturn(Optional.of(participant5));
-        when(participantsRepo.findById("6")).thenReturn(Optional.of(participant6));
 
         participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId())));
         participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId())));
@@ -311,29 +351,28 @@ class ParticipantsServiceTest {
 
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5, participant6));
-        when(participantsRepo.findAll()).thenReturn(participants);
+        mockedEvent.setEventParticipants(participants);
 
-        List<Participant> expected = new ArrayList<>(List.of(participant1, participant3, participant2, participant5,
-                participant4, participant6));
-        List<Participant> actual = participantsService.receivePairs();
+        List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant3));
+        List<Participant> expected2couple = new ArrayList<>(List.of(participant2, participant5));
+        List<Participant> expected3couple = new ArrayList<>(List.of(participant4, participant6));
+
+        List<List<Participant>> expected = new ArrayList<>(List.of(expected1couple, expected2couple, expected3couple));
+
+        List<List<Participant>> actual = participantsService.receivePairs(eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs6Participants3Round() {
+
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
         Participant participant4 = new Participant("D", "4", "123@gmail.com");
         Participant participant5 = new Participant("E", "5", "1234@gmail.com");
         Participant participant6 = new Participant("F", "6", "12345@gmail.com");
-
-        when(participantsRepo.findById("1")).thenReturn(Optional.of(participant1));
-        when(participantsRepo.findById("2")).thenReturn(Optional.of(participant2));
-        when(participantsRepo.findById("3")).thenReturn(Optional.of(participant3));
-        when(participantsRepo.findById("4")).thenReturn(Optional.of(participant4));
-        when(participantsRepo.findById("5")).thenReturn(Optional.of(participant5));
-        when(participantsRepo.findById("6")).thenReturn(Optional.of(participant6));
 
         participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId(), participant3.getId())));
         participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant1.getId(), participant5.getId())));
@@ -344,16 +383,21 @@ class ParticipantsServiceTest {
 
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
                 participant5, participant6));
-        when(participantsRepo.findAll()).thenReturn(participants);
+        mockedEvent.setEventParticipants(participants);
 
-        List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant6,
-                participant3, participant5));
-        List<Participant> actual = participantsService.receivePairs();
+        List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant4));
+        List<Participant> expected2couple = new ArrayList<>(List.of(participant2, participant6));
+        List<Participant> expected3couple = new ArrayList<>(List.of(participant3, participant5));
+
+        List<List<Participant>> expected = new ArrayList<>(List.of(expected1couple, expected2couple, expected3couple));
+
+        List<List<Participant>> actual = participantsService.receivePairs(eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs5Participants1Round() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
@@ -361,26 +405,25 @@ class ParticipantsServiceTest {
         Participant participant5 = new Participant("E", "5", "1234@gmail.com");
         Participant participantBreak = new Participant("break", "break", "break");
 
-        when(participantsRepo.findById("1")).thenReturn(Optional.of(participant1));
-        when(participantsRepo.findById("2")).thenReturn(Optional.of(participant2));
-        when(participantsRepo.findById("3")).thenReturn(Optional.of(participant3));
-        when(participantsRepo.findById("4")).thenReturn(Optional.of(participant4));
-        when(participantsRepo.findById("5")).thenReturn(Optional.of(participant5));
-        when(participantsRepo.findById("break")).thenReturn(Optional.of(participantBreak));
-        doNothing().when(participantsRepo).deleteById("break");
-
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participantBreak));
-        when(participantsRepo.findAll()).thenReturn(participants);
-        List<Participant> expected = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participantBreak));
+                participant5));
+        mockedEvent.setEventParticipants(participants);
 
-        List<Participant> actual = participantsService.receivePairs();
+        participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
+        List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant2));
+        List<Participant> expected2couple = new ArrayList<>(List.of(participant3, participant4));
+        List<Participant> expected3couple = new ArrayList<>(List.of(participant5, participantBreak));
+
+        List<List<Participant>> expected = new ArrayList<>(List.of(expected1couple, expected2couple, expected3couple));
+
+        List<List<Participant>> actual = participantsService.receivePairs(eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs5Participants3Round() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
@@ -393,31 +436,28 @@ class ParticipantsServiceTest {
         participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
         participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant2.getId())));
 
-        when(participantsRepo.findById("1")).thenReturn(Optional.of(participant1));
-        when(participantsRepo.findById("2")).thenReturn(Optional.of(participant2));
-        when(participantsRepo.findById("3")).thenReturn(Optional.of(participant3));
-        when(participantsRepo.findById("4")).thenReturn(Optional.of(participant4));
-        when(participantsRepo.findById("5")).thenReturn(Optional.of(participant5));
-        when(participantsRepo.findById("break")).thenReturn(Optional.of(participantBreak));
-        doNothing().when(participantsRepo).deleteById("break");
-
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participantBreak));
-        when(participantsRepo.findAll()).thenReturn(participants);
+                participant5));
+        mockedEvent.setEventParticipants(participants);
 
+        participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
+        List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant4));
+        List<Participant> expected2couple = new ArrayList<>(List.of(participant2, participant3));
+        List<Participant> expected3couple = new ArrayList<>(List.of(participant5, participantBreak));
 
-        List<Participant> expected = new ArrayList<>(List.of(participant1, participant4, participant2, participant3,
-                participant5, participantBreak));
-        List<Participant> actual = participantsService.receivePairs();
+        List<List<Participant>> expected = new ArrayList<>(List.of(expected1couple, expected2couple, expected3couple));
+
+        List<List<Participant>> actual = participantsService.receivePairs(eventId);
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void receivePairs3ParticipantsNoCombination() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+
         Participant participant1 = new Participant("A", "1", "123@gmail.com");
         Participant participant2 = new Participant("B", "2", "1234@gmail.com");
         Participant participant3 = new Participant("C", "3", "12345@gmail.com");
-
 
         participant1.setPeopleITalkedTo(new ArrayList<>(List.of(participant2.getId())));
         participant2.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId())));
@@ -425,12 +465,12 @@ class ParticipantsServiceTest {
 
 
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
-        when(participantsRepo.findAll()).thenReturn(participants);
-
+        mockedEvent.setEventParticipants(participants);
         try {
-            participantsService.receivePairs();
+            participantsService.receivePairs(eventId);
             Assertions.fail("Expected exception was not thrown");
         } catch (NoPossibleCombinationsException ignored) {
         }
+
     }
 }

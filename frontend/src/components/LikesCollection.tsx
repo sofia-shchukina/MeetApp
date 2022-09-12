@@ -1,19 +1,26 @@
 import {Participant} from "../types/Participant";
-import {ChangeEvent, FormEvent, useState} from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import './LikesCollection.css';
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
 import {AppUser} from "../types/AppUser";
+import {useParams} from "react-router-dom";
 
 export default function LikesCollection(props:
                                             {
                                                 participants: Participant[],
-                                                sendLike: (liker: Participant, liked: Participant[]) => void,
+                                                sendLike: (liker: Participant, liked: Participant[], eventId: string) => void,
                                                 appUser: AppUser | undefined,
+                                                getAllParticipants: (id: string) => void,
                                             }) {
 
     const [likedNames, setLikedNames] = useState<string[]>([]);
     const [resultMessage, setResultMessage] = useState<string>("");
+    const {eventId} = useParams();
+
+    useEffect(() => {
+        props.getAllParticipants(eventId ? eventId : "fakeId")
+    }, [])
 
     const handleLikedChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.currentTarget.checked) {
@@ -41,7 +48,7 @@ export default function LikesCollection(props:
             }
         })
         if (likerParticipant && likedParticipants.length > 0) {
-            props.sendLike(likerParticipant, likedParticipants);
+            props.sendLike(likerParticipant, likedParticipants, eventId ? eventId : "fakeId");
             setLikedNames([])
             setResultMessage("Your likes were succesfully submitted, you'll receive contacts of your matches soon");
         } else {

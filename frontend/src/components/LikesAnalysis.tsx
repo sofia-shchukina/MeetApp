@@ -3,21 +3,28 @@ import './LikeAnalysis.css';
 import {Participant} from "../types/Participant";
 import {AppUser} from "../types/AppUser";
 import EachMatch from "./EachMatch";
+import {useParams} from "react-router-dom";
+import {useEffect} from "react";
 
 export default function LikesAnalysis(props: {
     participants: Participant[],
-    getAllMatches: (id: string) => void,
+    getAllMatches: (id: string, eventId: string) => void,
     matches: Participant[],
     appUser: AppUser | undefined,
     appUsers: AppUser[],
+    getAllParticipants: (id: string) => void,
 }) {
+    const {eventId} = useParams();
+    useEffect(() => {
+        props.getAllParticipants(eventId ? eventId : "fakeId")
+    }, [])
     let email: string;
     if (props.appUser) {
         email = props.appUser.email
     }
     const analyser = props.participants.find(participant => participant.email === email);
     const handleSubmit = () => {
-        if (analyser) props.getAllMatches(analyser.id);
+        if (analyser) props.getAllMatches(analyser.id, eventId ? eventId : "fakeId");
     }
 
     return <>

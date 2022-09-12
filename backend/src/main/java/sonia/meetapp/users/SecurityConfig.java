@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/hello").permitAll()
+                .antMatchers("/events").permitAll()
                 .antMatchers(HttpMethod.GET, "/participants").permitAll()
                 .antMatchers("/participants").authenticated()
                 .and().httpBasic()

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {NewParticipant, Participant} from "../types/Participant";
 import axios from "axios";
 import {toast} from "react-toastify";
@@ -7,58 +7,59 @@ import {Like} from "../types/Like";
 export default function useParticipants() {
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [matches, setMatches] = useState<Participant[]>([]);
-    const [pairs, setPairs] = useState<Participant[][]>([]);
+    const [currentRound, setCurrentRound] = useState<Participant[][]>([]);
 
-    useEffect(() => {
-        getAllParticipants()
-    }, [])
-
-    const getAllParticipants = () => {
-        axios.get("/participants")
+    const getAllParticipants = (eventId: string) => {
+        axios.get("/participants/" + eventId)
             .then(response => response.data)
             .then(setParticipants)
     }
 
-    const addParticipant = (name: string, email: string) => {
+    const addParticipant = (name: string, email: string, eventId: string) => {
         const newParticipant: NewParticipant = {name, email}
-        return axios.post("participants", newParticipant)
-            .then(getAllParticipants)
+        return axios.post("participants/" + eventId, newParticipant)
+            .then(() => getAllParticipants(eventId))
     }
 
-    const deleteParticipant = (id: string) => {
-        return axios.delete("participants/" + id)
-            .then(getAllParticipants)
+    const deleteParticipant = (id: string, eventId: string) => {
+        return axios.delete(`participants/${eventId}/${id}`)
+            .then(() => getAllParticipants(eventId))
             .catch(
                 error => {
                     toast.error(error.message)
                 })
     }
 
-    const editParticipant = (participantToEdit: Participant, editedName: string, email: string) => {
+    const editParticipant = (participantToEdit: Participant, editedName: string, email: string, eventId: string) => {
         const newParticipant: NewParticipant = {name: editedName, email}
-        return axios.put("participants/edit/" + participantToEdit.id, newParticipant)
-            .then(getAllParticipants)
+        return axios.put(`participants/edit/${eventId}/${participantToEdit.id}`, newParticipant)
+            .then(() => getAllParticipants(eventId))
     }
 
-    const sendLike = (liker: Participant, liked: Participant[]) => {
+    const sendLike = (liker: Participant, liked: Participant[], eventId: string) => {
         const like: Like = {likerID: liker.id, likedPeopleIDs: liked.map(participant => participant.id)}
-        axios.put("participants/likes/", like)
+        axios.put("participants/likes/" + eventId, like)
             .catch(
                 error => {
                     toast.error(error.message)
                 })
     }
 
-    const getAllMatches = (id: string) => {
-        axios.get("/participants/likes/analysis/" + id)
+    const getAllMatches = (participantId: string, eventId: string) => {
+        axios.get(`/participants/likes/analysis/${eventId}/${participantId}`)
             .then(response => response.data)
             .then(setMatches)
     }
 
-    const getPairs = () => {
-        return axios.get("/participants/pairs")
+    const generatePairs = (eventId: string) => {
+        return axios.get("/participants/pairs/" + eventId)
             .then(response => response.data)
-            .then(setPairs)
+
+    }
+    const getCurrentRound = (eventId: string) => {
+        axios.get(`/participants/pairs/${eventId}/currentRound`)
+            .then(response => response.data)
+            .then(setCurrentRound)
     }
 
 
@@ -70,7 +71,9 @@ export default function useParticipants() {
         sendLike,
         getAllMatches,
         matches,
-        getPairs,
-        pairs
+        generatePairs,
+        getAllParticipants,
+        getCurrentRound,
+        currentRound
     }
 }

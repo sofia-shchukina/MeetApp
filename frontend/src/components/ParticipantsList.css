@@ -5,9 +5,10 @@ h3 {
 }
 
 #list {
+    width: 100vw;
     border: solid 1px white;
     border-top-left-radius: 40px;
     margin: 2vh 0 7vh 0;
     background-color: white;
-    min-height: 50vh;
+    min-height: 30vh;
 }
