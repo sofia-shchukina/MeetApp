@@ -10,12 +10,16 @@ export default function useEvents() {
     }, [])
 
     const getAllTheEvents = () => {
-        axios.get("/events")
+        axios.get<TheEvent[]>("/events")
             .then(response => response.data)
+            .then((data) => data.map((theEvent) => {
+                    return {...theEvent, time: new Date(theEvent.time)}
+                }
+            ))
             .then(setTheEvents)
     }
 
-    const addTheEvent = (name: string, place: string, time: string, description: string) => {
+    const addTheEvent = (name: string, place: string, time: Date, description: string) => {
         const newTheEvent: NewTheEvent = {name, place, time, description}
         return axios.post("events", newTheEvent)
             .then(getAllTheEvents)

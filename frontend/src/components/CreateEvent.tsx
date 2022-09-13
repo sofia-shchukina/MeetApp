@@ -11,14 +11,14 @@ import {TextField} from "@mui/material";
 
 export default function CreateEvent(props:
                                         {
-                                            addTheEvent: (name: string, place: string, time: string, description: string) => Promise<void>,
+                                            addTheEvent: (name: string, place: string, time: Date, description: string) => Promise<void>,
                                             appUser: AppUser | undefined,
                                         }) {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState("");
     const [place, setPlace] = useState("");
-    const [time, setTime] = useState("");
+    const [time, setTime] = useState<Date>(new Date());
     const [description, setDescription] = useState("");
 
     const onFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -31,7 +31,7 @@ export default function CreateEvent(props:
                     .then(() => {
                         setName("");
                         setPlace("");
-                        setTime("");
+                        setTime(new Date());
                         setDescription("");
                         setErrorMessage("")
                     })
@@ -52,12 +52,11 @@ export default function CreateEvent(props:
                         id="datetime-local"
                         label="Event time"
                         type="datetime-local"
-                        defaultValue="2017-05-24T10:30"
                         InputLabelProps={{
                             shrink: true
                         }}
-                        value={time}
-                        onChange={event => setTime(event.target.value)}/>
+                        value={time.toISOString().substring(0, 16)}
+                        onChange={event => setTime(new Date(event.target.value))}/>
 
                     <TextField id="eventDescription" label="Event description" color="warning" value={description}
                                onChange={event => setDescription(event.target.value)}/>

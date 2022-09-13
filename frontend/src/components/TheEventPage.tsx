@@ -19,7 +19,7 @@ export default function TheEventPage(props:
                 <div id="eventNameAndButtons">
                     <div className="nameStyle"> {thisEvent?.name} </div>
                     <div className="placeStyle"> {thisEvent?.place} </div>
-                    <div className="timeStyle"> {thisEvent?.time} </div>
+                    <div className="timeStyle"> {thisEvent?.time.toLocaleString()} </div>
                     <div className="descriptionStyle"> {thisEvent?.description} </div>
                     <div id="eventButtons">
                         <Button variant="outlined" id="personalButton"

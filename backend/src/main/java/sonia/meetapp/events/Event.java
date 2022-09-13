@@ -3,7 +3,7 @@ package sonia.meetapp.events;
 import lombok.Data;
 import sonia.meetapp.app.participants.Participant;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -12,12 +12,12 @@ public class Event {
     private String description;
     private String name;
     private String place;
-    private LocalDateTime time;
+    private Instant time;
     private List<Participant> eventParticipants;
     private List<List<Participant>> currentRound;
     private List<List<List<Participant>>> previousRounds;
 
-    public Event(String id, String name, String place, LocalDateTime time, String description) {
+    public Event(String id, String name, String place, Instant time, String description) {
         this.id = id;
         this.name = name;
         this.place = place;

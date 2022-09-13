@@ -43,7 +43,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -67,7 +67,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -96,7 +96,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -135,7 +135,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -158,7 +158,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -200,7 +200,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -258,7 +258,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -450,7 +450,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -519,7 +519,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -618,7 +618,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -677,7 +677,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -772,7 +772,7 @@ class IntegrationTest {
                         .content("""
                                 {"name": "speed-friending outdoors",
                                                "place": "park",
-                                               "time":"today",
+                                               "time":"2022-09-13T09:04:33.089Z",
                                                "description":"lovely event"
                                                }
                                  """)
@@ -782,7 +782,7 @@ class IntegrationTest {
                         {"id":"123",
                         "name": "speed-friending outdoors",
                         "place": "park",
-                        "time":"today",
+                        "time":"2022-09-13T09:04:33.089Z",
                         "description":"lovely event"
                         } 
                         """));

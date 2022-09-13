@@ -10,14 +10,14 @@ export default function EachTheEvent(props:
                                          }) {
 
     const navigate = useNavigate();
-
+console.log(typeof props.theEvent.time);
     return (<>
             {props.appUser ?
                 <li key={props.theEvent.id}>
                     <div id="nameAndButtons">
                         <div className="nameStyle"> {props.theEvent.name} </div>
                         <div className="placeStyle"> {props.theEvent.place} </div>
-                        <div className="timeStyle"> {props.theEvent.time.replace("T", " ")} </div>
+                        <div className="timeStyle"> {props.theEvent.time.toLocaleString()} </div>
                         <Button variant="outlined" id="personalButton"
                                 onClick={() => {
                                     navigate(`/events/${props.theEvent.id}`)
