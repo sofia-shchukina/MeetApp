@@ -9,6 +9,7 @@ import sonia.meetapp.exceptions.NameIsNotUniqueException;
 import sonia.meetapp.exceptions.NoPossibleCombinationsException;
 import sonia.meetapp.exceptions.ParticipantNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +23,8 @@ class ParticipantsServiceTest {
     Utility utility = mock(Utility.class);
     ParticipantsService participantsService = new ParticipantsService(eventRepo, utility);
     String eventId = "123";
-    Event mockedEvent = new Event("123", "Speed-Friending", "park", "today", "only for girls");
+    LocalDateTime time = LocalDateTime.of(2022, 9, 21, 14, 0);
+    Event mockedEvent = new Event("123", "Speed-Friending", "park", time, "only for girls");
 
 
     @Test
