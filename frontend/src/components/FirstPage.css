@@ -1,0 +1,35 @@
+.welcome {
+    width: 100vw;
+    height: 100vh;
+    background: black url('../../public/Welcome to Speed-Friending.png') no-repeat fixed center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#welcomeButton {
+    width: 70vw;
+    height: 5vh;
+    background-color: var(--white);
+    border-color: var(--white);
+    color: var(--orange);
+    font-size: 2vh;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 25px;
+}
+
+h1 {
+    color: var(--white);
+    text-align: center;
+}
+
+#welcomeMessageAndButtons {
+    position: absolute;
+    bottom: 5vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    align-items: center;
+}

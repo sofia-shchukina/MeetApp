@@ -1,9 +1,7 @@
 #getPairsButton {
-    height: 6vh;
-    width: 70vw;
+    height: 15vh;
+    border-radius: 15px;
     background-color: var(--brown);
-    font-size: 2vh;
-
 }
 
 #talk {
@@ -18,10 +16,5 @@
 }
 
 #pairsList {
-    border: solid 1px white;
-    border-top-left-radius: 40px;
-    margin: 2vh 0 7vh 0;
-    background-color: white;
-    min-height: 56vh;
-    width: 100vw;
+    min-height: 63vh;
 }

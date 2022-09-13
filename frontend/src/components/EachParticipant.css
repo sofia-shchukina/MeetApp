@@ -31,6 +31,11 @@
     flex-shrink: 2;
 }
 
-.nameStyle {
+.nameStyleParticipant {
     font-size: 20px;
+}
+
+#oneParticipantLi {
+    height: 4vh;
+
 }

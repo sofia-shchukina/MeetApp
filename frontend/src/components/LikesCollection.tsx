@@ -60,6 +60,7 @@ export default function LikesCollection(props:
 
     return (
         <>
+            <div className="eventBigName"><h4>Send likes</h4></div>
             <div className="clarificationText">Your name on meetup
                 was {likerParticipant ? likerParticipant.name : <>unknown</>}
                 . If it's incorrect, please contact the host before sending likes :-)

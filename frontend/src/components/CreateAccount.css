@@ -1,18 +1,41 @@
 #signUpButton {
-    height: 4vh;
-    width: 60vw;
+    height: 6vh;
+    width: 78vw;
     background-color: var(--brown);
+    border-radius: 10px;
+    font-size: 2vh;
 }
 
 #signUpForm {
+    padding: 15vh 3vw 5vh 3vw;
+    height: 80vh;
     display: flex;
     flex-direction: column;
-    justify-items: flex-start;
-    gap: 1vh;
+    justify-content: space-evenly;
     align-items: center;
-    margin: 1vh 2vw 2vh 2vw;
 }
 
 #message {
     color: red;
+}
+
+.register {
+    width: 100vw;
+    height: 100vh;
+    background: black url('../../public/registration-back.png') no-repeat fixed center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+h3 {
+    color: var(--dark-green);
+    font-size: 5vh;
+}
+
+#login {
+    height: 7vh;
+    width: 70vw;
+    border-radius: 10px;
 }

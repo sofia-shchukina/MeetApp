@@ -1,14 +1,15 @@
 .registrationInput {
-    height: 3vh;
     width: 70vw;
-    border-color: var(--brown);
-    margin-right: 1vw;
-    border-radius: 5px;
+    height: 5vh;
+    background-color: var(--white);
+    border-color: var(--orange);
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 25px;
 }
-
 #saveButton {
-    height: 4vh;
-    width: 60vw;
+    height: 5vh;
+    border-radius: 25px;
     background-color: var(--brown);
 }
 
@@ -18,6 +19,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    height: 15vh;
+    height: 20vh;
     width: 100vw;
+}
+
+#registrationForm label {
+    font-size: 3vh;
+    color: var(--dark-green);
 }

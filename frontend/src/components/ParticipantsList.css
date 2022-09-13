@@ -1,14 +1,20 @@
-h3 {
-    color: var(--orange);
-    text-align: center;
-    margin-top: 2vh;
-}
 
-#list {
+.list {
     width: 100vw;
     border: solid 1px white;
-    border-top-left-radius: 40px;
+    border-top-left-radius: 60px;;
     margin: 2vh 0 7vh 0;
     background-color: white;
     min-height: 30vh;
+}
+
+.list h3 {
+    color: var(--orange);
+    text-align: center;
+    margin-top: 2vh;
+    font-size: 3vh;
+}
+
+#participantList {
+    min-height: 50vh;
 }

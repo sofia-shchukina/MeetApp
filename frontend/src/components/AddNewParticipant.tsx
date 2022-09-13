@@ -44,13 +44,15 @@ export default function AddNewParticipant(props:
         }
     }
 
-    return (
-        <form id="registrationForm" onSubmit={onNameSubmit}>
-            <label>What will be your name on the nametag at this event? </label>
-            <input className="registrationInput" value={name}
-                   onChange={event => setName(event.target.value)}/>
-            <div className="errorMessage"> {errorMessage}</div>
-            <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
-        </form>
+    return (<>
+            <div className="eventBigName"><h4>Reserve a seat</h4></div>
+            <form id="registrationForm" onSubmit={onNameSubmit}>
+                <label>What will be your name on the nametag at this event? </label>
+                <input className="registrationInput" value={name}
+                       onChange={event => setName(event.target.value)}/>
+                <div className="errorMessage"> {errorMessage}</div>
+                <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
+            </form>
+        </>
     );
 }

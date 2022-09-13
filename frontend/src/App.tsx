@@ -13,6 +13,7 @@ import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
 import PairGeneration from "./components/PairGeneration";
+import FirstPage from "./components/FirstPage";
 import useEvents from "./hooks/useEvents";
 import CreateEvent from './components/CreateEvent';
 import EventGallery from "./components/EventGallery";
@@ -28,19 +29,25 @@ export default function App() {
 
     return (<>
             <HashRouter>
-                <header>Speed-Friending</header>
                 <main>
                     <Routes>
                         <Route path={"/"}
                                element={
                                    <>
-                                       <CreateAccount createUser={userHook.createUser}
-                                                      appUser={userHook.appUser}/>
-                                       <Home appUser={userHook.appUser}
-                                             login={userHook.login}
-                                             logout={userHook.logout}
-                                             checkIfLogin={userHook.checkIfLogin}/>
+                                       <FirstPage/>
                                    </>
+                               }/>
+                        <Route path={"/create-account"}
+                               element={
+                                   <CreateAccount createUser={userHook.createUser}
+                                                  appUser={userHook.appUser}/>
+                               }/>
+                        <Route path={"/login"}
+                               element={
+                                   <Home appUser={userHook.appUser}
+                                         login={userHook.login}
+                                         logout={userHook.logout}
+                                         checkIfLogin={userHook.checkIfLogin}/>
                                }/>
                         <Route path={"/for-admin"}
                                element={<ManageUsers appUser={userHook.appUser}

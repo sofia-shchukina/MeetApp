@@ -3,6 +3,7 @@ import {Participant} from "../types/Participant";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './EachParticipant.css';
+import './EachTheEvent.css';
 import {useNavigate, useParams} from "react-router-dom";
 import {AppUser} from "../types/AppUser";
 
@@ -18,9 +19,9 @@ export default function EachParticipant(props:
     const {id} = useParams();
 
     return (
-        <li key={props.participant.id}>
+        <li key={props.participant.id} id="oneParticipantLi">
             <div id="participantNameAndButtons">
-                <div className="nameStyle"> {props.participant.name} </div>
+                <div className="nameStyleParticipant"> {props.participant.name} </div>
                 {props.participant.email === props.appUser?.email || props.appUser?.role === "admin" ?
                     <div id="buttons">
                         <Button variant="outlined" id="personalButton"

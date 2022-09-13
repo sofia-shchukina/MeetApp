@@ -1,8 +1,10 @@
 #userLogin {
+    padding: 15vh 3vw 5vh 3vw;
     display: flex;
     flex-direction: column;
     justify-items: flex-start;
-    gap: 1vh;
+    justify-content: space-evenly;
+    height: 50vh;
     align-items: center;
 }
 
@@ -11,25 +13,17 @@
     width: 50vw;
 }
 
-#logout {
-    background-color: white;
-    width: 50vw;
+
+#checkEvents {
+    background-color: var(--orange);
+    height: 6vh;
+    width: 78vw;
+    border-radius: 10px;
+    font-size: 2vh;
 }
 
-#loginButton {
-    height: 4vh;
-    width: 60vw;
-    background-color: var(--brown);
-}
-
-#logoutButton {
-    height: 4vh;
-    width: 60vw;
-    background-color: var(--brown);
-}
-
-#adminButton {
-    height: 4vh;
-    width: 60vw;
-    background-color: var(--brown);
+#commentText {
+    font-size: 4vh;
+    margin-left: 5vw;
+    margin-right: 5vw;
 }
