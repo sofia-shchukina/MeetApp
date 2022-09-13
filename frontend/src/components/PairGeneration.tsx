@@ -41,7 +41,7 @@ export default function PairGeneration(props: {
                     See pairs for current round </Button> : <></>}
             <div id="pairsList">
                 <h3> Pairs for this round </h3>
-                {props.currentRound.map((array: Participant[], i: number) => {
+                {props.currentRound ? props.currentRound.map((array: Participant[], i: number) => {
                     return (
                         <ol key={i}>
                             {array.map((participant: Participant) => {
@@ -50,7 +50,7 @@ export default function PairGeneration(props: {
 
                         </ol>
                     );
-                })}
+                }) : <>this round was not generated yet, wait for host to do it, please</>}
             </div>
         </div>
     );
