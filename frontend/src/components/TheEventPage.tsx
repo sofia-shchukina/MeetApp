@@ -10,8 +10,8 @@ export default function TheEventPage(props:
                                              appUser: AppUser | undefined,
                                              theEvents: TheEvent[],
                                          }) {
-    const {id} = useParams();
-    const thisEvent = props.theEvents.find(theEvent => theEvent.id === id);
+    const {eventId} = useParams();
+    const thisEvent = props.theEvents.find(theEvent => theEvent.id === eventId);
 
     const navigate = useNavigate();
     return (<>
@@ -42,7 +42,7 @@ export default function TheEventPage(props:
                             </Button>
                         </div>
 
-                        <div className="eventName"> {thisEvent?.name} </div>
+
                         <div className="eventName"> {thisEvent?.place} </div>
                         <div className="eventName"> {thisEvent?.time.toLocaleString()} </div>
                         <div className="eventDescription"> {thisEvent?.description} </div>

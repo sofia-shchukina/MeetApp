@@ -19,6 +19,7 @@ import CreateEvent from './components/CreateEvent';
 import EventGallery from "./components/EventGallery";
 import TheEventPage from "./components/TheEventPage";
 import ParticipantDetails from './components/ParticipantDetails';
+import NavigationBarInsideEvent from "./components/NavigationBarInsideEvent";
 
 
 export default function App() {
@@ -62,7 +63,7 @@ export default function App() {
                                    <NavigationBar/>
                                </>
                                }/>
-                        <Route path={"/events/:id"}
+                        <Route path={"/events/:eventId"}
                                element={<>
                                    <TheEventPage theEvents={eventHook.theEvents}
                                                  appUser={userHook.appUser}/>
@@ -76,7 +77,7 @@ export default function App() {
                                                   deleteParticipant={participantsHook.deleteParticipant}
                                                   appUser={userHook.appUser}
                                                   getAllParticipants={participantsHook.getAllParticipants}/>
-                                <NavigationBar/>
+                                <NavigationBarInsideEvent/>
                             </>
                         }/>
 
@@ -87,7 +88,7 @@ export default function App() {
                                                 getAllParticipants={participantsHook.getAllParticipants}
                                                 getCurrentRound={participantsHook.getCurrentRound}
                                                 currentRound={participantsHook.currentRound}/>
-                                <NavigationBar/>
+                                <NavigationBarInsideEvent/>
                             </>
                         }/>
                         <Route path={"/participants/edit/:eventId/:id"}
@@ -97,7 +98,7 @@ export default function App() {
                                                            editParticipant={participantsHook.editParticipant}
                                                            appUser={userHook.appUser}
                                                            getAllParticipants={participantsHook.getAllParticipants}/>
-                                       <NavigationBar/>
+
                                    </>
                                }/>
                         <Route path={"/events/likes/:eventId"}
@@ -108,7 +109,7 @@ export default function App() {
                                                         appUser={userHook.appUser}
                                                         getAllParticipants={participantsHook.getAllParticipants}
                                        />
-                                       <NavigationBar/>
+                                       <NavigationBarInsideEvent/>
                                    </>}/>
                         <Route path={"/events/likes/analysis/:eventId"}
                                element={
@@ -120,7 +121,7 @@ export default function App() {
                                            matches={participantsHook.matches}
                                            appUsers={userHook.appUsers}
                                            appUser={userHook.appUser}/>
-                                       <NavigationBar/>
+                                       <NavigationBarInsideEvent/>
                                    </>}/>
                     </Routes>
                 </main>
