@@ -31,16 +31,16 @@ export default function LikesAnalysis(props: {
     return <>
         <div className="eventBigName"><h4>Receive matches</h4></div>
         <div className="clarificationText">Your name on meetup was {analyser ? analyser.name : <>unknown</>}
-            . If it's incorrect, please contact the host to receive your matches :-)
+            . If it's incorrect, please contact the host.List of your matches is not final, it will be updated, as soon
+            as other
+            participants
+            will send their likes. Come here later and press the button again:-)
         </div>
         <form className="likesForm">
             <Button type="submit" id="getMatchesButton" variant="contained" onClick={handleSubmit}> Get all
                 matches </Button>
-            <label> Here is a list of your matches, it is not final, it will be updated, as soon as other
-                participants
-                will send their likes. Come here later and press the button again:-) </label>
             <div className="list" id="listOfMatches">
-                <h3> List of matches </h3>
+                <h3> Your matches </h3>
                 <ul>
                     {props.matches.length > 0 ? props.matches.map((match: Participant) =>
                             <li key={match.id}>

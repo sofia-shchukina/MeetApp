@@ -12,9 +12,9 @@ export default function ParticipantsList(props:
                                                  appUser: AppUser | undefined,
                                                  getAllParticipants: (id: string) => void,
                                              }) {
-    const {id} = useParams();
+    const {eventId} = useParams();
     useEffect(() => {
-        props.getAllParticipants(id ? id : "fakeId")
+        props.getAllParticipants(eventId ? eventId : "fakeId")
         //eslint-disable-next-line
     }, [])
     return (<>
@@ -26,7 +26,7 @@ export default function ParticipantsList(props:
                                          participant={participant}
                                          deleteParticipant={props.deleteParticipant}
                                          appUser={props.appUser}
-                                         eventId={id}
+                                         eventId={eventId}
                         />)}
                 </ol>
             </div>

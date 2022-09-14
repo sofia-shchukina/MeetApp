@@ -14,7 +14,8 @@
 }
 
 #listOfMatches {
-    min-height: 47vh;
+    min-height: 49vh;
+    font-size: 3vh;
 }
 
 h4 {
@@ -24,6 +25,7 @@ h4 {
 .clarificationText {
     margin-left: 3vw;
     margin-right: 3vw;
+    font-size: 2vh;
 }
 
 .likesForm label {

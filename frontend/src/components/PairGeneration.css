@@ -16,5 +16,6 @@
 }
 
 #pairsList {
-    min-height: 63vh;
+    min-height: 65vh;
+    font-size: 3vh;
 }

@@ -4,7 +4,7 @@
     position: fixed;
     bottom: 0;
     width: 100vw;
-    height: 8vh;
+    height: 6vh;
     display: flex;
     justify-content: space-between;
     border-radius: 15px 15px 0 0;
@@ -20,6 +20,7 @@
     font-size: 3vh;
     height: 7vh;
     flex-grow: 4;
+    border: 1px var(--beige) solid;
 }
 
 .navigation a:hover {

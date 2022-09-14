@@ -4,13 +4,14 @@ import './NavigationBar.css';
 
 export default function NavigationBarInsideEvent() {
     const {eventId} = useParams();
+    console.log(eventId)
     return (
         <div className={"navigation"}>
-            <NavLink to={`/events/${eventId}`}>Event page</NavLink>
-            <NavLink to={`/events/registration/${eventId}`}>Reserve a seat</NavLink>
+            <NavLink to={`/events/${eventId}`}>Event</NavLink>
+            <NavLink to={`/events/registration/${eventId}`}>RSVP</NavLink>
             <NavLink to={`/events/pairs/${eventId}`}>Talk</NavLink>
-            <NavLink to={`/events/likes/${eventId}`}>Send likes</NavLink>
-            <NavLink to={`/events/likes/analysis/${eventId}`}>Receive matches</NavLink>
+            <NavLink to={`/events/likes/${eventId}`}>Likes</NavLink>
+            <NavLink to={`/events/likes/analysis/${eventId}`}>Matches</NavLink>
         </div>
     )
 }

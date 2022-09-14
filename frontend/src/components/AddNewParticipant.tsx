@@ -16,16 +16,16 @@ export default function AddNewParticipant(props:
 
     const [errorMessage, setErrorMessage] = useState("");
     const [name, setName] = useState("");
-    const {id} = useParams();
+    const {eventId} = useParams();
 
     const onNameSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!name) {
             toast.error("Your name should not be empty, try again or contact meetup host")
         } else {
-            if (id) {
+            if (eventId) {
                 props.appUser ?
-                    props.addParticipant(name, props.appUser.email, id)
+                    props.addParticipant(name, props.appUser.email, eventId)
                         .then(() => {
                             setName("");
                             setErrorMessage("")

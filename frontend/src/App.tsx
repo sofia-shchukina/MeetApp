@@ -69,7 +69,7 @@ export default function App() {
                                                  appUser={userHook.appUser}/>
                                </>
                                }/>
-                        <Route path={"/events/registration/:id"} element={
+                        <Route path={"/events/registration/:eventId"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}
                                                    appUser={userHook.appUser}/>

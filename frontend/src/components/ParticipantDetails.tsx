@@ -45,18 +45,21 @@ export default function ParticipantDetails(props: {
     }
 
     return (
-        <form id="nameEditForm" onSubmit={onNameSubmit}>
-            <label> How would you like to change your name?
-                Your previous version was <>{participantToEdit ? participantToEdit.name : ""}</>
-            </label>
-            <input id="detailsInput" value={editedName}
-                   onChange={event => setEditedName(event.target.value)}/>
-            <div className="errorMessage"> {errorMessage}</div>
-            <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
-            <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
-                    onClick={() => {
-                        navigate("/events/registration/" + eventId)
-                    }}>back</Button>
-        </form>
+        <>
+            <div className="eventBigName"><h4>Reserve a seat</h4></div>
+            <form id="nameEditForm" onSubmit={onNameSubmit}>
+                <label> How would you like to change your name?
+                    Your previous version was <>{participantToEdit ? participantToEdit.name : ""}</>
+                </label>
+                <input id="detailsInput" value={editedName}
+                       onChange={event => setEditedName(event.target.value)}/>
+                <div className="errorMessage"> {errorMessage}</div>
+                <Button type="submit" id="saveButton" variant="contained" endIcon={<SendIcon/>}>save</Button>
+                <Button type="submit" id="goBackButton" variant="contained" endIcon={<ArrowBackIosNewIcon/>}
+                        onClick={() => {
+                            navigate("/events/registration/" + eventId)
+                        }}>back</Button>
+            </form>
+        </>
     );
 }
