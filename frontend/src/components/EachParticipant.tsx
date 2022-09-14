@@ -31,7 +31,7 @@ export default function EachParticipant(props:
                                 }}>Edit
                         </Button>
                         <Button variant="outlined" id="personalButton" startIcon={<DeleteIcon id="deleteIcon"/>}
-                                onClick={() => props.deleteParticipant(props.participant.id, id ? id : "fakeId")}>Delete</Button>
+                                onClick={() => props.deleteParticipant(props.participant.id, props.eventId ? props.eventId : "fakeId")}>Delete</Button>
                     </div>
                     : <></>}
             </div>
