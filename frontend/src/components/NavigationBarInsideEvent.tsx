@@ -4,7 +4,6 @@ import './NavigationBar.css';
 
 export default function NavigationBarInsideEvent() {
     const {eventId} = useParams();
-    console.log(eventId)
     return (
         <div className={"navigation"}>
             <NavLink to={`/events/${eventId}`}>Event</NavLink>

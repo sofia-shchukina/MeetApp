@@ -40,12 +40,9 @@ export default function TheEventPage(props:
                                     }}> Receive matches
                             </Button>
                         </div>
-
-
                         <div className="eventName"> {thisEvent?.place} </div>
                         <div className="eventName"> {thisEvent?.time.toLocaleString()} </div>
                         <div className="eventDescription"> {thisEvent?.description} </div>
-
                     </div>
                     <NavigationBarForEvent/>
                 </> : <></>}

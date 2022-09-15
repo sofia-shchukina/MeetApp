@@ -7,7 +7,6 @@ import './EachTheEvent.css';
 import {useNavigate} from "react-router-dom";
 import {AppUser} from "../types/AppUser";
 
-
 export default function EachParticipant(props:
                                             {
                                                 participant: Participant,

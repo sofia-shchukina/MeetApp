@@ -20,7 +20,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.cors().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().authorizeRequests().antMatchers("/hello").permitAll().antMatchers("/events").permitAll().antMatchers(HttpMethod.GET, "/participants").permitAll().antMatchers("/participants").authenticated().and().httpBasic().and().build();
+        return http.cors()
+                .and().csrf()
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().authorizeRequests()
+                .antMatchers("/hello")
+                .permitAll().antMatchers("/events").permitAll()
+                .antMatchers(HttpMethod.GET, "/participants").permitAll()
+                .antMatchers("/participants").authenticated()
+                .and().httpBasic()
+                .and().build();
     }
 
     @Bean
