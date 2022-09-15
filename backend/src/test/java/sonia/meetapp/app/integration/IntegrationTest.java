@@ -703,7 +703,7 @@ class IntegrationTest {
                         "place": "park",
                         "time":"2022-09-13T09:04:33.089Z",
                         "description":"lovely event"
-                        } 
+                        }
                         """));
     }
 
