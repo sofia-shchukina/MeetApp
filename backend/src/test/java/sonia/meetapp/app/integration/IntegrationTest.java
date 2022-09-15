@@ -51,10 +51,20 @@ class IntegrationTest {
                 """));
     }
 
+
     @DirtiesContext
     @Test
     @WithMockUser(username = "username")
-    void addParticipant() throws Exception {
+    void addParticipantEventNotFound() throws Exception {
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mike"}
+                 """).with(csrf())).andExpect(status().is(404));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void addParticipantNameIsNotUnique() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/events").contentType(APPLICATION_JSON).content("""
                 {"name": "speed-friending outdoors",
@@ -64,11 +74,33 @@ class IntegrationTest {
                                }
                  """).with(csrf())).andExpect(status().is(201));
 
-        MvcResult result = mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
                 {"name":"Mike"}
-                 """).with(csrf())).andExpect(status().is(201)).andReturn();
-        String content = result.getResponse().getContentAsString();
-        Assertions.assertTrue(content.contains("Mike"));
+                 """).with(csrf())).andExpect(status().is(201));
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mike"}
+                 """).with(csrf())).andExpect(status().is(400));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void addParticipantEmailIsNotUnique() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events").contentType(APPLICATION_JSON).content("""
+                {"name": "speed-friending outdoors",
+                               "place": "park",
+                               "time":"2022-09-13T09:04:33.089Z",
+                               "description":"lovely event"
+                               }
+                 """).with(csrf())).andExpect(status().is(201));
+
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mike", "email": "mike@gmail.com"}
+                 """).with(csrf())).andExpect(status().is(201));
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mary", "email": "mike@gmail.com"}
+                 """).with(csrf())).andExpect(status().is(403));
     }
 
     @DirtiesContext
@@ -260,6 +292,30 @@ class IntegrationTest {
 
     @DirtiesContext
     @Test
+    void createAccountPasswordDoesNotMatch() throws Exception {
+        mockMvc.perform(post("/hello").contentType(APPLICATION_JSON).content("""
+                {"email": "abcde@gmail.com",
+                               "password": "aaaaaa",
+                               "repeatPassword":"bbbbbb",
+                               "contacts":"insta"
+                               }
+                 """).with(csrf())).andExpect(status().is(403));
+    }
+
+    @DirtiesContext
+    @Test
+    void createAccountConstraintsViolation() throws Exception {
+        mockMvc.perform(post("/hello").contentType(APPLICATION_JSON).content("""
+                {"email": "abcdegmail.com",
+                               "password": "aaaaaa",
+                               "repeatPassword":"aaaaaa",
+                               "contacts":"insta"
+                               }
+                 """).with(csrf())).andExpect(status().is(400));
+    }
+
+    @DirtiesContext
+    @Test
     @WithMockUser(username = "username")
     void getAllUsers() throws Exception {
         mockMvc.perform(post("/hello").contentType(APPLICATION_JSON).content("""
@@ -425,6 +481,76 @@ class IntegrationTest {
     @DirtiesContext
     @Test
     @WithMockUser(username = "username@gmail.com")
+    void createPairsSeveralTimesTillNoPossibleCombination() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events").contentType(APPLICATION_JSON).content("""
+                {"name": "speed-friending outdoors",
+                               "place": "park",
+                               "time":"2022-09-13T09:04:33.089Z",
+                               "description":"lovely event"
+                               }
+                 """).with(csrf())).andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mike", "email":"1@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mary", "email":"2@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Misha", "email":"3@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("4");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mark", "email":"4@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        mockMvc.perform(get("/participants/pairs/123")).andExpect(status().isOk()).andExpect(content().json("""
+                                 [
+                                [{"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2"]},
+                {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1"]}],
+                                [{"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4"]},
+                {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3"]}]
+                                ]
+                """));
+
+        mockMvc.perform(get("/participants/pairs/123")).andExpect(status().isOk()).andExpect(content().json("""
+                [
+                    [
+                        {"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2", "3"]},
+                        {"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4", "1"]}
+                    ],
+                    [
+                        {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1", "4"]},
+                        {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3", "2"]}
+                    ]
+                ]
+                """));
+
+        mockMvc.perform(get("/participants/pairs/123")).andExpect(status().isOk()).andExpect(content().json("""
+                [
+                    [
+                        {"name":"Mike","id":"1","email":"1@gmail.com", "peopleITalkedTo":["2", "3", "4"]},
+                        {"name":"Mark","id":"4","email":"4@gmail.com", "peopleITalkedTo":["3","2", "1"]}
+                    ],
+                    [
+                        {"name":"Mary","id":"2","email":"2@gmail.com", "peopleITalkedTo":["1", "4", "3"]},
+                        {"name":"Misha","id":"3","email":"3@gmail.com", "peopleITalkedTo":["4", "1", "2"]}
+                    ]
+                ]
+                """));
+        mockMvc.perform(get("/participants/pairs/123")).andExpect(status().is(417));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username@gmail.com")
     void createPairsOddNumberOfParticipants() throws Exception {
         given(utility.createIdAsString()).willReturn("123");
         mockMvc.perform(post("/events").contentType(APPLICATION_JSON).content("""
@@ -545,5 +671,57 @@ class IntegrationTest {
                 "description":"lovely event"
                 } 
                 """));
+    }
+
+    @DirtiesContext
+    @Test
+    @WithMockUser(username = "username")
+    void receiveCurrentRound() throws Exception {
+        given(utility.createIdAsString()).willReturn("123");
+        mockMvc.perform(post("/events").contentType(APPLICATION_JSON).content("""
+                {"name": "speed-friending outdoors",
+                               "place": "park",
+                               "time":"2022-09-13T09:04:33.089Z",
+                               "description":"lovely event"
+                               }
+                 """).with(csrf())).andExpect(status().is(201));
+
+        given(utility.createIdAsString()).willReturn("1");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mike", "email":"1@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("2");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mary", "email":"2@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("3");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Misha", "email":"3@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        given(utility.createIdAsString()).willReturn("4");
+        mockMvc.perform(post("/participants/123").contentType(APPLICATION_JSON).content("""
+                {"name":"Mark", "email":"4@gmail.com"}
+                 """).with(csrf())).andReturn().getResponse();
+
+        mockMvc.perform(get("/participants/pairs/123")).andExpect(status().isOk()).andExpect(content().json("""
+                                 [
+                                [{"name":"Mike","id":"1","email":"1@gmail.com"},
+                {"name":"Mary","id":"2","email":"2@gmail.com"}],
+                                [{"name":"Misha","id":"3","email":"3@gmail.com"},
+                {"name":"Mark","id":"4","email":"4@gmail.com"}]
+                                ]
+                """));
+
+        mockMvc.perform(get("/participants/pairs/123/currentRound")).andExpect(status().isOk()).andExpect(content().json("""
+                                 [
+                                [{"name":"Mike","id":"1","email":"1@gmail.com"},
+                {"name":"Mary","id":"2","email":"2@gmail.com"}],
+                                [{"name":"Misha","id":"3","email":"3@gmail.com"},
+                {"name":"Mark","id":"4","email":"4@gmail.com"}]
+                                ]
+                                  """));
     }
 }

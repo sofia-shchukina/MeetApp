@@ -269,6 +269,29 @@ class ParticipantsServiceTest {
     }
 
     @Test
+    void addLikesLikedPersonAlreadyHasLikes() {
+        when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
+        Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
+        Participant testParticipant2 = new Participant("Alex", "1", "daniel@gmail.com");
+        testParticipant2.setPeopleWhoLikeMe(new ArrayList<>(List.of("11111")));
+        List<Participant> testList = new ArrayList<>();
+        testList.add(testParticipant1);
+        testList.add(testParticipant2);
+        mockedEvent.setEventParticipants(testList);
+
+        Like like = new Like();
+        like.setLikerID(testParticipant1.getId());
+        String[] likedPeopleIDs = {"1"};
+        like.setLikedPeopleIDs(likedPeopleIDs);
+
+        Participant expected = new Participant("Daniel", "1234", "daniel@gmail.com");
+        expected.setPeopleILike(new ArrayList<>(List.of("1")));
+
+        Participant actual = participantsService.addLikes(like, eventId);
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
     void addLikesDoesNotExist() {
         when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         Participant testParticipant1 = new Participant("Daniel", "1234", "daniel@gmail.com");
