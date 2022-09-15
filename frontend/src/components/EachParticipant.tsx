@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import './EachParticipant.css';
 import './EachTheEvent.css';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {AppUser} from "../types/AppUser";
 
 
@@ -16,7 +16,6 @@ export default function EachParticipant(props:
                                                 eventId: string | undefined,
                                             }) {
     const navigate = useNavigate();
-    const {id} = useParams();
 
     return (
         <li key={props.participant.id} id="oneParticipantLi">

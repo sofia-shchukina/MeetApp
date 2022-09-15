@@ -2,7 +2,6 @@ import {Participant} from "../types/Participant";
 import {AppUser} from "../types/AppUser";
 import './EachMatch.css'
 
-
 export default function EachMatch(props: {
     match: Participant
     appUsers: AppUser[],

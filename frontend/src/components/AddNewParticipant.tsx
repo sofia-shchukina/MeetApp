@@ -7,7 +7,6 @@ import "react-toastify/dist/ReactToastify.css";
 import {AppUser} from "../types/AppUser";
 import {useParams} from "react-router-dom";
 
-
 export default function AddNewParticipant(props:
                                               {
                                                   addParticipant: (name: string, email: string, id: string) => Promise<void>,

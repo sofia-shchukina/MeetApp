@@ -20,12 +20,9 @@ public class ParticipantsController {
     }
 
     @PostMapping("/{eventId}")
-    public ResponseEntity<Participant> addParticipant(@PathVariable String eventId,
-                                                      @RequestBody NewParticipant newParticipant) {
+    public ResponseEntity<Participant> addParticipant(@PathVariable String eventId, @RequestBody NewParticipant newParticipant) {
         Participant createdParticipant = participantsService.addParticipant(newParticipant, eventId);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdParticipant);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdParticipant);
     }
 
     @DeleteMapping("/{eventId}/{participantId}")
@@ -35,31 +32,19 @@ public class ParticipantsController {
     }
 
     @PutMapping("/edit/{eventId}/{participantId}")
-    public ResponseEntity<Participant> editParticipant(
-            @PathVariable String eventId, @PathVariable String participantId,
-            @RequestBody NewParticipant editedNewParticipant) {
+    public ResponseEntity<Participant> editParticipant(@PathVariable String eventId, @PathVariable String participantId, @RequestBody NewParticipant editedNewParticipant) {
         Participant updatedParticipant = participantsService.editParticipant(participantId, eventId, editedNewParticipant);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(updatedParticipant);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedParticipant);
     }
 
     @PutMapping("/likes/{eventId}")
-    public ResponseEntity<Participant> addLikes(@PathVariable String eventId,
-                                                @RequestBody
-                                                Like like
-    ) {
+    public ResponseEntity<Participant> addLikes(@PathVariable String eventId, @RequestBody Like like) {
         Participant updatedParticipant = participantsService.addLikes(like, eventId);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(updatedParticipant);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedParticipant);
     }
 
     @GetMapping("likes/analysis/{eventId}/{participantId}")
-    public List<Participant> receiveMatches(
-            @PathVariable String eventId,
-            @PathVariable String participantId
-    ) {
+    public List<Participant> receiveMatches(@PathVariable String eventId, @PathVariable String participantId) {
         return participantsService.receiveMatches(eventId, participantId);
     }
 

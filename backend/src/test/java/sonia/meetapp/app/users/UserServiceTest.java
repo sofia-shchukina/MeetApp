@@ -29,8 +29,7 @@ class UserServiceTest {
     @Test
     void registerNewUserTest() {
 
-        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
-                "qwerty", "insta");
+        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty", "qwerty", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
@@ -44,8 +43,7 @@ class UserServiceTest {
     @Test
     void registerNewUserTestEmailAlreadyExists() {
 
-        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
-                "qwerty", "insta");
+        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty", "qwerty", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
@@ -61,8 +59,7 @@ class UserServiceTest {
 
     @Test
     void registerNewUserTestPasswordDoesNotMatch() {
-        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty",
-                "qwertz", "insta");
+        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwerty", "qwertz", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");
@@ -78,8 +75,7 @@ class UserServiceTest {
 
     @Test
     void registerNewUserTestConstraintViolation() {
-        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer",
-                "qwer", "insta");
+        NewAppUser newAppUser = new NewAppUser("abc@gmail.com", "qwer", "qwer", "insta");
         AppUser appUser = new AppUser("abc@gmail.com", "password_encode", "insta", "user");
 
         when(passwordEncoder.encode(newAppUser.password())).thenReturn("password_encode");

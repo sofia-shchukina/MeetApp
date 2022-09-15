@@ -1,6 +1,5 @@
 #personalButton {
     width: 20vw;
-
     background-color: var(--brown);
     border-color: var(--brown);
     color: var(--white);
@@ -23,7 +22,6 @@
     align-items: center;
     margin-right: 3vw;
     height: 2vh;
-
 }
 
 #buttons {
@@ -40,5 +38,4 @@
 
 #oneParticipantLi {
     height: 4vh;
-
 }

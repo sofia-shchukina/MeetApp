@@ -30,7 +30,6 @@ export default function PairGeneration(props: {
         props.getCurrentRound(eventId ? eventId : "fakeID")
     }
 
-
     return (<>
             <div className="eventBigName"><h4>Talk</h4></div>
 

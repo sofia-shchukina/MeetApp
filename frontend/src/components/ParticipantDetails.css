@@ -29,7 +29,6 @@ label {
     grid-area: 2 / 1 / 3 / 3;
 }
 
-
 #saveButton {
     grid-area: 2 / 3 / 3 / 4;
     width: 30vw;
@@ -46,4 +45,3 @@ label {
     background-color: var(--brown);
     border-radius: 25px;
 }
-

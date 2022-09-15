@@ -40,9 +40,7 @@ public class ParticipantsService {
 
     public void deleteParticipant(String eventId, String participantId) {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
-        Participant toDelete = event.getEventParticipants().stream().filter(participant ->
-                participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
-                new ParticipantNotFoundException(participantId));
+        Participant toDelete = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(participantId)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(participantId));
         event.getEventParticipants().remove(toDelete);
         eventRepo.save(event);
     }
@@ -50,9 +48,7 @@ public class ParticipantsService {
     public Participant editParticipant(String participantId, String eventId, NewParticipant editedNewParticipant) {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         if (Boolean.TRUE.equals(thisNameIsUnique(editedNewParticipant, event))) {
-            Participant toEdit = event.getEventParticipants().stream().filter(participant ->
-                    participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
-                    new ParticipantNotFoundException(participantId));
+            Participant toEdit = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(participantId)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(participantId));
             event.getEventParticipants().remove(toEdit);
             toEdit.setName(editedNewParticipant.getName());
             event.getEventParticipants().add(toEdit);
@@ -92,16 +88,12 @@ public class ParticipantsService {
         List<String> likedPeopleIDsArrayList = new ArrayList<>(Arrays.asList(like.getLikedPeopleIDs()));
 
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
-        Participant liker = event.getEventParticipants().stream().filter(participant ->
-                participant.getId().equals(likerID)).findFirst().orElseThrow(() ->
-                new ParticipantNotFoundException(likerID));
+        Participant liker = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(likerID)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(likerID));
         event.getEventParticipants().remove(liker);
         liker.setPeopleILike(likedPeopleIDsArrayList);
 
         for (String whoIsLikedID : likedPeopleIDsArrayList) {
-            Participant likedPerson = event.getEventParticipants().stream().filter(participant ->
-                    participant.getId().equals(whoIsLikedID)).findFirst().orElseThrow(() ->
-                    new ParticipantNotFoundException(whoIsLikedID));
+            Participant likedPerson = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(whoIsLikedID)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(whoIsLikedID));
             event.getEventParticipants().remove(likedPerson);
             if (likedPerson.getPeopleWhoLikeMe() != null) {
                 likedPerson.getPeopleWhoLikeMe().add(likerID);
@@ -118,17 +110,13 @@ public class ParticipantsService {
     public List<Participant> receiveMatches(String eventId, String participantId) {
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
 
-        Participant whoWantsMatches = event.getEventParticipants().stream().filter(participant ->
-                participant.getId().equals(participantId)).findFirst().orElseThrow(() ->
-                new ParticipantNotFoundException(participantId));
+        Participant whoWantsMatches = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(participantId)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(participantId));
 
         List<Participant> matches = new ArrayList<>();
         if (whoWantsMatches.getPeopleWhoLikeMe() != null && whoWantsMatches.getPeopleILike() != null) {
             for (String idParticipantILike : whoWantsMatches.getPeopleILike()) {
                 if (whoWantsMatches.getPeopleWhoLikeMe().contains(idParticipantILike)) {
-                    Participant matchParticipant = event.getEventParticipants().stream().filter(participant ->
-                            participant.getId().equals(idParticipantILike)).findFirst().orElseThrow(() ->
-                            new ParticipantNotFoundException(idParticipantILike));
+                    Participant matchParticipant = event.getEventParticipants().stream().filter(participant -> participant.getId().equals(idParticipantILike)).findFirst().orElseThrow(() -> new ParticipantNotFoundException(idParticipantILike));
                     matches.add(matchParticipant);
                 }
             }
@@ -150,9 +138,7 @@ public class ParticipantsService {
         if (solve(allParticipants, generatedPairs)) {
             for (int i = 0; i < generatedPairs.size(); i++) {
                 int finalI = i;
-                Participant participantToEdit = allParticipants.stream().filter(participant ->
-                        participant.getId().equals(generatedPairs.get(finalI).getId())).findFirst().orElseThrow(() ->
-                        new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
+                Participant participantToEdit = allParticipants.stream().filter(participant -> participant.getId().equals(generatedPairs.get(finalI).getId())).findFirst().orElseThrow(() -> new ParticipantNotFoundException(generatedPairs.get(finalI).getId()));
                 event.getEventParticipants().remove(participantToEdit);
                 if (i % 2 == 0) {
                     if (participantToEdit.getPeopleITalkedTo() != null) {
@@ -176,8 +162,7 @@ public class ParticipantsService {
             eventRepo.save(event);
             return pairs;
         } else {
-            throw new
-                    NoPossibleCombinationsException();
+            throw new NoPossibleCombinationsException();
         }
     }
 
@@ -201,8 +186,7 @@ public class ParticipantsService {
         return true;
     }
 
-    public static boolean isValidPlacement(List<Participant> generatedPairs, Participant participantToTry,
-                                           int personPlace) {
+    public static boolean isValidPlacement(List<Participant> generatedPairs, Participant participantToTry, int personPlace) {
         if (generatedPairs.contains(participantToTry)) {
             return false;
         } else {
@@ -212,8 +196,7 @@ public class ParticipantsService {
                 if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() == null)) {
                     return true;
                 } else if ((participantToTry.getPeopleITalkedTo() != null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
-                    return !generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) &&
-                            !participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId());
+                    return !generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId()) && !participantToTry.getPeopleITalkedTo().contains(generatedPairs.get(personPlace - 1).getId());
                 } else if ((participantToTry.getPeopleITalkedTo() == null) && (generatedPairs.get(personPlace - 1).getPeopleITalkedTo() != null)) {
                     return !generatedPairs.get(personPlace - 1).getPeopleITalkedTo().contains(participantToTry.getId());
                 } else {

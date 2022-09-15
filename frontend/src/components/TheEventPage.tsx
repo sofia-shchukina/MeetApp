@@ -12,7 +12,6 @@ export default function TheEventPage(props:
                                          }) {
     const {eventId} = useParams();
     const thisEvent = props.theEvents.find(theEvent => theEvent.id === eventId);
-
     const navigate = useNavigate();
     return (<>
             {props.appUser ?

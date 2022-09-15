@@ -21,7 +21,6 @@ import TheEventPage from "./components/TheEventPage";
 import ParticipantDetails from './components/ParticipantDetails';
 import NavigationBarInsideEvent from "./components/NavigationBarInsideEvent";
 
-
 export default function App() {
 
     const participantsHook = useParticipants()
@@ -34,9 +33,7 @@ export default function App() {
                     <Routes>
                         <Route path={"/"}
                                element={
-                                   <>
                                        <FirstPage/>
-                                   </>
                                }/>
                         <Route path={"/create-account"}
                                element={
@@ -64,10 +61,9 @@ export default function App() {
                                </>
                                }/>
                         <Route path={"/events/:eventId"}
-                               element={<>
+                               element={
                                    <TheEventPage theEvents={eventHook.theEvents}
                                                  appUser={userHook.appUser}/>
-                               </>
                                }/>
                         <Route path={"/events/registration/:eventId"} element={
                             <>
@@ -93,13 +89,11 @@ export default function App() {
                         }/>
                         <Route path={"/participants/edit/:eventId/:id"}
                                element={
-                                   <>
                                        <ParticipantDetails participants={participantsHook.participants}
                                                            editParticipant={participantsHook.editParticipant}
                                                            appUser={userHook.appUser}
                                                            getAllParticipants={participantsHook.getAllParticipants}/>
 
-                                   </>
                                }/>
                         <Route path={"/events/likes/:eventId"}
                                element={

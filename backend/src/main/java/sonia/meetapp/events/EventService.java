@@ -12,14 +12,12 @@ import java.util.List;
 public class EventService {
     private final EventRepo eventRepo;
     private final Utility utility;
+
     public List<Event> getAllEvents() {
-
         return eventRepo.findAll();
-
     }
 
     public Event addEvent(NewEvent newEvent) {
-
         Event event = new Event(utility.createIdAsString(), newEvent.getName(), newEvent.getPlace(), newEvent.getTime(), newEvent.getDescription());
         event.setEventParticipants(new ArrayList<>());
         return eventRepo.save(event);

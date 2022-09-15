@@ -8,7 +8,6 @@ import {AppUser} from "../types/AppUser";
 import './CreateEvent.css'
 import {TextField} from "@mui/material";
 
-
 export default function CreateEvent(props:
                                         {
                                             addTheEvent: (name: string, place: string, time: Date, description: string) => Promise<void>,

@@ -7,7 +7,6 @@ import {AxiosResponse} from "axios";
 import {AppUser} from "../types/AppUser";
 import {useNavigate} from "react-router-dom";
 
-
 export default function CreateAccount(props:
                                           {
                                               appUser: AppUser | undefined,

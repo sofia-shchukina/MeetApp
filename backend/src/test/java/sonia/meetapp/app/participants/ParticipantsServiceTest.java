@@ -29,20 +29,13 @@ class ParticipantsServiceTest {
 
     @Test
     void getAllParticipants() {
-        List<Participant> testList = List.of(
-                new Participant("Alex", "12", "alex@gmail.com"),
-                new Participant("Marina", "333", "marina@gmail.com"),
-                new Participant("Ivan", "2222", "ivan@gmail.com"));
+        List<Participant> testList = List.of(new Participant("Alex", "12", "alex@gmail.com"), new Participant("Marina", "333", "marina@gmail.com"), new Participant("Ivan", "2222", "ivan@gmail.com"));
 
         mockedEvent.setEventParticipants(testList);
 
         when(eventRepo.findById("123")).thenReturn(Optional.of(mockedEvent));
         List<Participant> actualResult = participantsService.getAllParticipants(eventId);
-        List<Participant> expectedResult = List.of(
-                new Participant("Alex", "12", "alex@gmail.com"),
-                new Participant("Marina", "333", "marina@gmail.com"),
-                new Participant("Ivan", "2222", "ivan@gmail.com")
-        );
+        List<Participant> expectedResult = List.of(new Participant("Alex", "12", "alex@gmail.com"), new Participant("Marina", "333", "marina@gmail.com"), new Participant("Ivan", "2222", "ivan@gmail.com"));
         assertThat(actualResult).hasSameElementsAs(expectedResult);
     }
 
@@ -69,9 +62,7 @@ class ParticipantsServiceTest {
 
     @Test
     void addParticipantNotUniqueName() {
-        List<Participant> testList = List.of(
-                new Participant("Daniel", "1234", "daniel@gmail.com"),
-                new Participant("Guillermo", "1", "123"));
+        List<Participant> testList = List.of(new Participant("Daniel", "1234", "daniel@gmail.com"), new Participant("Guillermo", "1", "123"));
         mockedEvent.setEventParticipants(testList);
 
         String participantName = "Guillermo";
@@ -93,9 +84,7 @@ class ParticipantsServiceTest {
 
     @Test
     void addParticipantNotUniqueEmail() {
-        List<Participant> testList = List.of(
-                new Participant("Daniel", "1234", "daniel@gmail.com"),
-                new Participant("Alex", "1", "guillermo@gmail.com"));
+        List<Participant> testList = List.of(new Participant("Daniel", "1234", "daniel@gmail.com"), new Participant("Alex", "1", "guillermo@gmail.com"));
         mockedEvent.setEventParticipants(testList);
 
         String participantName = "Guillermo";
@@ -303,8 +292,7 @@ class ParticipantsServiceTest {
         List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3));
         mockedEvent.setEventParticipants(participants);
 
-        List<Participant> expected = new ArrayList<>(List.of(
-                participant2));
+        List<Participant> expected = new ArrayList<>(List.of(participant2));
         List<Participant> actual = participantsService.receiveMatches(participant1.getId(), eventId);
         Assertions.assertEquals(expected, actual);
     }
@@ -319,8 +307,7 @@ class ParticipantsServiceTest {
         Participant participant4 = new Participant("D", "4", "123@gmail.com");
         Participant participant5 = new Participant("E", "5", "1234@gmail.com");
         Participant participant6 = new Participant("F", "6", "12345@gmail.com");
-        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participant6));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4, participant5, participant6));
         mockedEvent.setEventParticipants(participants);
 
         List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant2));
@@ -351,8 +338,7 @@ class ParticipantsServiceTest {
         participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId())));
         participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
 
-        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participant6));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4, participant5, participant6));
         mockedEvent.setEventParticipants(participants);
 
         List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant3));
@@ -383,8 +369,7 @@ class ParticipantsServiceTest {
         participant5.setPeopleITalkedTo(new ArrayList<>(List.of(participant6.getId(), participant2.getId())));
         participant6.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId(), participant3.getId())));
 
-        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5, participant6));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4, participant5, participant6));
         mockedEvent.setEventParticipants(participants);
 
         List<Participant> expected1couple = new ArrayList<>(List.of(participant1, participant4));
@@ -407,8 +392,7 @@ class ParticipantsServiceTest {
         Participant participant5 = new Participant("E", "5", "1234@gmail.com");
         Participant participantBreak = new Participant("break", "break", "break");
 
-        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4, participant5));
         mockedEvent.setEventParticipants(participants);
 
         participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
@@ -438,8 +422,7 @@ class ParticipantsServiceTest {
         participant3.setPeopleITalkedTo(new ArrayList<>(List.of(participant4.getId(), participant1.getId())));
         participant4.setPeopleITalkedTo(new ArrayList<>(List.of(participant3.getId(), participant2.getId())));
 
-        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4,
-                participant5));
+        List<Participant> participants = new ArrayList<>(List.of(participant1, participant2, participant3, participant4, participant5));
         mockedEvent.setEventParticipants(participants);
 
         participantBreak.setPeopleITalkedTo(new ArrayList<>(List.of(participant5.getId())));
