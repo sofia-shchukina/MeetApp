@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sonia.meetapp.events.Event;
 import sonia.meetapp.events.EventRepo;
-import sonia.meetapp.exceptions.EmailIsNotUniqueException;
-import sonia.meetapp.exceptions.NameIsNotUniqueException;
-import sonia.meetapp.exceptions.NoPossibleCombinationsException;
-import sonia.meetapp.exceptions.ParticipantNotFoundException;
+import sonia.meetapp.exceptions.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -37,6 +34,20 @@ class ParticipantsServiceTest {
         List<Participant> actualResult = participantsService.getAllParticipants(eventId);
         List<Participant> expectedResult = List.of(new Participant("Alex", "12", "alex@gmail.com"), new Participant("Marina", "333", "marina@gmail.com"), new Participant("Ivan", "2222", "ivan@gmail.com"));
         assertThat(actualResult).hasSameElementsAs(expectedResult);
+    }
+
+    @Test
+    void getAllParticipantsEventNotFound() {
+        List<Participant> testList = List.of(new Participant("Alex", "12", "alex@gmail.com"), new Participant("Marina", "333", "marina@gmail.com"), new Participant("Ivan", "2222", "ivan@gmail.com"));
+
+        mockedEvent.setEventParticipants(testList);
+
+        when(eventRepo.findById("123")).thenReturn(Optional.empty());
+        try {
+            participantsService.getAllParticipants(eventId);
+            Assertions.fail("Expected exception was not thrown");
+        } catch (EventNotFoundException ignored) {
+        }
     }
 
     @Test
