@@ -26,7 +26,6 @@ export default function useUsers() {
             .then((response) => {
                 setAppUser(response.data)
             })
-
     }
 
     const logout = () => {

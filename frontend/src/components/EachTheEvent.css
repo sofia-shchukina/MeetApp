@@ -1,0 +1,19 @@
+#eventLi {
+    background-color: var(--brown);
+    border-radius: 25px;
+    color: white;
+    padding-left: 4vw;
+    height: 17vh;
+    justify-content: flex-end;
+}
+
+#eventLi:nth-child(even) {
+    background-color: var(--orange);
+}
+
+#oneEvent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 15vh;
+}

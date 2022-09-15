@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import './CreateAccount.css';
 import {AxiosResponse} from "axios";
 import {AppUser} from "../types/AppUser";
-
+import {useNavigate} from "react-router-dom";
 
 export default function CreateAccount(props:
                                           {
@@ -29,23 +29,30 @@ export default function CreateAccount(props:
                 setMessage(error.response.data.message)
             })
     }
+    const navigate = useNavigate();
     return (
-        <>
-            {props.appUser ? <></> :
-                <form id="signUpForm">
-                    <h3>New here? Sign up now!</h3>
-                    <TextField id="login" label="e-mail" color="warning" value={email}
-                               onChange={(event) => setEmail(event.target.value)}/>
-                    <TextField id="logout" label="password" color="warning" type="password" value={password}
-                               onChange={(event) => setPassword(event.target.value)}/>
-                    <TextField id="logout" label="repeat password" color="warning" type="password"
-                               value={repeatPassword}
-                               onChange={(event) => setRepeatPassword(event.target.value)}/>
-                    <TextField id="logout" label="contacts to share" color="warning" value={contacts}
-                               onChange={(event) => setContacts(event.target.value)}/>
-                    <Button type="submit" id="signUpButton" variant="contained" onClick={handleSignUp}>Sign Up!</Button>
-                    <div id="message">{message}</div>
-                </form>}
-        </>
+        <body className="register">
+
+
+        <form id="signUpForm">
+            <h3>New here? Sign up now!</h3>
+            <TextField id="login" label="e-mail" color="warning" value={email}
+                       onChange={(event) => setEmail(event.target.value)}/>
+            <TextField id="login" label="password" color="warning" type="password" value={password}
+                       onChange={(event) => setPassword(event.target.value)}/>
+            <TextField id="login" label="repeat password" color="warning" type="password"
+                       value={repeatPassword}
+                       onChange={(event) => setRepeatPassword(event.target.value)}/>
+            <TextField id="login" label="contacts to share" color="warning" value={contacts}
+                       onChange={(event) => setContacts(event.target.value)}/>
+            <Button type="submit" id="signUpButton" variant="contained" onClick={handleSignUp}>Create your
+                account</Button>
+            <Button type="submit" id="signUpButton" variant="contained" onClick={() => {
+                navigate("/login")
+            }}>Already have an account? log in!</Button>
+            <div id="message">{message}</div>
+        </form>
+
+        </body>
     )
 }

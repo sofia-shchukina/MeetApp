@@ -12,23 +12,24 @@ export default function ParticipantsList(props:
                                                  appUser: AppUser | undefined,
                                                  getAllParticipants: (id: string) => void,
                                              }) {
-    const {id} = useParams();
+    const {eventId} = useParams();
     useEffect(() => {
-        props.getAllParticipants(id ? id : "fakeId")
+        props.getAllParticipants(eventId ? eventId : "fakeId")
         //eslint-disable-next-line
     }, [])
-    return (
-        <div id="list">
-            <h3>List of participants</h3>
-            <ol>
-                {props.participants.map(participant =>
-                    <EachParticipant key={participant.id}
-                                     participant={participant}
-                                     deleteParticipant={props.deleteParticipant}
-                                     appUser={props.appUser}
-                                     eventId={id}
-                    />)}
-            </ol>
-        </div>
+    return (<>
+            <div className="list" id="participantList">
+                <h3>Already registered</h3>
+                <ol>
+                    {props.participants.map(participant =>
+                        <EachParticipant key={participant.id}
+                                         participant={participant}
+                                         deleteParticipant={props.deleteParticipant}
+                                         appUser={props.appUser}
+                                         eventId={eventId}
+                        />)}
+                </ol>
+            </div>
+        </>
     );
 }

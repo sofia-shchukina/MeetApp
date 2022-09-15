@@ -4,6 +4,7 @@
     gap: 1vh;
     align-items: center;
     margin-top: 3vh;
+    font-size: 3vh;
 }
 
 select {
@@ -25,5 +26,5 @@ select {
 }
 
 .clarificationText {
-    margin: 1vh 2vw;
+    margin: 4vh 2vw;
 }

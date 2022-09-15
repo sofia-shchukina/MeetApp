@@ -21,6 +21,7 @@
     margin-top: 2px;
     align-items: center;
     margin-right: 3vw;
+    height: 2vh;
 }
 
 #buttons {
@@ -31,6 +32,10 @@
     flex-shrink: 2;
 }
 
-.nameStyle {
-    font-size: 20px;
+.nameStyleParticipant {
+    font-size: 3vh;
+}
+
+#oneParticipantLi {
+    height: 4vh;
 }

@@ -13,12 +13,13 @@ import useUsers from './hooks/useUsers';
 import CreateAccount from './components/CreateAccount';
 import ManageUsers from "./components/ManageUsers";
 import PairGeneration from "./components/PairGeneration";
+import FirstPage from "./components/FirstPage";
 import useEvents from "./hooks/useEvents";
 import CreateEvent from './components/CreateEvent';
 import EventGallery from "./components/EventGallery";
 import TheEventPage from "./components/TheEventPage";
 import ParticipantDetails from './components/ParticipantDetails';
-
+import NavigationBarInsideEvent from "./components/NavigationBarInsideEvent";
 
 export default function App() {
 
@@ -28,19 +29,23 @@ export default function App() {
 
     return (<>
             <HashRouter>
-                <header>Speed-Friending</header>
                 <main>
                     <Routes>
                         <Route path={"/"}
                                element={
-                                   <>
-                                       <CreateAccount createUser={userHook.createUser}
-                                                      appUser={userHook.appUser}/>
-                                       <Home appUser={userHook.appUser}
-                                             login={userHook.login}
-                                             logout={userHook.logout}
-                                             checkIfLogin={userHook.checkIfLogin}/>
-                                   </>
+                                       <FirstPage/>
+                               }/>
+                        <Route path={"/create-account"}
+                               element={
+                                   <CreateAccount createUser={userHook.createUser}
+                                                  appUser={userHook.appUser}/>
+                               }/>
+                        <Route path={"/login"}
+                               element={
+                                   <Home appUser={userHook.appUser}
+                                         login={userHook.login}
+                                         logout={userHook.logout}
+                                         checkIfLogin={userHook.checkIfLogin}/>
                                }/>
                         <Route path={"/for-admin"}
                                element={<ManageUsers appUser={userHook.appUser}
@@ -55,13 +60,12 @@ export default function App() {
                                    <NavigationBar/>
                                </>
                                }/>
-                        <Route path={"/events/:id"}
-                               element={<>
+                        <Route path={"/events/:eventId"}
+                               element={
                                    <TheEventPage theEvents={eventHook.theEvents}
                                                  appUser={userHook.appUser}/>
-                               </>
                                }/>
-                        <Route path={"/events/registration/:id"} element={
+                        <Route path={"/events/registration/:eventId"} element={
                             <>
                                 <AddNewParticipant addParticipant={participantsHook.addParticipant}
                                                    appUser={userHook.appUser}/>
@@ -69,7 +73,7 @@ export default function App() {
                                                   deleteParticipant={participantsHook.deleteParticipant}
                                                   appUser={userHook.appUser}
                                                   getAllParticipants={participantsHook.getAllParticipants}/>
-                                <NavigationBar/>
+                                <NavigationBarInsideEvent/>
                             </>
                         }/>
 
@@ -80,18 +84,16 @@ export default function App() {
                                                 getAllParticipants={participantsHook.getAllParticipants}
                                                 getCurrentRound={participantsHook.getCurrentRound}
                                                 currentRound={participantsHook.currentRound}/>
-                                <NavigationBar/>
+                                <NavigationBarInsideEvent/>
                             </>
                         }/>
                         <Route path={"/participants/edit/:eventId/:id"}
                                element={
-                                   <>
                                        <ParticipantDetails participants={participantsHook.participants}
                                                            editParticipant={participantsHook.editParticipant}
                                                            appUser={userHook.appUser}
                                                            getAllParticipants={participantsHook.getAllParticipants}/>
-                                       <NavigationBar/>
-                                   </>
+
                                }/>
                         <Route path={"/events/likes/:eventId"}
                                element={
@@ -101,7 +103,7 @@ export default function App() {
                                                         appUser={userHook.appUser}
                                                         getAllParticipants={participantsHook.getAllParticipants}
                                        />
-                                       <NavigationBar/>
+                                       <NavigationBarInsideEvent/>
                                    </>}/>
                         <Route path={"/events/likes/analysis/:eventId"}
                                element={
@@ -113,7 +115,7 @@ export default function App() {
                                            matches={participantsHook.matches}
                                            appUsers={userHook.appUsers}
                                            appUser={userHook.appUser}/>
-                                       <NavigationBar/>
+                                       <NavigationBarInsideEvent/>
                                    </>}/>
                     </Routes>
                 </main>

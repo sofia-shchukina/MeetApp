@@ -42,8 +42,7 @@ public class UserService {
     }
 
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser appUser = appUserRepo.findById(email)
-                .orElse(null);
+        AppUser appUser = appUserRepo.findById(email).orElse(null);
         if (appUser == null) {
             return null;
         }

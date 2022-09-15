@@ -1,15 +1,66 @@
 #eventNameAndButtons {
     display: flex;
     flex-direction: column;
-    margin: 1vh 2vw 3vh 2vw;
     justify-content: space-evenly;
     gap: 2vh;
+    margin: 2vh 3vw;
 }
 
 #eventButtons {
-    margin-top: 3vw;
+    margin-top: 2vh;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    margin-bottom: 3vh;
+}
 
+.eventBigName {
+    height: 20vh;
+    position: relative;
+    background-color: #a56432;
+    border-radius: 0 0 50px 0;
+}
+
+.eventBigName h4 {
+    color: white;
+    font-size: 3vh;
+    position: absolute;
+    bottom: 0;
+    right: 6vw;
+    justify-self: end;
+    padding-bottom: 0;
+}
+
+.eventBigName::before {
+    content: "";
+    position: absolute;
+    background-color: transparent;
+    bottom: -100px;
+    height: 100px;
+    width: 50px;
+    border-top-left-radius: 50px;
+    box-shadow: 0 -50px 0 0 var(--brown);
+}
+
+.eventName {
+    color: var(--dark-green);
+    font-size: 3vh;
+}
+
+.eventDescription {
+    color: var(--brown);
+    font-size: 3vh;
+}
+
+#eventPartButton {
+    width: 22vw;
+    height: 22vw;
+    border-color: var(--brown);
+    color: var(--white);
+    font-size: 1.5vh;
+    padding-left: 2px;
+    padding-right: 2px;
+    display: flex;
+    border-radius: 50%;
+    background-color: #a56432;
 }

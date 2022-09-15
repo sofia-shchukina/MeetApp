@@ -23,9 +23,7 @@ public class UserController {
 
     @GetMapping("me")
     AppUser getUser() {
-        String email = SecurityContextHolder
-                .getContext()
-                .getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.findUserByEmail(email);
     }
 
