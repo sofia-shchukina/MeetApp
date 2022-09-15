@@ -520,6 +520,7 @@ class IntegrationTest {
     @Test
     @WithMockUser(username = "username")
     void getAllEvents() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.get("/events")).andExpect(status().isOk()).andExpect(content().json("""
                 []
                 """));
